@@ -1,0 +1,48 @@
+.update-product {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.update-product h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.update-product form {
+    margin-top: 20px;
+}
+
+.update-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.update-form input[type="text"],
+.update-form input[type="number"],
+.update-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.update-form input[type="submit"] {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    width: 40%;
+}
+
+.update-form input[type="submit"]:hover {
+    background-color: #45a049;
+}

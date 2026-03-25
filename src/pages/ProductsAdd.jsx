@@ -1,0 +1,52 @@
+import { useState } from 'react';
+import api from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import './css/products/products_add.css';
+
+const ProductsAdd = () => {
+  const [formData, setFormData] = useState({
+    product_name: '',
+    quantity: '',
+    price: '',
+    status: 'active'
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post('/products', formData);
+      navigate('/products_list');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to add product');
+    }
+  };
+
+  return (
+    <div className="product-container">
+      <h2>Add a Product</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Product Name:</label>
+        <input type="text" name="product_name" value={formData.product_name} onChange={handleChange} required /><br />
+        <label>Quantity:</label>
+        <input type="number" min="0" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
+        <label>Price:</label>
+        <input type="number" min="0" step="0.01" name="price" value={formData.price} onChange={handleChange} required /><br />
+        <label>Status:</label>
+        <select name="status" value={formData.status} onChange={handleChange} required>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select><br />
+        <input type="submit" value="Add Product" />
+        {error && <p className="error">{error}</p>}
+      </form>
+    </div>
+  );
+};
+
+export default ProductsAdd;
