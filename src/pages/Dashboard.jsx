@@ -2,6 +2,19 @@ import { useEffect, useState } from 'react';
 import api from '../utils/api';
 import './css/dashboard.css';
 
+const RECENT_ORDERS_LIMIT = 5;
+
+const formatOrderDate = (value) => {
+  if (!value) return 'N/A';
+
+  const parsedDate = new Date(value);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'N/A';
+  }
+
+  return parsedDate.toLocaleString();
+};
+
 const Dashboard = () => {
   const [user, setUser] = useState({});
   const [stats, setStats] = useState({
@@ -12,34 +25,48 @@ const Dashboard = () => {
     totalPurchases: 0,
     totalOrders: 0
   });
-  const [usersList, setUsersList] = useState([]);
+  const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [meRes, productsRes, custRes, purchRes, ordersRes, sysUsersRes] = await Promise.all([
+        const [meRes, productsRes, custRes, purchRes, ordersRes] = await Promise.all([
           api.get('/auth/me'),
           api.get('/products'),
           api.get('/customers'),
           api.get('/purchases'),
-          api.get('/orders'),
-          api.get('/users').catch(() => ({ data: [] }))
+          api.get('/orders')
         ]);
 
         setUser(meRes.data);
         
         const products = productsRes.data;
+        const customers = custRes.data;
+        const orders = ordersRes.data;
+
+        const productNameById = new Map(products.map((product) => [String(product.product_id), product.product_name]));
+        const customerNameById = new Map(customers.map((customer) => [Number(customer.cust_id), customer.name]));
+
         setStats({
           totalProducts: products.length,
           lowStockProducts: products.filter(p => p.quantity <= 10).length,
           outOfStockProducts: products.filter(p => p.quantity === 0).length,
-          totalCustomers: custRes.data.length,
+          totalCustomers: customers.length,
           totalPurchases: purchRes.data.length,
-          totalOrders: ordersRes.data.length
+          totalOrders: orders.length
         });
-        
-        setUsersList(sysUsersRes.data);
+
+        const latestOrders = [...orders]
+          .sort((left, right) => new Date(right.order_date) - new Date(left.order_date))
+          .slice(0, RECENT_ORDERS_LIMIT)
+          .map((order) => ({
+            ...order,
+            product_name: productNameById.get(String(order.product_id)) || `Product #${order.product_id}`,
+            customer_name: customerNameById.get(Number(order.customer_id)) || `Customer #${order.customer_id}`,
+          }));
+
+        setRecentOrders(latestOrders);
       } catch (error) {
         console.error("Dashboard fetch error", error);
       } finally {
@@ -95,30 +122,30 @@ const Dashboard = () => {
         
         <hr />
         
-        <h3>User List</h3>
+        <h3>Recent Orders</h3>
         <table>
           <thead>
             <tr>
-              <th>User ID</th>
-              <th>Email</th>
-              <th>Username</th>
-              <th>Account Type</th>
-              <th>Status</th>
+              <th>Order ID</th>
+              <th>Product</th>
+              <th>Customer</th>
+              <th>Quantity</th>
+              <th>Order Date</th>
             </tr>
           </thead>
           <tbody>
-            {usersList.length > 0 ? (
-              usersList.map(u => (
-                <tr key={u.user_id} className={u.status.toLowerCase() === 'inactive' ? 'inactive-row' : ''}>
-                  <td>{u.user_id}</td>
-                  <td>{u.email}</td>
-                  <td>{u.username}</td>
-                  <td>{u.acc_type}</td>
-                  <td>{u.status}</td>
+            {recentOrders.length > 0 ? (
+              recentOrders.map((order) => (
+                <tr key={order.order_id}>
+                  <td>{order.order_id}</td>
+                  <td>{order.product_name}</td>
+                  <td>{order.customer_name}</td>
+                  <td>{order.quantity}</td>
+                  <td>{formatOrderDate(order.order_date)}</td>
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="5">No users found.</td></tr>
+              <tr><td colSpan="5">No recent orders found.</td></tr>
             )}
           </tbody>
         </table>

@@ -1,0 +1,75 @@
+.session-warning-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(15, 23, 42, 0.45);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	z-index: 1000;
+}
+
+.session-warning-modal {
+	width: min(100%, 420px);
+	background: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
+	padding: 24px;
+}
+
+.session-warning-modal h2 {
+	margin: 0 0 12px;
+	color: #1f2937;
+}
+
+.session-warning-modal p {
+	margin: 0 0 12px;
+	color: #4b5563;
+	line-height: 1.5;
+}
+
+.session-warning-countdown {
+	font-size: 20px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.session-warning-detail {
+	font-size: 14px;
+}
+
+.session-warning-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+.session-warning-actions button {
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
+	padding: 10px 16px;
+}
+
+.session-warning-actions .secondary {
+	background: #e5e7eb;
+	color: #1f2937;
+}
+
+.session-warning-actions .primary {
+	background: #166534;
+	color: #ffffff;
+}
+
+@media (max-width: 600px) {
+	.session-warning-actions {
+		flex-direction: column-reverse;
+	}
+
+	.session-warning-actions button {
+		width: 100%;
+	}
+}

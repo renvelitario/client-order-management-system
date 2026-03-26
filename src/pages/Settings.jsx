@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
+import {
+  DEFAULT_INACTIVITY_MINUTES,
+  MAX_INACTIVITY_MINUTES,
+  MIN_INACTIVITY_MINUTES,
+  setStoredInactivityDurationMinutes,
+  getStoredInactivityDurationMinutes,
+  WARNING_LEAD_MINUTES,
+} from '../utils/inactivity';
 import './css/auth/settings.css';
 
 const Settings = () => {
@@ -12,11 +20,17 @@ const Settings = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [timeoutMinutes, setTimeoutMinutes] = useState(DEFAULT_INACTIVITY_MINUTES);
+  const [timeoutMessage, setTimeoutMessage] = useState('');
 
   useEffect(() => {
+    setTimeoutMinutes(getStoredInactivityDurationMinutes());
+
     const fetchProfile = async () => {
       try {
         const { data } = await api.get('/auth/me');
+        const savedTimeout = setStoredInactivityDurationMinutes(data.inactivity_timeout_minutes, { notify: false });
+        setTimeoutMinutes(savedTimeout);
         setFormData((prev) => ({
           ...prev,
           email: data.email || '',
@@ -38,6 +52,11 @@ const Settings = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleTimeoutChange = (e) => {
+    setTimeoutMinutes(e.target.value);
+    setTimeoutMessage('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -50,6 +69,28 @@ const Settings = () => {
       const message = err.response?.data?.error || 'Failed to update account details.';
       setError(message);
       window.alert(message);
+    }
+  };
+
+  const handleTimeoutSubmit = async (e) => {
+    e.preventDefault();
+    setTimeoutMessage('');
+
+    const nextMinutes = Number(timeoutMinutes);
+    if (!Number.isFinite(nextMinutes)) {
+      setTimeoutMessage('Enter a valid number of minutes.');
+      return;
+    }
+
+    try {
+      const { data } = await api.put('/auth/session-timeout', {
+        inactivity_timeout_minutes: nextMinutes,
+      });
+      const savedMinutes = setStoredInactivityDurationMinutes(data.inactivity_timeout_minutes);
+      setTimeoutMinutes(savedMinutes);
+      setTimeoutMessage(`Inactivity logout is now set to ${savedMinutes} minutes. Warning appears ${WARNING_LEAD_MINUTES} minutes before logout.`);
+    } catch (err) {
+      setTimeoutMessage(err.response?.data?.error || 'Failed to update inactivity timeout.');
     }
   };
 
@@ -98,6 +139,34 @@ const Settings = () => {
           </div>
 
           {error && <p className="error">{error}</p>}
+        </form>
+      </div>
+
+      <div className="edit-account session-settings">
+        <h3>Session Timeout</h3>
+        <form onSubmit={handleTimeoutSubmit}>
+          <div className="form-group">
+            <label>Auto logout after inactivity (minutes):</label>
+            <input
+              type="number"
+              min={MIN_INACTIVITY_MINUTES}
+              max={MAX_INACTIVITY_MINUTES}
+              step="1"
+              value={timeoutMinutes}
+              onChange={handleTimeoutChange}
+              required
+            />
+          </div>
+
+          <p className="settings-help">
+            Choose a value between {MIN_INACTIVITY_MINUTES} and {MAX_INACTIVITY_MINUTES} minutes. The warning modal appears {WARNING_LEAD_MINUTES} minutes before logout.
+          </p>
+
+          <div className="form-group">
+            <input type="submit" value="Update Timeout" />
+          </div>
+
+          {timeoutMessage && <p className="settings-message">{timeoutMessage}</p>}
         </form>
       </div>
     </div>

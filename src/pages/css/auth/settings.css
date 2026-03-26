@@ -27,6 +27,7 @@
 
 .form-group input[type="text"],
 .form-group input[type="email"],
+.form-group input[type="number"],
 .form-group input[type="password"],
 .form-group select {
     padding: 10px;
@@ -56,4 +57,22 @@
 
 .form-group input[type="submit"]:hover {
     background-color: #45a049;
+}
+
+.session-settings {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.settings-help {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 10px 0 15px;
+}
+
+.settings-message {
+    color: #2f6f3e;
+    font-size: 14px;
+    margin-top: 10px;
 }
