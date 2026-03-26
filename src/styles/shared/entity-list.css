@@ -1,35 +1,72 @@
-.search-container {
-    margin-bottom: 10px;
+/* WRAPPER FOR TITLE + CONTROLS */
+.header-row {
     display: flex;
-    justify-content: flex-end;
-    gap: 6px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
-.search-container input[type="text"] {
-    padding: 6px 8px;
+/* SEARCH + CREATE BUTTONS */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* SEARCH INPUT WITH ICON */
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #fff;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: 6px;
+    padding: 6px 10px;
+    width: 260px;
 }
 
-.search-container .search-button {
-    padding: 8px 16px;
+.search-input-wrapper .material-icons {
+    font-size: 18px;
+    color: #888;
+    margin-right: 6px;
+}
+
+.search-input-wrapper input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+/* CREATE BUTTON */
+.create-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
     background-color: #4caf50;
     color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
     font-size: 14px;
+    font-weight: 500;
     transition: background-color 0.3s ease;
-    text-transform: uppercase;
 }
 
-.search-container .search-button:hover {
+.create-button:hover {
     background-color: #45a049;
 }
 
+.create-button .material-icons {
+    font-size: 18px;
+}
+
+/* TABLE STYLING */
 table {
     width: 100%;
     border-collapse: collapse;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 th,
@@ -40,30 +77,31 @@ td {
 
 th {
     background-color: #f5f5f5;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 14px;
 }
 
+/* ROW HOVER EFFECT */
 tbody tr:hover {
     background-color: #fff5cd;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease;
 }
 
+/* INACTIVE ROW */
 .inactive-row td {
     color: #aaa;
     background-color: #fafafa;
 }
 
+/* EDIT BUTTON */
 .edit-button {
-    padding: 8px 16px;
+    padding: 6px 12px;
     background-color: #4caf50;
     color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-    text-transform: uppercase;
+    border-radius: 5px;
     text-decoration: none;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
 }
 
 .edit-button:hover {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import api from '../utils/api';
+import api from '../../utils/api';
+import { Link } from 'react-router-dom';
 import '../styles/shared/entity-list.css';
 
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);
   const [searchInput, setSearchInput] = useState('');
-  const [appliedSearch, setAppliedSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const PurchasesList = () => {
   };
 
   const matchesSearch = (purchase) => {
-    const term = appliedSearch.trim().toLowerCase();
+    const term = searchInput.trim().toLowerCase();
     if (!term) return true;
 
     return [
@@ -39,18 +39,25 @@ const PurchasesList = () => {
 
   return (
     <div className="container">
-      <h2>Purchases</h2>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button type="button" className="search-button" onClick={() => setAppliedSearch(searchInput)}>
-          Search
-        </button>
+      <div className="header-row">
+        <h2>Purchases</h2>
+        <div className="search-container">
+          <div className="search-input-wrapper">
+            <span className="material-icons">search</span>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          <Link to="/purchases_add" className="create-button">
+            <span className="material-icons">add</span>
+            Create
+          </Link>
+        </div>
       </div>
+
       <table id="purchases-table">
         <thead>
           <tr>

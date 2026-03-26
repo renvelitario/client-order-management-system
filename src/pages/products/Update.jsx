@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../utils/api';
+import api from '../../utils/api';
 import '../styles/shared/entity-form.css';
 
 const ProductsUpdate = () => {

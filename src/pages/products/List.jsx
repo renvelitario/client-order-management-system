@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import api from '../utils/api';
-import { Link } from 'react-router-dom';
-import '../styles/shared/entity-list.css';
+import { useEffect, useState } from "react";
+import api from "../../utils/api";
+import { Link } from "react-router-dom";
+import "../styles/shared/entity-list.css";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [appliedSearch, setAppliedSearch] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ const ProductsList = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await api.get('/products');
+      const { data } = await api.get("/products");
       setProducts(data);
     } catch (error) {
       console.error(error);
@@ -25,7 +24,7 @@ const ProductsList = () => {
   };
 
   const matchesSearch = (product) => {
-    const term = appliedSearch.trim().toLowerCase();
+    const term = searchInput.trim().toLowerCase();
     if (!term) return true;
 
     return [
@@ -33,7 +32,7 @@ const ProductsList = () => {
       product.product_name,
       String(product.quantity),
       String(product.price),
-      product.status
+      product.status,
     ].some((value) => String(value).toLowerCase().includes(term));
   };
 
@@ -41,18 +40,25 @@ const ProductsList = () => {
 
   return (
     <div className="container">
-      <h2>Products</h2>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button type="button" className="search-button" onClick={() => setAppliedSearch(searchInput)}>
-          Search
-        </button>
+      <div className="header-row">
+        <h2>Products</h2>
+        <div className="search-container">
+          <div className="search-input-wrapper">
+            <span className="material-icons">search</span>
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          <Link to="/products_add" className="create-button">
+            <span className="material-icons">add</span>
+            Create
+          </Link>
+        </div>
       </div>
+
       <table id="products-table">
         <thead>
           <tr>
@@ -66,11 +72,11 @@ const ProductsList = () => {
         </thead>
         <tbody>
           {products.length > 0 ? (
-            products.map(p => (
+            products.map((p) => (
               <tr
                 key={p.product_id}
-                className={p.status === 'inactive' ? 'inactive-row' : ''}
-                style={{ display: matchesSearch(p) ? '' : 'none' }}
+                className={p.status === "inactive" ? "inactive-row" : ""}
+                style={{ display: matchesSearch(p) ? "" : "none" }}
               >
                 <td>{p.product_id}</td>
                 <td>{p.product_name}</td>
@@ -78,12 +84,19 @@ const ProductsList = () => {
                 <td>{Number(p.price).toFixed(2)}</td>
                 <td>{p.status}</td>
                 <td>
-                  <Link to={`/products_update?product_id=${p.product_id}`} className="edit-button">Edit</Link>
+                  <Link
+                    to={`/products_update?product_id=${p.product_id}`}
+                    className="edit-button"
+                  >
+                    Edit
+                  </Link>
                 </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan="6">No products found.</td></tr>
+            <tr>
+              <td colSpan="6">No products found.</td>
+            </tr>
           )}
         </tbody>
       </table>
