@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
-import "../styles/shared/entity-list.css";
+import "../../styles/shared/entity-list.css";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -52,7 +52,7 @@ const ProductsList = () => {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          <Link to="/products_add" className="create-button">
+          <Link to="/products/new" className="create-button">
             <span className="material-icons">add</span>
             Create
           </Link>
@@ -85,7 +85,7 @@ const ProductsList = () => {
                 <td>{p.status}</td>
                 <td>
                   <Link
-                    to={`/products_update?product_id=${p.product_id}`}
+                    to={`/products/edit?product_id=${p.product_id}`}
                     className="edit-button"
                   >
                     Edit

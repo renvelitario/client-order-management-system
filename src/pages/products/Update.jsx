@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
-import '../styles/shared/entity-form.css';
+import '../../styles/shared/entity-form.css';
 
 const ProductsUpdate = () => {
   const [searchParams] = useSearchParams();
@@ -53,7 +53,7 @@ const ProductsUpdate = () => {
 
     try {
       await api.put(`/products/${productId}`, formData);
-      navigate('/products_list');
+      navigate('/products');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to update product.');
     }

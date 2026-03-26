@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import api from '../utils/api';
-import '../styles/pages/auth/register.css';
+import api from '../../utils/api';
+import '../../styles/pages/auth/register.css';
 
-const Register = () => {
+const CreateUserAccount = () => {
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -92,12 +92,12 @@ const Register = () => {
         <div className="form-group">
           <input type="submit" value="Register" />
         </div>
-        
-        {error && <p className="error" style={{color: 'red'}}>{error}</p>}
-        {success && <p className="success" style={{color: 'green'}}>{success}</p>}
+
+        {error && <p className="error" style={{ color: 'red' }}>{error}</p>}
+        {success && <p className="success" style={{ color: 'green' }}>{success}</p>}
       </form>
     </div>
   );
 };
 
-export default Register;
+export default CreateUserAccount;

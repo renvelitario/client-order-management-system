@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import '../styles/shared/entity-form.css';
+import '../../styles/shared/entity-form.css';
 
 const PurchasesAdd = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ const PurchasesAdd = () => {
 
     try {
       await api.post('/purchases', formData);
-      navigate('/purchases_list');
+      navigate('/purchases');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to record purchase');
     }

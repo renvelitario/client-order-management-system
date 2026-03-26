@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import '../styles/shared/entity-form.css';
+import '../../styles/shared/entity-form.css';
 
 const ProductsAdd = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,7 @@ const ProductsAdd = () => {
     e.preventDefault();
     try {
       await api.post('/products', formData);
-      navigate('/products_list');
+      navigate('/products');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add product');
     }

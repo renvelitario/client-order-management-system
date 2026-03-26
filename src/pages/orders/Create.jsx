@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import '../styles/shared/entity-form.css';
+import '../../styles/shared/entity-form.css';
 
 const OrdersAdd = () => {
   const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ const OrdersAdd = () => {
 
     try {
       await api.post('/orders', formData);
-      navigate('/orders_list');
+      navigate('/orders');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add order');
     }

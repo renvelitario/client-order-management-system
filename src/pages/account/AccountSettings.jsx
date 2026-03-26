@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../utils/api';
+import api from '../../utils/api';
 import {
   DEFAULT_INACTIVITY_MINUTES,
   MAX_INACTIVITY_MINUTES,
@@ -7,10 +7,10 @@ import {
   setStoredInactivityDurationMinutes,
   getStoredInactivityDurationMinutes,
   WARNING_LEAD_MINUTES,
-} from '../utils/inactivity';
-import '../styles/pages/auth/settings.css';
+} from '../../utils/inactivity';
+import '../../styles/pages/auth/settings.css';
 
-const Settings = () => {
+const AccountSettings = () => {
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -173,4 +173,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default AccountSettings;

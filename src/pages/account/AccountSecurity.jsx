@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import api from '../utils/api';
-import '../styles/pages/auth/change-password.css';
+import api from '../../utils/api';
+import '../../styles/pages/auth/change-password.css';
 
-const ChangePassword = () => {
+const AccountSecurity = () => {
   const [formData, setFormData] = useState({
     current_password: '',
     new_password: '',
@@ -86,4 +86,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default AccountSecurity;

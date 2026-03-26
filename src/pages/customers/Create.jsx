@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import '../styles/shared/entity-form.css';
+import '../../styles/shared/entity-form.css';
 
 const CustomersAdd = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ const CustomersAdd = () => {
     e.preventDefault();
     try {
       await api.post('/customers', formData);
-      navigate('/cust_list');
+      navigate('/customers');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add customer');
     }

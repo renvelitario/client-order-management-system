@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
-import '../styles/shared/entity-list.css';
+import '../../styles/shared/entity-list.css';
 
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);
@@ -51,7 +51,7 @@ const PurchasesList = () => {
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          <Link to="/purchases_add" className="create-button">
+          <Link to="/purchases/new" className="create-button">
             <span className="material-icons">add</span>
             Create
           </Link>

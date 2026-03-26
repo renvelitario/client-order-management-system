@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
-import '../styles/shared/entity-form.css';
+import '../../styles/shared/entity-form.css';
 
 const CustomersUpdate = () => {
   const [searchParams] = useSearchParams();
@@ -51,7 +51,7 @@ const CustomersUpdate = () => {
 
     try {
       await api.put(`/customers/${customerId}`, formData);
-      navigate('/cust_list');
+      navigate('/customers');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to update customer.');
     }
