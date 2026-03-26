@@ -76,7 +76,7 @@ td {
 }
 
 th {
-    background-color: #f5f5f5;
+    background-color: #f3fff5;
     font-weight: 600;
     font-size: 14px;
 }
@@ -93,8 +93,11 @@ tbody tr:hover {
     background-color: #fafafa;
 }
 
-/* EDIT BUTTON */
+/* EDIT BUTTON WITH ICON */
 .edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     padding: 6px 12px;
     background-color: #4caf50;
     color: #fff;
@@ -106,4 +109,78 @@ tbody tr:hover {
 
 .edit-button:hover {
     background-color: #45a049;
+}
+
+.edit-button .material-icons {
+    font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .create-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    table,
+    th,
+    td {
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-row {
+        gap: 8px;
+    }
+
+    .search-input-wrapper input {
+        font-size: 13px;
+    }
+
+    .create-button {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    /* EDIT BUTTON ICON ONLY ON MOBILE */
+    .edit-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+
+    .edit-button .edit-text {
+        display: none;
+    }
+
+    .edit-button .material-icons {
+        font-size: 18px;
+    }
 }

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import api from '../../utils/api';
-import { Link } from 'react-router-dom';
-import '../../styles/shared/entity-list.css';
+import { useEffect, useState } from "react";
+import api from "../../utils/api";
+import { Link } from "react-router-dom";
+import "../../styles/shared/entity-list.css";
 
 const CustomersList = () => {
   const [customers, setCustomers] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const CustomersList = () => {
 
   const fetchCustomers = async () => {
     try {
-      const { data } = await api.get('/customers');
+      const { data } = await api.get("/customers");
       setCustomers(data);
     } catch (error) {
       console.error(error);
@@ -31,7 +31,7 @@ const CustomersList = () => {
       String(customer.cust_id),
       customer.name,
       customer.address,
-      customer.contact_no
+      customer.contact_no,
     ].some((value) => String(value).toLowerCase().includes(term));
   };
 
@@ -70,21 +70,30 @@ const CustomersList = () => {
         </thead>
         <tbody>
           {customers.length > 0 ? (
-            customers.map(c => (
-              <tr key={c.cust_id} style={{ display: matchesSearch(c) ? '' : 'none' }}>
+            customers.map((c) => (
+              <tr
+                key={c.cust_id}
+                style={{ display: matchesSearch(c) ? "" : "none" }}
+              >
                 <td>{c.cust_id}</td>
                 <td>{c.name}</td>
                 <td>{c.address}</td>
                 <td>{c.contact_no}</td>
                 <td>
-                  <Link to={`/customers/edit?cust_id=${c.cust_id}`} className="edit-button">
-                    Edit
+                  <Link
+                    to={`/customers/edit?cust_id=${c.cust_id}`}
+                    className="edit-button"
+                  >
+                    <span className="material-icons">edit</span>
+                    <span className="edit-text">Edit</span>
                   </Link>
                 </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan="5">No customers found.</td></tr>
+            <tr>
+              <td colSpan="5">No customers found.</td>
+            </tr>
           )}
         </tbody>
       </table>

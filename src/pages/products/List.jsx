@@ -88,7 +88,8 @@ const ProductsList = () => {
                     to={`/products/edit?product_id=${p.product_id}`}
                     className="edit-button"
                   >
-                    Edit
+                    <span className="material-icons">edit</span>
+                    <span className="edit-text">Edit</span>
                   </Link>
                 </td>
               </tr>
