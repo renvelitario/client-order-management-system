@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
-import './css/dashboard.css';
+import '../styles/pages/dashboard.css';
 
 const RECENT_ORDERS_LIMIT = 5;
 

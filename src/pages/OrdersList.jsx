@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
-import './css/orders/orders_list.css';
+import '../styles/shared/entity-list.css';
 
 const OrdersList = () => {
   const [orders, setOrders] = useState([]);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import api from '../utils/api';
 import { useNavigate } from 'react-router-dom';
-import './css/products/products_add.css';
+import '../styles/shared/entity-form.css';
 
 const ProductsAdd = () => {
   const [formData, setFormData] = useState({

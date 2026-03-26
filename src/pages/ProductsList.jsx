@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 import { Link } from 'react-router-dom';
-import './css/products/products_list.css';
+import '../styles/shared/entity-list.css';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);

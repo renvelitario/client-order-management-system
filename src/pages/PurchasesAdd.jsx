@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { useNavigate } from 'react-router-dom';
-import './css/purchases/purchases.css';
+import '../styles/shared/entity-form.css';
 
 const PurchasesAdd = () => {
   const [formData, setFormData] = useState({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
-import './css/purchases/purchases_list.css';
+import '../styles/shared/entity-list.css';
 
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
-import './css/form.css';
+import '../styles/pages/login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');

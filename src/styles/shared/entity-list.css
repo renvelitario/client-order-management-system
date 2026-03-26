@@ -2,18 +2,18 @@
     margin-bottom: 10px;
     display: flex;
     justify-content: flex-end;
+    gap: 6px;
 }
 
 .search-container input[type="text"] {
-    padding: 5px;
+    padding: 6px 8px;
     border: 1px solid #ddd;
     border-radius: 3px;
-    margin-right: 5px;
 }
 
 .search-container .search-button {
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: #fff;
     border: none;
     border-radius: 3px;
@@ -34,7 +34,7 @@ table {
 
 th,
 td {
-    padding: 8px;
+    padding: 12px;
     text-align: left;
 }
 
@@ -43,28 +43,19 @@ th {
     font-weight: bold;
 }
 
-tr:hover {
+tbody tr:hover {
     background-color: #fff5cd;
     transition: background-color 0.3s ease;
 }
 
 .inactive-row td {
-    color: #8a8a8a;
-    background-color: #f3f3f3;
-}
-
-.inactive-row:hover td {
-    background-color: #ececec;
-}
-
-a {
-    color: #4CAF50;
-    text-decoration: none;
+    color: #aaa;
+    background-color: #fafafa;
 }
 
 .edit-button {
     padding: 8px 16px;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: #fff;
     border: none;
     border-radius: 3px;
@@ -72,6 +63,7 @@ a {
     font-size: 14px;
     transition: background-color 0.3s ease;
     text-transform: uppercase;
+    text-decoration: none;
 }
 
 .edit-button:hover {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
-import './css/customers/cust_update.css';
+import '../styles/shared/entity-form.css';
 
 const CustomersUpdate = () => {
   const [searchParams] = useSearchParams();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
 import { Link } from 'react-router-dom';
-import './css/customers/cust_list.css';
+import '../styles/shared/entity-list.css';
 
 const CustomersList = () => {
   const [customers, setCustomers] = useState([]);

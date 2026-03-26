@@ -18,7 +18,7 @@ import ProductsUpdate from './pages/ProductsUpdate';
 import CustomersUpdate from './pages/CustomersUpdate';
 import Settings from './pages/Settings';
 import ChangePassword from './pages/ChangePassword';
-import './App.css';
+import './styles/base/app.css';
 import {
   getInactivityLimitMs,
   getStoredInactivityDurationMinutes,

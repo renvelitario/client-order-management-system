@@ -8,7 +8,7 @@ import {
   getStoredInactivityDurationMinutes,
   WARNING_LEAD_MINUTES,
 } from '../utils/inactivity';
-import './css/auth/settings.css';
+import '../styles/pages/auth/settings.css';
 
 const Settings = () => {
   const [formData, setFormData] = useState({

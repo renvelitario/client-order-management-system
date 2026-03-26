@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import api from '../utils/api';
-import './css/auth/change_pass.css';
+import '../styles/pages/auth/change-password.css';
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
