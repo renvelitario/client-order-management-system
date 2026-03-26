@@ -89,6 +89,18 @@
     cursor: not-allowed;
 }
 
+.login-page .demo-note {
+    margin-top: 12px;
+    margin-bottom: 0;
+    font-size: 13px;
+    color: #444;
+    text-align: center;
+}
+
+.login-page .demo-note strong {
+    color: #1f1f1f;
+}
+
 /* ERROR */
 .login-page .error {
     color: red;

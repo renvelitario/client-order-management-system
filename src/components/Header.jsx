@@ -20,7 +20,7 @@ const Header = () => {
           <div className="navbar-header">
             <Link to="/dashboard" className="navbar-brand">
               <img src="/logo.png" className="logo-image" alt="Logo" />
-              <span className="logo-text">Order Management System</span>
+              <span className="logo-text">FEU Alabang Order Management System</span>
             </Link>
           </div>
         </div>

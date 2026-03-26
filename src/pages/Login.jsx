@@ -91,6 +91,10 @@ const Login = () => {
           disabled={loading}
         />
 
+        <p className="demo-note">
+          Demo account: <strong>admin@admin.com</strong> / <strong>admin</strong>
+        </p>
+
         {/* ERROR */}
         {error && <p className="error">{error}</p>}
       </form>
