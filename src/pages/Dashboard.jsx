@@ -191,7 +191,7 @@ const Dashboard = () => {
     setLineData(buildOrderTrend(filteredOrders));
     setTopProducts(buildTopProducts(filteredOrders, productNameById));
 
-    const latestOrders = [...filteredOrders]
+    const latestOrders = [...rawOrders]
       .sort((left, right) => new Date(right.order_date) - new Date(left.order_date))
       .slice(0, RECENT_ORDERS_LIMIT)
       .map((order) => {
@@ -382,7 +382,7 @@ const Dashboard = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6">No recent orders found for this range.</td>
+                  <td colSpan="6">No recent orders found.</td>
                 </tr>
               )}
             </tbody>
