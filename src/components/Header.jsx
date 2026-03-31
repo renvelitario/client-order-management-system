@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import api from '../utils/api';
 import '../styles/components/header.css';
@@ -105,13 +105,7 @@ const Header = () => {
   const [accountName, setAccountName] = useState('Account');
   const [accountEmail, setAccountEmail] = useState('');
   const accountMenuRef = useRef(null);
-  const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setIsSidebarOpen(false);
-    setIsAccountMenuOpen(false);
-  }, [location.pathname]);
 
   useEffect(() => {
     if (!isAccountMenuOpen) return undefined;
@@ -192,7 +186,7 @@ const Header = () => {
         <Link to="/dashboard" className="mobile-shell-brand">
           <img src="/logo.png" className="logo-image" alt="Logo" />
           <div>
-            <strong>Order Management</strong>
+            <strong>Order Management System</strong>
             <span>Operations workspace</span>
           </div>
         </Link>
@@ -263,16 +257,16 @@ const Header = () => {
       <aside className={`dashboard-sidebar${isSidebarOpen ? ' is-open' : ''}`}>
         <nav className="sidebar-nav" aria-label="Primary navigation">
           <div className="sidebar-section">
-            <p className="sidebar-section-title">Main</p>
             {mainLinks.map(({ to, label, icon, end }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
                 className={({ isActive }) => `sidebar-link${isActive ? ' is-active' : ''}`}
+                onClick={() => setIsSidebarOpen(false)}
               >
                 <span className="sidebar-link-icon"><Icon name={icon} /></span>
-                <span>{label}</span>
+                <span className="sidebar-link-label">{label}</span>
               </NavLink>
             ))}
           </div>

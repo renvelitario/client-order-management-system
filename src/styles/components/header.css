@@ -6,18 +6,11 @@
 }
 
 .sidebar-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.42);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  z-index: 1090;
+  display: none;
 }
 
 .sidebar-backdrop.is-open {
-  opacity: 1;
-  pointer-events: auto;
+  display: none;
 }
 
 .mobile-shell-bar {
@@ -237,15 +230,13 @@
 .dashboard-sidebar {
   position: fixed;
   left: 0;
-  top: 0;
-  transform: translateX(-100%);
-  transition: transform 0.25s ease;
-  width: min(320px, 88vw);
-  height: 100dvh;
+  top: 74px;
+  width: 84px;
+  height: calc(100dvh - 74px);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 16px;
+  gap: 12px;
+  padding: 14px 10px;
   box-sizing: border-box;
   color: #f8fff7;
   background:
@@ -255,52 +246,48 @@
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 18px 0 40px rgba(15, 23, 42, 0.18);
   z-index: 1110;
+  overflow: hidden;
+  will-change: width;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.dashboard-sidebar.is-open {
-  transform: translateX(0);
+.dashboard-sidebar:hover {
+  width: 248px;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   overflow-y: auto;
 }
 
 .sidebar-section {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-}
-
-.sidebar-section-title {
-  margin: 0 0 2px;
-  padding: 0 10px;
-  color: rgba(218, 244, 221, 0.66);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  gap: 6px;
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 14px;
+  gap: 9px;
+  padding: 9px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
   color: rgba(248, 255, 247, 0.86);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+  justify-content: flex-start;
 }
 
 .sidebar-link:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.1);
-  transform: translateX(2px);
 }
 
 .sidebar-link.is-active {
@@ -309,19 +296,109 @@
   box-shadow: 0 12px 24px rgba(5, 24, 13, 0.18);
 }
 
+.sidebar-link-label {
+  display: inline-block;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  transition: opacity 0.2s ease, max-width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dashboard-sidebar:hover .sidebar-link-label {
+  opacity: 1;
+  max-width: 170px;
+}
+
 .sidebar-link-icon {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  border-radius: 11px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  flex: 0 0 30px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.08);
 }
 
+.sidebar-link-icon svg {
+  width: 20px;
+  height: 20px;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 .sidebar-link.is-active .sidebar-link-icon {
   background: rgba(12, 61, 32, 0.08);
+}
+
+@media (min-width: 981px) {
+  .sidebar-toggle {
+    display: none;
+  }
+
+  .dashboard-sidebar:not(:hover) .sidebar-link {
+    width: 48px;
+    height: 48px;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 9px;
+  }
+
+  .dashboard-sidebar:not(:hover) .sidebar-link-icon {
+    margin: 0;
+  }
+
+  .dashboard-sidebar:not(:hover) .sidebar-link-label {
+    opacity: 0;
+    max-width: 0;
+  }
+}
+
+@media (max-width: 980px) {
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    display: block;
+    background: rgba(15, 23, 42, 0.42);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1090;
+  }
+
+  .sidebar-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .dashboard-sidebar {
+    top: 74px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    width: min(308px, 90vw);
+    height: calc(100dvh - 74px);
+    padding: 12px;
+    overflow: visible;
+  }
+
+  .dashboard-sidebar:hover {
+    width: min(308px, 90vw);
+  }
+
+  .dashboard-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-link-label {
+    opacity: 1;
+    max-width: none;
+    overflow: visible;
+  }
+
+  .sidebar-link {
+    padding: 9px 11px;
+  }
 }
 
 @media (max-width: 640px) {
