@@ -3,11 +3,14 @@ import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
+import Pagination from '../../components/Pagination';
 
 const CustomersList = () => {
   const [customers, setCustomers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const {
     deleteDialog,
     notification,
@@ -43,16 +46,31 @@ const CustomersList = () => {
     );
   };
 
-  const matchesSearch = (customer) => {
+  const filteredCustomers = customers.filter((customer) => {
     const term = searchInput.trim().toLowerCase();
     if (!term) return true;
-
     return [
       String(customer.customer_id),
       customer.name,
       customer.address,
       customer.contact_no,
     ].some((value) => String(value).toLowerCase().includes(term));
+  });
+
+  const totalPages = Math.ceil(filteredCustomers.length / pageSize);
+  const pageCustomers = filteredCustomers.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   if (loading) return <div className="container">Loading...</div>;
@@ -81,7 +99,7 @@ const CustomersList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
           <Link to="/customers/new" className="create-button">
@@ -106,12 +124,9 @@ const CustomersList = () => {
           </tr>
         </thead>
         <tbody>
-          {customers.length > 0 ? (
-            customers.map((c) => (
-              <tr
-                key={c.customer_id}
-                style={{ display: matchesSearch(c) ? "" : "none" }}
-              >
+          {pageCustomers.length > 0 ? (
+            pageCustomers.map((c) => (
+              <tr key={c.customer_id}>
                 <td>{c.customer_id}</td>
                 <td>{c.name}</td>
                 <td>{c.address}</td>
@@ -141,6 +156,14 @@ const CustomersList = () => {
           )}
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        onPageSizeChange={handlePageSizeChange}
+        totalRows={filteredCustomers.length}
+      />
     </div>
   );
 };

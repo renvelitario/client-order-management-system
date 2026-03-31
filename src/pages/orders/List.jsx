@@ -5,11 +5,14 @@ import '../../styles/shared/entity-list.css';
 import { formatPeso } from '../../utils/currency';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import { formatDateTime } from '../../utils/date';
+import Pagination from '../../components/Pagination';
 
 const OrdersList = () => {
   const [orders, setOrders] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const {
     deleteDialog,
     notification,
@@ -33,16 +36,31 @@ const OrdersList = () => {
     }
   };
 
-  const matchesSearch = (order) => {
+  const filteredOrders = orders.filter((order) => {
     const term = searchInput.trim().toLowerCase();
     if (!term) return true;
-
     return [
       String(order.order_id),
       String(order.customer_id),
       String(order.total_amount),
-      String(order.order_date)
+      String(order.order_date),
     ].some((value) => String(value).toLowerCase().includes(term));
+  });
+
+  const totalPages = Math.ceil(filteredOrders.length / pageSize);
+  const pageOrders = filteredOrders.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   const handleDeleteConfirm = async () => {
@@ -79,7 +97,7 @@ const OrdersList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
           <Link to="/orders/new" className="create-button">
@@ -105,9 +123,9 @@ const OrdersList = () => {
           </tr>
         </thead>
         <tbody>
-          {orders.length > 0 ? (
-            orders.map(o => (
-              <tr key={o.order_id} style={{ display: matchesSearch(o) ? '' : 'none' }}>
+          {pageOrders.length > 0 ? (
+            pageOrders.map(o => (
+              <tr key={o.order_id}>
                 <td>{o.order_id}</td>
                 <td>{o.customer_id}</td>
                 <td>
@@ -144,6 +162,14 @@ const OrdersList = () => {
           )}
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        onPageSizeChange={handlePageSizeChange}
+        totalRows={filteredOrders.length}
+      />
     </div>
   );
 };

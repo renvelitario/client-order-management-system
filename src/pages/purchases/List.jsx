@@ -4,11 +4,14 @@ import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import { formatDateTime } from '../../utils/date';
+import Pagination from '../../components/Pagination';
 
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const {
     deleteDialog,
     notification,
@@ -39,16 +42,31 @@ const PurchasesList = () => {
     );
   };
 
-  const matchesSearch = (purchase) => {
+  const filteredPurchases = purchases.filter((purchase) => {
     const term = searchInput.trim().toLowerCase();
     if (!term) return true;
-
     return [
       String(purchase.purchase_id),
       String(purchase.product_id),
       String(purchase.quantity),
-      String(purchase.purchase_date)
+      String(purchase.purchase_date),
     ].some((value) => String(value).toLowerCase().includes(term));
+  });
+
+  const totalPages = Math.ceil(filteredPurchases.length / pageSize);
+  const pagePurchases = filteredPurchases.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   if (loading) return <div className="container">Loading...</div>;
@@ -77,7 +95,7 @@ const PurchasesList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
           <Link to="/purchases/new" className="create-button">
@@ -102,9 +120,9 @@ const PurchasesList = () => {
           </tr>
         </thead>
         <tbody>
-          {purchases.length > 0 ? (
-            purchases.map(p => (
-              <tr key={p.purchase_id} style={{ display: matchesSearch(p) ? '' : 'none' }}>
+          {pagePurchases.length > 0 ? (
+            pagePurchases.map(p => (
+              <tr key={p.purchase_id}>
                 <td>{p.purchase_id}</td>
                 <td>{p.product_id}</td>
                 <td>{p.quantity}</td>
@@ -125,6 +143,14 @@ const PurchasesList = () => {
           )}
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        onPageSizeChange={handlePageSizeChange}
+        totalRows={filteredPurchases.length}
+      />
     </div>
   );
 };

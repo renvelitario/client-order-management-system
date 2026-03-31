@@ -362,3 +362,120 @@ tbody tr:hover {
         font-size: 18px;
     }
 }
+
+/* PAGINATION FOOTER */
+.pagination-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ROWS PER PAGE SELECTOR */
+.rows-per-page {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: #64748b;
+}
+
+.rows-per-page select {
+    height: 34px;
+    padding: 0 28px 0 10px;
+    border: 1px solid #dde3ec;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: #334155;
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+.rows-per-page select:focus {
+    border-color: #4caf50;
+}
+
+/* PAGINATION CONTROLS */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-btn {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 6px;
+    border: 1px solid #dde3ec;
+    background: #fff;
+    color: #334155;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.pagination-btn:disabled {
+    color: #b0bec5;
+    border-color: #e8edf2;
+    background: #f8fafc;
+    cursor: not-allowed;
+}
+
+.pagination-btn .material-icons {
+    font-size: 18px;
+    display: block;
+    line-height: 1;
+}
+
+.pagination-input {
+    width: 48px;
+    height: 34px;
+    padding: 0 6px;
+    border: 1px solid #dde3ec;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: #334155;
+    text-align: center;
+    outline: none;
+    box-sizing: border-box;
+    -moz-appearance: textfield;
+}
+
+.pagination-input::-webkit-outer-spin-button,
+.pagination-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pagination-input:focus {
+    border-color: #4caf50;
+}
+
+.pagination-of {
+    font-size: 13px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: #64748b;
+    white-space: nowrap;
+    padding: 0 2px;
+}

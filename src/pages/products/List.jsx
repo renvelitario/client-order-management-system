@@ -4,11 +4,14 @@ import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
 import { formatPeso } from "../../utils/currency";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
+import Pagination from '../../components/Pagination';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const {
     deleteDialog,
     notification,
@@ -44,10 +47,9 @@ const ProductsList = () => {
     );
   };
 
-  const matchesSearch = (product) => {
+  const filteredProducts = products.filter((product) => {
     const term = searchInput.trim().toLowerCase();
     if (!term) return true;
-
     return [
       String(product.product_id),
       product.product_name,
@@ -55,6 +57,22 @@ const ProductsList = () => {
       String(product.price),
       product.status,
     ].some((value) => String(value).toLowerCase().includes(term));
+  });
+
+  const totalPages = Math.ceil(filteredProducts.length / pageSize);
+  const pageProducts = filteredProducts.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newSize) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   if (loading) return <div className="container">Loading...</div>;
@@ -83,7 +101,7 @@ const ProductsList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
           <Link to="/products/new" className="create-button">
@@ -109,12 +127,11 @@ const ProductsList = () => {
           </tr>
         </thead>
         <tbody>
-          {products.length > 0 ? (
-            products.map((p) => (
+          {pageProducts.length > 0 ? (
+            pageProducts.map((p) => (
               <tr
                 key={p.product_id}
                 className={p.status === "inactive" ? "inactive-row" : ""}
-                style={{ display: matchesSearch(p) ? "" : "none" }}
               >
                 <td>{p.product_id}</td>
                 <td>{p.product_name}</td>
@@ -146,6 +163,14 @@ const ProductsList = () => {
           )}
         </tbody>
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        onPageSizeChange={handlePageSizeChange}
+        totalRows={filteredProducts.length}
+      />
     </div>
   );
 };
