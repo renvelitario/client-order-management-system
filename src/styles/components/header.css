@@ -366,6 +366,10 @@
 }
 
 @media (max-width: 980px) {
+  .mobile-shell-brand-copy {
+    display: none;
+  }
+
   .sidebar-backdrop {
     position: fixed;
     inset: 0;
@@ -420,14 +424,6 @@
   .logo-image {
     height: 40px;
     width: 40px;
-  }
-
-  .mobile-shell-brand span {
-    display: none;
-  }
-
-  .mobile-shell-brand strong {
-    font-size: 13px;
   }
 
   .dashboard-sidebar {
