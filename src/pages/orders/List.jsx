@@ -3,6 +3,17 @@ import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
 
+const formatOrderDate = (value) => {
+  if (!value) return 'N/A';
+
+  const parsedDate = new Date(value);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'N/A';
+  }
+
+  return parsedDate.toLocaleString();
+};
+
 const OrdersList = () => {
   const [orders, setOrders] = useState([]);
   const [searchInput, setSearchInput] = useState('');
@@ -80,7 +91,7 @@ const OrdersList = () => {
                 <td>{o.customer_id}</td>
                 <td>{o.quantity}</td>
                 <td>{o.amount}</td>
-                <td>{o.order_date}</td>
+                <td>{formatOrderDate(o.order_date)}</td>
               </tr>
             ))
           ) : (
