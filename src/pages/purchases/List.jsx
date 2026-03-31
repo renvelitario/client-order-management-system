@@ -3,10 +3,18 @@ import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
 
+const formatPurchaseDate = (value) => {
+  if (!value) return 'N/A';
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? 'N/A' : parsed.toLocaleString();
+};
+
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState({ show: false, id: null });
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   useEffect(() => {
     fetchPurchases();
@@ -20,6 +28,31 @@ const PurchasesList = () => {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification({ message: '', type: '' }), 4000);
+  };
+
+  const handleDeleteClick = (id) => {
+    setDeleteDialog({ show: true, id });
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ show: false, id: null });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteDialog.id;
+    setDeleteDialog({ show: false, id: null });
+    try {
+      await api.delete(`/purchases/${id}`);
+      setPurchases((prev) => prev.filter((p) => p.purchase_id !== id));
+      showNotification('Record deleted successfully.', 'success');
+    } catch (err) {
+      showNotification(err.response?.data?.error || 'Failed to delete record.', 'error');
     }
   };
 
@@ -39,6 +72,19 @@ const PurchasesList = () => {
 
   return (
     <div className="container">
+      {deleteDialog.show && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Delete Purchase</h3>
+            <p>Are you sure you want to delete this record? This action cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={handleDeleteCancel}>Cancel</button>
+              <button className="modal-confirm-delete" onClick={handleDeleteConfirm}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="header-row">
         <h2>Purchases</h2>
         <div className="search-container">
@@ -58,6 +104,10 @@ const PurchasesList = () => {
         </div>
       </div>
 
+      {notification.message && (
+        <div className={`notification ${notification.type}`}>{notification.message}</div>
+      )}
+
       <table id="purchases-table">
         <thead>
           <tr>
@@ -65,6 +115,7 @@ const PurchasesList = () => {
             <th>Product ID</th>
             <th>Quantity</th>
             <th>Purchase Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -74,11 +125,20 @@ const PurchasesList = () => {
                 <td>{p.purchase_id}</td>
                 <td>{p.product_id}</td>
                 <td>{p.quantity}</td>
-                <td>{p.purchase_date}</td>
+                <td>{formatPurchaseDate(p.purchase_date)}</td>
+                <td>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteClick(p.purchase_id)}
+                  >
+                    <span className="material-icons">delete</span>
+                    <span className="delete-text">Delete</span>
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan="4">No purchases found.</td></tr>
+            <tr><td colSpan="5">No purchases found.</td></tr>
           )}
         </tbody>
       </table>

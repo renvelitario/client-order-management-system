@@ -7,6 +7,8 @@ const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState({ show: false, id: null });
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   useEffect(() => {
     fetchProducts();
@@ -20,6 +22,34 @@ const ProductsList = () => {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification({ message: '', type: '' }), 4000);
+  };
+
+  const handleDeleteClick = (id) => {
+    setDeleteDialog({ show: true, id });
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialog({ show: false, id: null });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteDialog.id;
+    setDeleteDialog({ show: false, id: null });
+    try {
+      await api.delete(`/products/${id}`);
+      setProducts((prev) => prev.filter((p) => p.product_id !== id));
+      showNotification('Record deleted successfully.', 'success');
+    } catch (err) {
+      const msg = err.response?.status === 409
+        ? 'This record cannot be deleted because it is used in other records.'
+        : (err.response?.data?.error || 'Failed to delete record.');
+      showNotification(msg, 'error');
     }
   };
 
@@ -40,6 +70,19 @@ const ProductsList = () => {
 
   return (
     <div className="container">
+      {deleteDialog.show && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Delete Product</h3>
+            <p>Are you sure you want to delete this record? This action cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={handleDeleteCancel}>Cancel</button>
+              <button className="modal-confirm-delete" onClick={handleDeleteConfirm}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="header-row">
         <h2>Products</h2>
         <div className="search-container">
@@ -58,6 +101,10 @@ const ProductsList = () => {
           </Link>
         </div>
       </div>
+
+      {notification.message && (
+        <div className={`notification ${notification.type}`}>{notification.message}</div>
+      )}
 
       <table id="products-table">
         <thead>
@@ -91,6 +138,13 @@ const ProductsList = () => {
                     <span className="material-icons">edit</span>
                     <span className="edit-text">Edit</span>
                   </Link>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteClick(p.product_id)}
+                  >
+                    <span className="material-icons">delete</span>
+                    <span className="delete-text">Delete</span>
+                  </button>
                 </td>
               </tr>
             ))
