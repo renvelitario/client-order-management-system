@@ -306,16 +306,24 @@ tbody tr:hover {
         padding: 6px 10px;
     }
 
-    /* EDIT BUTTON ICON ONLY ON MOBILE */
-    .edit-button {
+    /* Keep all action buttons identical in mobile tables */
+    .edit-button,
+    .view-button,
+    .delete-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0;
-        padding: 8px;
         width: 40px;
         height: 40px;
         min-width: 40px;
+        padding: 0;
+        box-sizing: border-box;
+        line-height: 1;
+    }
+
+    .edit-button {
+        border: none;
     }
 
     .edit-button .edit-text {
@@ -328,12 +336,7 @@ tbody tr:hover {
 
     /* VIEW BUTTON ICON ONLY ON MOBILE */
     .view-button {
-        padding: 8px;
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
         margin-right: 4px;
-        justify-content: center;
     }
 
     .view-button .view-text {
@@ -346,12 +349,7 @@ tbody tr:hover {
 
     /* DELETE BUTTON ICON ONLY ON MOBILE */
     .delete-button {
-        padding: 8px;
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
         margin-left: 4px;
-        justify-content: center;
     }
 
     .delete-button .delete-text {
