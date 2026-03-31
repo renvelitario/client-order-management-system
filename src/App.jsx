@@ -264,35 +264,41 @@ function App() {
                 </div>
               </div>
             )}
-            <Header />
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/products" element={<ProductsList />} />
-              <Route path="/products/new" element={<ProductsAdd />} />
-              <Route path="/products/edit" element={<ProductsUpdate />} />
-              <Route path="/customers" element={<CustomersList />} />
-              <Route path="/customers/new" element={<CustomersAdd />} />
-              <Route path="/customers/edit" element={<CustomersUpdate />} />
-              <Route path="/orders" element={<OrdersList />} />
-              <Route path="/orders/new" element={<OrdersAdd />} />
-              <Route path="/purchases" element={<PurchasesList />} />
-              <Route path="/purchases/new" element={<PurchasesAdd />} />
-              <Route path="/account/users/new" element={<CreateUserAccount />} />
-              <Route path="/account/settings" element={<AccountSettings />} />
-              <Route path="/account/security" element={<AccountSecurity />} />
-              <Route path="/products_list" element={<Navigate to="/products" replace />} />
-              <Route path="/products_add" element={<Navigate to="/products/new" replace />} />
-              <Route path="/products_update" element={<Navigate to="/products/edit" replace />} />
-              <Route path="/cust_list" element={<Navigate to="/customers" replace />} />
-              <Route path="/cust_add" element={<Navigate to="/customers/new" replace />} />
-              <Route path="/cust_update" element={<Navigate to="/customers/edit" replace />} />
-              <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
-              <Route path="/orders_add" element={<Navigate to="/orders/new" replace />} />
-              <Route path="/purchases_list" element={<Navigate to="/purchases" replace />} />
-              <Route path="/purchases_add" element={<Navigate to="/purchases/new" replace />} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
+            <div className="app-shell">
+              <Header />
+              <main className="app-main">
+                <div className="app-content">
+                  <Routes>
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/products" element={<ProductsList />} />
+                    <Route path="/products/new" element={<ProductsAdd />} />
+                    <Route path="/products/edit" element={<ProductsUpdate />} />
+                    <Route path="/customers" element={<CustomersList />} />
+                    <Route path="/customers/new" element={<CustomersAdd />} />
+                    <Route path="/customers/edit" element={<CustomersUpdate />} />
+                    <Route path="/orders" element={<OrdersList />} />
+                    <Route path="/orders/new" element={<OrdersAdd />} />
+                    <Route path="/purchases" element={<PurchasesList />} />
+                    <Route path="/purchases/new" element={<PurchasesAdd />} />
+                    <Route path="/account/users/new" element={<CreateUserAccount />} />
+                    <Route path="/account/settings" element={<AccountSettings />} />
+                    <Route path="/account/security" element={<AccountSecurity />} />
+                    <Route path="/products_list" element={<Navigate to="/products" replace />} />
+                    <Route path="/products_add" element={<Navigate to="/products/new" replace />} />
+                    <Route path="/products_update" element={<Navigate to="/products/edit" replace />} />
+                    <Route path="/cust_list" element={<Navigate to="/customers" replace />} />
+                    <Route path="/cust_add" element={<Navigate to="/customers/new" replace />} />
+                    <Route path="/cust_update" element={<Navigate to="/customers/edit" replace />} />
+                    <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
+                    <Route path="/orders_add" element={<Navigate to="/orders/new" replace />} />
+                    <Route path="/purchases_list" element={<Navigate to="/purchases" replace />} />
+                    <Route path="/purchases_add" element={<Navigate to="/purchases/new" replace />} />
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                  </Routes>
+                </div>
+              </main>
+            </div>
           </>
         ) : (
           <Routes>
