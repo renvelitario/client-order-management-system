@@ -66,7 +66,7 @@ const ProductsUpdate = () => {
       <h2>Update a Product</h2>
 
       {error ? (
-        <p className="error">{error}</p>
+        <div className="notification error">{error}</div>
       ) : (
         <form onSubmit={handleSubmit} className="update-form">
           <label>Product Name:</label>

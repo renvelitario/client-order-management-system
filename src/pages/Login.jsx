@@ -96,7 +96,7 @@ const Login = () => {
         </p>
 
         {/* ERROR */}
-        {error && <p className="error">{error}</p>}
+        {error && <div className="notification error">{error}</div>}
       </form>
     </div>
   );

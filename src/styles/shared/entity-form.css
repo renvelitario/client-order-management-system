@@ -99,3 +99,23 @@
 .form-group {
     margin-bottom: 10px;
 }
+
+.order-item-block {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border 0.2s ease;
+}
+
+.order-item-block-highlight {
+    border: 2px solid #e53935;
+}
+
+.order-item-remove-button {
+    margin-top: 10px;
+}
+
+.order-item-add-button {
+    margin-bottom: 15px;
+}

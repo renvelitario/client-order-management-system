@@ -138,7 +138,7 @@ const AccountSettings = () => {
             <input type="submit" value="Save" />
           </div>
 
-          {error && <p className="error">{error}</p>}
+          {error && <div className="notification error">{error}</div>}
         </form>
       </div>
 

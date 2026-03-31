@@ -56,7 +56,7 @@ const PurchasesAdd = () => {
         <label>Quantity:</label>
         <input type="text" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
         <input type="submit" value="Add Purchase" />
-        {error && <p className="error">{error}</p>}
+        {error && <div className="notification error">{error}</div>}
       </form>
     </div>
   );

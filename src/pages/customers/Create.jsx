@@ -37,7 +37,7 @@ const CustomersAdd = () => {
         <label>Contact No:</label>
         <input type="text" name="contact_no" value={formData.contact_no} onChange={handleChange} required /><br />
         <input type="submit" value="Add Customer" />
-        {error && <p className="error">{error}</p>}
+        {error && <div className="notification error">{error}</div>}
       </form>
     </div>
   );

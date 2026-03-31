@@ -43,7 +43,7 @@ const ProductsAdd = () => {
           <option value="inactive">Inactive</option>
         </select><br />
         <input type="submit" value="Add Product" />
-        {error && <p className="error">{error}</p>}
+        {error && <div className="notification error">{error}</div>}
       </form>
     </div>
   );

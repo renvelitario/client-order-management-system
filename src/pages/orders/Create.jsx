@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
@@ -11,6 +11,8 @@ const OrdersAdd = () => {
   const [products, setProducts] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [error, setError] = useState('');
+  const [highlightedIndex, setHighlightedIndex] = useState(null);
+  const highlightTimerRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,9 +38,38 @@ const OrdersAdd = () => {
   };
 
   const handleItemChange = (index, field, value) => {
+    if (field === 'product_id' && value) {
+      const duplicateIndex = formData.items_data.findIndex(
+        (item, itemIndex) => itemIndex !== index && String(item.product_id) === String(value)
+      );
+
+      if (duplicateIndex !== -1) {
+        if (highlightTimerRef.current) {
+          clearTimeout(highlightTimerRef.current);
+        }
+
+        setHighlightedIndex(duplicateIndex);
+        setError('This product is already selected in another order item.');
+
+        const existingBlock = document.getElementById(`item-block-${duplicateIndex}`);
+        if (existingBlock) {
+          existingBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        highlightTimerRef.current = setTimeout(() => {
+          setHighlightedIndex(null);
+        }, 1500);
+
+        return;
+      }
+    }
+
     const newItems = [...formData.items_data];
     newItems[index][field] = value;
     setFormData({ ...formData, items_data: newItems });
+    if (error) {
+      setError('');
+    }
   };
 
   const addItem = () => {
@@ -84,7 +115,11 @@ const OrdersAdd = () => {
         
         <h3>Order Items</h3>
         {formData.items_data.map((item, index) => (
-          <div key={index} style={{ marginBottom: '15px', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>
+          <div
+            key={index}
+            id={`item-block-${index}`}
+            className={highlightedIndex === index ? 'order-item-block order-item-block-highlight' : 'order-item-block'}
+          >
             <label>Product:</label>
             <select 
               value={item.product_id} 
@@ -109,19 +144,19 @@ const OrdersAdd = () => {
             /><br />
             
             {formData.items_data.length > 1 && (
-              <button type="button" onClick={() => removeItem(index)} style={{ marginTop: '10px' }}>
+              <button type="button" onClick={() => removeItem(index)} className="order-item-remove-button">
                 Remove Item
               </button>
             )}
           </div>
         ))}
         
-        <button type="button" onClick={addItem} style={{ marginBottom: '15px' }}>
+        <button type="button" onClick={addItem} className="order-item-add-button">
           Add Another Item
         </button><br />
         
         <input type="submit" value="Create Order" />
-        {error && <p className="error">{error}</p>}
+        {error && <div className="notification error">{error}</div>}
       </form>
     </div>
   );

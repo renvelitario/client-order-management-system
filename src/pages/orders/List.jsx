@@ -94,17 +94,19 @@ const OrdersList = () => {
                 <td>${Number(o.total_amount || 0).toFixed(2)}</td>
                 <td>{formatOrderDate(o.order_date)}</td>
                 <td>
-                  <button 
+                  <button
+                    className="view-button"
                     onClick={() => alert(
                       o.items && o.items.length > 0
                         ? `Order Items:\n${o.items.map(item => `Product #${item.product_id}: ${item.quantity} x $${Number(item.price).toFixed(2)}`).join('\n')}`
                         : 'No items in this order'
                     )}
-                    style={{ padding: '5px 10px', marginRight: '5px' }}
                   >
-                    View Items
+                    <span className="material-icons">visibility</span>
+                    <span className="view-text">View Items</span>
                   </button>
-                  <button 
+                  <button
+                    className="delete-button"
                     onClick={() => {
                       if (window.confirm('Are you sure you want to delete this order?')) {
                         api.delete(`/orders/${o.order_id}`)
@@ -114,9 +116,9 @@ const OrdersList = () => {
                           .catch(err => console.error(err));
                       }
                     }}
-                    style={{ padding: '5px 10px' }}
                   >
-                    Delete
+                    <span className="material-icons">delete</span>
+                    <span className="delete-text">Delete</span>
                   </button>
                 </td>
               </tr>

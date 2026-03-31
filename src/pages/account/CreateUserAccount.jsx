@@ -93,8 +93,8 @@ const CreateUserAccount = () => {
           <input type="submit" value="Register" />
         </div>
 
-        {error && <p className="error" style={{ color: 'red' }}>{error}</p>}
-        {success && <p className="success" style={{ color: 'green' }}>{success}</p>}
+        {error && <div className="notification error">{error}</div>}
+        {success && <div className="notification success">{success}</div>}
       </form>
     </div>
   );

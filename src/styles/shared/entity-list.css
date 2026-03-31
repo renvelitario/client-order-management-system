@@ -115,6 +115,29 @@ tbody tr:hover {
     font-size: 16px;
 }
 
+/* VIEW BUTTON WITH ICON */
+.view-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background-color: #1e88e5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.view-button:hover {
+    background-color: #1565c0;
+}
+
+.view-button .material-icons {
+    font-size: 16px;
+}
+
 /* DELETE BUTTON WITH ICON */
 .delete-button {
     display: inline-flex;
@@ -292,6 +315,24 @@ tbody tr:hover {
     }
 
     .edit-button .material-icons {
+        font-size: 18px;
+    }
+
+    /* VIEW BUTTON ICON ONLY ON MOBILE */
+    .view-button {
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        margin-right: 4px;
+        justify-content: center;
+    }
+
+    .view-button .view-text {
+        display: none;
+    }
+
+    .view-button .material-icons {
         font-size: 18px;
     }
 
