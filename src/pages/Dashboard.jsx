@@ -46,7 +46,7 @@ const Dashboard = () => {
         const orders = ordersRes.data;
 
         const productNameById = new Map(products.map((product) => [String(product.product_id), product.product_name]));
-        const customerNameById = new Map(customers.map((customer) => [Number(customer.cust_id), customer.name]));
+        const customerNameById = new Map(customers.map((customer) => [Number(customer.customer_id), customer.name]));
 
         setStats({
           totalProducts: products.length,
@@ -60,11 +60,18 @@ const Dashboard = () => {
         const latestOrders = [...orders]
           .sort((left, right) => new Date(right.order_date) - new Date(left.order_date))
           .slice(0, RECENT_ORDERS_LIMIT)
-          .map((order) => ({
-            ...order,
-            product_name: productNameById.get(String(order.product_id)) || `Product #${order.product_id}`,
-            customer_name: customerNameById.get(Number(order.customer_id)) || `Customer #${order.customer_id}`,
-          }));
+          .map((order) => {
+            // Get product names from order items
+            const productNames = order.items
+              ? order.items.map(item => productNameById.get(String(item.product_id)) || `Product #${item.product_id}`).join(', ')
+              : 'N/A';
+            
+            return {
+              ...order,
+              product_name: productNames,
+              customer_name: customerNameById.get(Number(order.customer_id)) || `Customer #${order.customer_id}`,
+            };
+          });
 
         setRecentOrders(latestOrders);
       } catch (error) {

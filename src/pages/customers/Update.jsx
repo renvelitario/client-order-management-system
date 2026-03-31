@@ -5,7 +5,7 @@ import '../../styles/shared/entity-form.css';
 
 const CustomersUpdate = () => {
   const [searchParams] = useSearchParams();
-  const customerId = searchParams.get('cust_id');
+  const customerId = searchParams.get('customer_id');
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({

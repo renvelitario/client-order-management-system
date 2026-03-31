@@ -40,10 +40,8 @@ const OrdersList = () => {
 
     return [
       String(order.order_id),
-      String(order.product_id),
       String(order.customer_id),
-      String(order.quantity),
-      String(order.amount),
+      String(order.total_amount),
       String(order.order_date)
     ].some((value) => String(value).toLowerCase().includes(term));
   };
@@ -75,11 +73,11 @@ const OrdersList = () => {
         <thead>
           <tr>
             <th>Order ID</th>
-            <th>Product ID</th>
             <th>Customer ID</th>
-            <th>Quantity</th>
-            <th>Amount</th>
+            <th>Items</th>
+            <th>Total Amount</th>
             <th>Order Date</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -87,11 +85,40 @@ const OrdersList = () => {
             orders.map(o => (
               <tr key={o.order_id} style={{ display: matchesSearch(o) ? '' : 'none' }}>
                 <td>{o.order_id}</td>
-                <td>{o.product_id}</td>
                 <td>{o.customer_id}</td>
-                <td>{o.quantity}</td>
-                <td>{o.amount}</td>
+                <td>
+                  {o.items && o.items.length > 0
+                    ? `${o.items.length} item(s)`
+                    : 'No items'}
+                </td>
+                <td>${Number(o.total_amount || 0).toFixed(2)}</td>
                 <td>{formatOrderDate(o.order_date)}</td>
+                <td>
+                  <button 
+                    onClick={() => alert(
+                      o.items && o.items.length > 0
+                        ? `Order Items:\n${o.items.map(item => `Product #${item.product_id}: ${item.quantity} x $${Number(item.price).toFixed(2)}`).join('\n')}`
+                        : 'No items in this order'
+                    )}
+                    style={{ padding: '5px 10px', marginRight: '5px' }}
+                  >
+                    View Items
+                  </button>
+                  <button 
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this order?')) {
+                        api.delete(`/orders/${o.order_id}`)
+                          .then(() => {
+                            setOrders(orders.filter(order => order.order_id !== o.order_id));
+                          })
+                          .catch(err => console.error(err));
+                      }
+                    }}
+                    style={{ padding: '5px 10px' }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))
           ) : (

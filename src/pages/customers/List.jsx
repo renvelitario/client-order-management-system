@@ -28,7 +28,7 @@ const CustomersList = () => {
     if (!term) return true;
 
     return [
-      String(customer.cust_id),
+      String(customer.customer_id),
       customer.name,
       customer.address,
       customer.contact_no,
@@ -72,16 +72,16 @@ const CustomersList = () => {
           {customers.length > 0 ? (
             customers.map((c) => (
               <tr
-                key={c.cust_id}
+                key={c.customer_id}
                 style={{ display: matchesSearch(c) ? "" : "none" }}
               >
-                <td>{c.cust_id}</td>
+                <td>{c.customer_id}</td>
                 <td>{c.name}</td>
                 <td>{c.address}</td>
                 <td>{c.contact_no}</td>
                 <td>
                   <Link
-                    to={`/customers/edit?cust_id=${c.cust_id}`}
+                    to={`/customers/edit?customer_id=${c.customer_id}`}
                     className="edit-button"
                   >
                     <span className="material-icons">edit</span>
