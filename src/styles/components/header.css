@@ -29,12 +29,20 @@
 }
 
 .mobile-shell-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: #ffffff;
   text-decoration: none;
+}
+
+.mobile-shell-brand-copy {
+  display: block;
+  min-width: 0;
 }
 
 .mobile-shell-brand strong,
@@ -58,6 +66,7 @@
 
 .top-account-menu {
   position: relative;
+  z-index: 1;
 }
 
 .top-account-trigger {
@@ -211,6 +220,7 @@
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
+  z-index: 1;
 }
 
 .sidebar-toggle:hover {
@@ -410,6 +420,14 @@
   .logo-image {
     height: 40px;
     width: 40px;
+  }
+
+  .mobile-shell-brand span {
+    display: none;
+  }
+
+  .mobile-shell-brand strong {
+    font-size: 13px;
   }
 
   .dashboard-sidebar {

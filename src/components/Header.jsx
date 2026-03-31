@@ -185,7 +185,7 @@ const Header = () => {
 
         <Link to="/dashboard" className="mobile-shell-brand">
           <img src="/logo.png" className="logo-image" alt="Logo" />
-          <div>
+          <div className="mobile-shell-brand-copy">
             <strong>Order Management System</strong>
             <span>Operations workspace</span>
           </div>
