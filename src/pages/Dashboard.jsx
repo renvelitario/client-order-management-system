@@ -215,7 +215,13 @@ const Dashboard = () => {
     setRecentOrders(latestOrders);
   }, [range, rawProducts, rawCustomers, rawPurchases, rawOrders]);
 
-  if (loading) return <div className="dashboard-loading">Loading dashboard...</div>;
+  if (loading) {
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-loading">Loading dashboard...</div>
+      </div>
+    );
+  }
 
   const stockChartData = [
     { name: 'Low', value: barData.low },

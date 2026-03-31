@@ -8,10 +8,10 @@
 }
 
 .dashboard-loading {
-    max-width: 1280px;
-    margin: 24px auto;
+    margin: 0;
     padding: 16px;
     font-size: 16px;
+    color: #475569;
 }
 
 .dashboard-header {
