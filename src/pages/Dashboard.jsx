@@ -112,6 +112,7 @@ const buildTopProducts = (orders, productNameById) => {
 
 const Dashboard = () => {
   const [range, setRange] = useState('this_month');
+  const [username, setUsername] = useState('User');
   const [rawProducts, setRawProducts] = useState([]);
   const [rawCustomers, setRawCustomers] = useState([]);
   const [rawPurchases, setRawPurchases] = useState([]);
@@ -135,17 +136,19 @@ const Dashboard = () => {
     const fetchData = async () => {
       setError('');
       try {
-        const [productsRes, custRes, purchRes, ordersRes] = await Promise.all([
+        const [productsRes, custRes, purchRes, ordersRes, authMeRes] = await Promise.all([
           api.get('/products'),
           api.get('/customers'),
           api.get('/purchases'),
-          api.get('/orders')
+          api.get('/orders'),
+          api.get('/auth/me')
         ]);
 
         setRawProducts(productsRes.data || []);
         setRawCustomers(custRes.data || []);
         setRawPurchases(purchRes.data || []);
         setRawOrders(ordersRes.data || []);
+        setUsername((authMeRes.data?.username || authMeRes.data?.email || 'User').trim());
       } catch (error) {
         console.error("Dashboard fetch error", error);
         setError(error.response?.data?.error || 'Failed to load dashboard data.');
@@ -229,7 +232,7 @@ const Dashboard = () => {
     <div className="dashboard-page">
       <div className="dashboard-header">
         <div>
-          <h2>Dashboard</h2>
+          <h2>Welcome, {username}</h2>
           <p className="dashboard-subtitle">Business overview and trend insights</p>
         </div>
 
