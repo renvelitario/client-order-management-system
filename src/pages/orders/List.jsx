@@ -3,22 +3,20 @@ import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
 import { formatPeso } from '../../utils/currency';
-
-const formatOrderDate = (value) => {
-  if (!value) return 'N/A';
-
-  const parsedDate = new Date(value);
-  if (Number.isNaN(parsedDate.getTime())) {
-    return 'N/A';
-  }
-
-  return parsedDate.toLocaleString();
-};
+import { useDeleteDialog } from '../../hooks/useDeleteDialog';
+import { formatDateTime } from '../../utils/date';
 
 const OrdersList = () => {
   const [orders, setOrders] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const {
+    deleteDialog,
+    notification,
+    handleDeleteClick,
+    handleDeleteCancel,
+    handleDeleteConfirm: confirmDelete,
+  } = useDeleteDialog((err) => err.response?.data?.error || 'Failed to delete order.');
 
   useEffect(() => {
     fetchOrders();
@@ -47,10 +45,31 @@ const OrdersList = () => {
     ].some((value) => String(value).toLowerCase().includes(term));
   };
 
+  const handleDeleteConfirm = async () => {
+    await confirmDelete(
+      (id) => api.delete(`/orders/${id}`),
+      (id) => setOrders((prev) => prev.filter((order) => order.order_id !== id)),
+      { success: 'Order deleted successfully.' },
+    );
+  };
+
   if (loading) return <div className="container">Loading...</div>;
 
   return (
     <div className="container">
+      {deleteDialog.show && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3>Delete Order</h3>
+            <p>Are you sure you want to delete this record? This action cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={handleDeleteCancel}>Cancel</button>
+              <button className="modal-confirm-delete" onClick={handleDeleteConfirm}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="header-row">
         <h2>Orders</h2>
         <div className="search-container">
@@ -69,6 +88,10 @@ const OrdersList = () => {
           </Link>
         </div>
       </div>
+
+      {notification.message && (
+        <div className={`notification ${notification.type}`}>{notification.message}</div>
+      )}
 
       <table id="orders-table">
         <thead>
@@ -93,7 +116,7 @@ const OrdersList = () => {
                     : 'No items'}
                 </td>
                 <td>{formatPeso(o.total_amount || 0)}</td>
-                <td>{formatOrderDate(o.order_date)}</td>
+                <td>{formatDateTime(o.order_date)}</td>
                 <td>
                   <button
                     className="view-button"
@@ -108,15 +131,7 @@ const OrdersList = () => {
                   </button>
                   <button
                     className="delete-button"
-                    onClick={() => {
-                      if (window.confirm('Are you sure you want to delete this order?')) {
-                        api.delete(`/orders/${o.order_id}`)
-                          .then(() => {
-                            setOrders(orders.filter(order => order.order_id !== o.order_id));
-                          })
-                          .catch(err => console.error(err));
-                      }
-                    }}
+                    onClick={() => handleDeleteClick(o.order_id)}
                   >
                     <span className="material-icons">delete</span>
                     <span className="delete-text">Delete</span>

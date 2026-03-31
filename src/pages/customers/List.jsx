@@ -2,13 +2,24 @@ import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
+import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 
 const CustomersList = () => {
   const [customers, setCustomers] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const [deleteDialog, setDeleteDialog] = useState({ show: false, id: null });
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const {
+    deleteDialog,
+    notification,
+    handleDeleteClick,
+    handleDeleteCancel,
+    handleDeleteConfirm: confirmDelete,
+  } = useDeleteDialog((err) => {
+    if (err.response?.status === 409) {
+      return 'This record cannot be deleted because it is used in other records.';
+    }
+    return err.response?.data?.error || 'Failed to delete record.';
+  });
 
   useEffect(() => {
     fetchCustomers();
@@ -25,32 +36,11 @@ const CustomersList = () => {
     }
   };
 
-  const showNotification = (message, type) => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification({ message: '', type: '' }), 4000);
-  };
-
-  const handleDeleteClick = (id) => {
-    setDeleteDialog({ show: true, id });
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteDialog({ show: false, id: null });
-  };
-
   const handleDeleteConfirm = async () => {
-    const id = deleteDialog.id;
-    setDeleteDialog({ show: false, id: null });
-    try {
-      await api.delete(`/customers/${id}`);
-      setCustomers((prev) => prev.filter((c) => c.customer_id !== id));
-      showNotification('Record deleted successfully.', 'success');
-    } catch (err) {
-      const msg = err.response?.status === 409
-        ? 'This record cannot be deleted because it is used in other records.'
-        : (err.response?.data?.error || 'Failed to delete record.');
-      showNotification(msg, 'error');
-    }
+    await confirmDelete(
+      (id) => api.delete(`/customers/${id}`),
+      (id) => setCustomers((prev) => prev.filter((c) => c.customer_id !== id)),
+    );
   };
 
   const matchesSearch = (customer) => {

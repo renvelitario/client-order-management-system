@@ -2,19 +2,20 @@ import { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
-
-const formatPurchaseDate = (value) => {
-  if (!value) return 'N/A';
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? 'N/A' : parsed.toLocaleString();
-};
+import { useDeleteDialog } from '../../hooks/useDeleteDialog';
+import { formatDateTime } from '../../utils/date';
 
 const PurchasesList = () => {
   const [purchases, setPurchases] = useState([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
-  const [deleteDialog, setDeleteDialog] = useState({ show: false, id: null });
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const {
+    deleteDialog,
+    notification,
+    handleDeleteClick,
+    handleDeleteCancel,
+    handleDeleteConfirm: confirmDelete,
+  } = useDeleteDialog((err) => err.response?.data?.error || 'Failed to delete record.');
 
   useEffect(() => {
     fetchPurchases();
@@ -31,29 +32,11 @@ const PurchasesList = () => {
     }
   };
 
-  const showNotification = (message, type) => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification({ message: '', type: '' }), 4000);
-  };
-
-  const handleDeleteClick = (id) => {
-    setDeleteDialog({ show: true, id });
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteDialog({ show: false, id: null });
-  };
-
   const handleDeleteConfirm = async () => {
-    const id = deleteDialog.id;
-    setDeleteDialog({ show: false, id: null });
-    try {
-      await api.delete(`/purchases/${id}`);
-      setPurchases((prev) => prev.filter((p) => p.purchase_id !== id));
-      showNotification('Record deleted successfully.', 'success');
-    } catch (err) {
-      showNotification(err.response?.data?.error || 'Failed to delete record.', 'error');
-    }
+    await confirmDelete(
+      (id) => api.delete(`/purchases/${id}`),
+      (id) => setPurchases((prev) => prev.filter((p) => p.purchase_id !== id)),
+    );
   };
 
   const matchesSearch = (purchase) => {
@@ -125,7 +108,7 @@ const PurchasesList = () => {
                 <td>{p.purchase_id}</td>
                 <td>{p.product_id}</td>
                 <td>{p.quantity}</td>
-                <td>{formatPurchaseDate(p.purchase_date)}</td>
+                <td>{formatDateTime(p.purchase_date)}</td>
                 <td>
                   <button
                     className="delete-button"

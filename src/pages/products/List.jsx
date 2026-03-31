@@ -3,13 +3,24 @@ import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
 import { formatPeso } from "../../utils/currency";
+import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const [deleteDialog, setDeleteDialog] = useState({ show: false, id: null });
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const {
+    deleteDialog,
+    notification,
+    handleDeleteClick,
+    handleDeleteCancel,
+    handleDeleteConfirm: confirmDelete,
+  } = useDeleteDialog((err) => {
+    if (err.response?.status === 409) {
+      return 'This record cannot be deleted because it is used in other records.';
+    }
+    return err.response?.data?.error || 'Failed to delete record.';
+  });
 
   useEffect(() => {
     fetchProducts();
@@ -26,32 +37,11 @@ const ProductsList = () => {
     }
   };
 
-  const showNotification = (message, type) => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification({ message: '', type: '' }), 4000);
-  };
-
-  const handleDeleteClick = (id) => {
-    setDeleteDialog({ show: true, id });
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteDialog({ show: false, id: null });
-  };
-
   const handleDeleteConfirm = async () => {
-    const id = deleteDialog.id;
-    setDeleteDialog({ show: false, id: null });
-    try {
-      await api.delete(`/products/${id}`);
-      setProducts((prev) => prev.filter((p) => p.product_id !== id));
-      showNotification('Record deleted successfully.', 'success');
-    } catch (err) {
-      const msg = err.response?.status === 409
-        ? 'This record cannot be deleted because it is used in other records.'
-        : (err.response?.data?.error || 'Failed to delete record.');
-      showNotification(msg, 'error');
-    }
+    await confirmDelete(
+      (id) => api.delete(`/products/${id}`),
+      (id) => setProducts((prev) => prev.filter((p) => p.product_id !== id)),
+    );
   };
 
   const matchesSearch = (product) => {
