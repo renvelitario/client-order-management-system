@@ -16,6 +16,7 @@ import {
   Legend,
 } from 'recharts';
 import '../styles/pages/dashboard.css';
+import { formatPeso } from '../utils/currency';
 
 const RECENT_ORDERS_LIMIT = 10;
 
@@ -366,7 +367,7 @@ const Dashboard = () => {
                     <td>{order.product_name}</td>
                     <td>{order.customer_name}</td>
                     <td>{order.item_count}</td>
-                    <td>${Number(order.total_amount || 0).toFixed(2)}</td>
+                    <td>{formatPeso(order.total_amount || 0)}</td>
                     <td>{formatOrderDate(order.order_date)}</td>
                   </tr>
                 ))

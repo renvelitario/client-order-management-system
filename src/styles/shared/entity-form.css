@@ -119,3 +119,24 @@
 .order-item-add-button {
     margin-bottom: 15px;
 }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .product-container input[type="submit"],
+    .add-customer input[type="submit"],
+    .order-container input[type="submit"],
+    .purchase-container input[type="submit"],
+    .update-form input[type="submit"],
+    .form-group input[type="submit"] {
+        width: 100%;
+    }
+
+    .product-container,
+    .add-customer,
+    .order-container,
+    .purchase-container,
+    .update-product,
+    .update-customer-container {
+        padding: 16px;
+    }
+}

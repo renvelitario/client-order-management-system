@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
+import { formatPeso } from "../../utils/currency";
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -128,7 +129,7 @@ const ProductsList = () => {
                 <td>{p.product_id}</td>
                 <td>{p.product_name}</td>
                 <td>{p.quantity}</td>
-                <td>{Number(p.price).toFixed(2)}</td>
+                <td>{formatPeso(p.price)}</td>
                 <td>{p.status}</td>
                 <td>
                   <Link

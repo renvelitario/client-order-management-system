@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
+import { formatPeso } from '../../utils/currency';
 
 const formatOrderDate = (value) => {
   if (!value) return 'N/A';
@@ -91,14 +92,14 @@ const OrdersList = () => {
                     ? `${o.items.length} item(s)`
                     : 'No items'}
                 </td>
-                <td>${Number(o.total_amount || 0).toFixed(2)}</td>
+                <td>{formatPeso(o.total_amount || 0)}</td>
                 <td>{formatOrderDate(o.order_date)}</td>
                 <td>
                   <button
                     className="view-button"
                     onClick={() => alert(
                       o.items && o.items.length > 0
-                        ? `Order Items:\n${o.items.map(item => `Product #${item.product_id}: ${item.quantity} x $${Number(item.price).toFixed(2)}`).join('\n')}`
+                        ? `Order Items:\n${o.items.map(item => `Product #${item.product_id}: ${item.quantity} x ${formatPeso(item.price)}`).join('\n')}`
                         : 'No items in this order'
                     )}
                   >

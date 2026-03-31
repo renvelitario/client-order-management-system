@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
+import { formatPeso } from '../../utils/currency';
 
 const OrdersAdd = () => {
   const [formData, setFormData] = useState({
@@ -129,7 +130,7 @@ const OrdersAdd = () => {
               <option value="">Select a product</option>
               {products.map(p => (
                 <option key={p.product_id} value={p.product_id}>
-                  {p.product_id} - {p.product_name} (${p.price})
+                  {p.product_id} - {p.product_name} ({formatPeso(p.price)})
                 </option>
               ))}
             </select><br />

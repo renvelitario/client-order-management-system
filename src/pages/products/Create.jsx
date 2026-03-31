@@ -35,7 +35,7 @@ const ProductsAdd = () => {
         <input type="text" name="product_name" value={formData.product_name} onChange={handleChange} required /><br />
         <label>Quantity:</label>
         <input type="number" min="0" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
-        <label>Price:</label>
+        <label>Price (PHP):</label>
         <input type="number" min="0" step="0.01" name="price" value={formData.price} onChange={handleChange} required /><br />
         <label>Status:</label>
         <select name="status" value={formData.status} onChange={handleChange} required>

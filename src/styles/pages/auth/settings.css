@@ -76,3 +76,13 @@
     font-size: 14px;
     margin-top: 10px;
 }
+
+@media (max-width: 600px) {
+    .form-group input[type="submit"] {
+        width: 100%;
+    }
+
+    .settings-container {
+        padding: 16px;
+    }
+}
