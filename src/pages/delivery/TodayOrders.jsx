@@ -3,7 +3,8 @@ import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
 import OrderScanner from '../../components/features/OrderScanner';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
-import { formatDateTime } from '../../utils/date';
+import { formatDateTime } from '../../utils/formatters';
+import '../../styles/shared/entity-list.css';
 import '../../styles/pages/delivery/today-orders.css';
 
 const STATUS_OPTIONS = [
@@ -110,7 +111,8 @@ const TodayOrders = () => {
       <div className="header-row">
         <h2>Delivery Orders (Today)</h2>
         <div className="search-container">
-          <div className="search-input-wrapper delivery-search-wrapper">
+          <div className="search-input-wrapper">
+            <span className="material-icons" aria-hidden="true">search</span>
             <input
               type="text"
               placeholder="Search order, customer, address..."
@@ -118,7 +120,6 @@ const TodayOrders = () => {
               onChange={(event) => handleSearchChange(event.target.value)}
               aria-label="Search delivery orders"
             />
-            <span className="material-icons delivery-search-icon" aria-hidden="true">search</span>
           </div>
           <button
             ref={scanButtonRef}

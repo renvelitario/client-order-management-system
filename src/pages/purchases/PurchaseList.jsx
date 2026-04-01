@@ -2,7 +2,7 @@ import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
-import { formatDateTime } from '../../utils/date';
+import { formatDateTime } from '../../utils/formatters';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';

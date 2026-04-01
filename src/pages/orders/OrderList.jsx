@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import '../../styles/shared/entity-list.css';
 import { formatPeso } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
-import { formatDateOnly } from '../../utils/date';
+import { formatDateOnly } from '../../utils/formatters';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';

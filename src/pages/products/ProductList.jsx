@@ -1,7 +1,7 @@
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
-import { formatPeso } from "../../utils/currency";
+import { formatPeso } from "../../utils/formatters";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';

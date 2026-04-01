@@ -7,45 +7,32 @@
   --ds-danger-bg: #ffebee;
   --ds-danger-fg: #b71c1c;
   --ds-info-bg: #e3f2fd;
-  --ds-info-fg: #0d47a1;
+  --ds-info-fg: var(--primary-hover);
 }
 
-/* ── Search icon on the right ───────────────────────────────────── */
-.delivery-search-wrapper {
-  flex-direction: row;
-}
-
-.delivery-search-wrapper input {
-  order: 0;
-}
-
-.delivery-search-icon {
-  order: 1;
-  margin-right: 0;
-  margin-left: 4px;
-  flex-shrink: 0;
-}
+/* ── Removed Search icon override ── */
 
 /* ── QR scan button ──────────────────────────────────────────────── */
 .scan-qr-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;
-  height: 38px;
+  padding: 0 16px;
+  height: 40px;
   border: none;
-  border-radius: 6px;
-  background: #1565c0;
-  color: #fff;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--text-inverse);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
   flex-shrink: 0;
 }
 
 .scan-qr-button:hover,
 .scan-qr-button:focus-visible {
-  background: #0d47a1;
-  outline: 2px solid #0d47a1;
+  background: var(--primary-hover);
+  outline: 2px solid var(--primary-hover);
   outline-offset: 2px;
 }
 
@@ -110,7 +97,7 @@
   position: absolute;
   width: 28px;
   height: 28px;
-  border-color: #8cf0ff;
+  border-color: var(--primary);
   border-style: solid;
   border-width: 0;
 }
@@ -145,7 +132,7 @@
   border: none;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.55);
-  color: #fff;
+  color: var(--text-inverse);
   cursor: pointer;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -181,21 +168,22 @@
 
 .fs-scanner-hint {
   background: rgba(0, 0, 0, 0.6);
-  color: #fff;
+  color: var(--text-inverse);
 }
 
 .fs-scanner-error {
   background: rgba(183, 28, 28, 0.85);
-  color: #fff;
+  color: var(--text-inverse);
 }
 
 /* ── Selected order panel ────────────────────────────────────────── */
 .delivery-selected-order {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-md);
 }
 
 .delivery-selected-header {
@@ -208,7 +196,7 @@
 .delivery-selected-header h3 {
   margin: 0;
   font-size: 15px;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .delivery-order-grid {
@@ -230,20 +218,23 @@
 
 /* ── Clickable order ID in table ────────────────────────────────── */
 .delivery-order-id-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  color: #1565c0;
+  background: var(--surface-alt);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  color: var(--text-primary);
   font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  font-size: 13px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-fast);
 }
 
 .delivery-order-id-btn:hover,
 .delivery-order-id-btn:focus-visible {
-  color: #0d47a1;
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
   outline: none;
 }
 
@@ -261,17 +252,17 @@
 }
 
 .delivery-status-actions select {
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
   padding: 6px 8px;
   font-size: 13px;
 }
 
 .delivery-status-actions button {
   border: none;
-  border-radius: 6px;
-  background: #1565c0;
-  color: #fff;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--text-inverse);
   padding: 6px 12px;
   cursor: pointer;
   font-size: 13px;
@@ -281,7 +272,7 @@
 
 .delivery-status-actions button:hover,
 .delivery-status-actions button:focus-visible {
-  background: #0d47a1;
+  background: var(--primary-hover);
 }
 
 /* ── Status pills ────────────────────────────────────────────────── */
@@ -302,19 +293,20 @@
 /* ── Delivery meta (timestamp) ───────────────────────────────────── */
 .delivery-meta {
   margin-top: 3px;
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 11px;
 }
 
 /* ── Loading text ────────────────────────────────────────────────── */
 .delivery-loading {
-  color: #64748b;
+  color: var(--text-muted);
   margin: 16px 0;
 }
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .delivery-search-wrapper {
+  /* search wrapper width adjustment for mobile */
+  .search-input-wrapper {
     width: 180px;
   }
 
