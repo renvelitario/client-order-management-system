@@ -251,14 +251,13 @@
   padding: 14px 10px;
   box-sizing: border-box;
   color: #f5f7fb;
-  background: linear-gradient(180deg, rgba(8, 44, 24, 0.78) 0%, rgba(12, 60, 33, 0.8) 58%, rgba(7, 36, 20, 0.82) 100%);
+  background: linear-gradient(180deg, rgba(8, 44, 24, 0.52) 0%, rgba(12, 60, 33, 0.55) 58%, rgba(7, 36, 20, 0.58) 100%);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 18px 0 40px rgba(15, 23, 42, 0.18);
   z-index: 1110;
   overflow: hidden;
-  will-change: width;
   transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -400,9 +399,9 @@
     height: calc(100dvh - 74px);
     padding: 12px;
     overflow: visible;
-    background: linear-gradient(180deg, rgba(8, 44, 24, 0.68) 0%, rgba(12, 60, 33, 0.7) 58%, rgba(7, 36, 20, 0.72) 100%);
-    backdrop-filter: blur(22px) saturate(120%);
-    -webkit-backdrop-filter: blur(22px) saturate(120%);
+    background: linear-gradient(180deg, rgba(8, 44, 24, 0.48) 0%, rgba(12, 60, 33, 0.50) 58%, rgba(7, 36, 20, 0.54) 100%);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
     border-right: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 18px 0 40px rgba(15, 23, 42, 0.26);
     z-index: 1160;
