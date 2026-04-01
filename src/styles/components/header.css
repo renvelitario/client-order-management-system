@@ -251,11 +251,11 @@
   padding: 14px 10px;
   box-sizing: border-box;
   color: #f5f7fb;
-  background: linear-gradient(180deg, rgba(8, 44, 24, 0.52) 0%, rgba(12, 60, 33, 0.55) 58%, rgba(7, 36, 20, 0.58) 100%);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 18px 0 40px rgba(15, 23, 42, 0.18);
+  background: linear-gradient(180deg, rgba(8, 44, 24, 0.3) 0%, rgba(12, 60, 33, 0.32) 58%, rgba(7, 36, 20, 0.34) 100%);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08), 18px 0 40px rgba(15, 23, 42, 0.18);
   z-index: 1110;
   overflow: hidden;
   transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
@@ -377,7 +377,7 @@
     position: fixed;
     inset: 0;
     display: block;
-    background: rgba(15, 23, 42, 0.42);
+    background: rgba(15, 23, 42, 0.08);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -397,11 +397,11 @@
     height: calc(100dvh - 74px);
     padding: 12px;
     overflow: visible;
-    background: linear-gradient(180deg, rgba(8, 44, 24, 0.48) 0%, rgba(12, 60, 33, 0.50) 58%, rgba(7, 36, 20, 0.54) 100%);
-    backdrop-filter: blur(22px) saturate(140%);
-    -webkit-backdrop-filter: blur(22px) saturate(140%);
-    border-right: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 18px 0 40px rgba(15, 23, 42, 0.26);
+    background: linear-gradient(180deg, rgba(8, 44, 24, 0.2) 0%, rgba(12, 60, 33, 0.22) 58%, rgba(7, 36, 20, 0.24) 100%);
+    backdrop-filter: blur(36px) saturate(200%);
+    -webkit-backdrop-filter: blur(36px) saturate(200%);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.12), 18px 0 48px rgba(15, 23, 42, 0.32);
     z-index: 1160;
   }
 
