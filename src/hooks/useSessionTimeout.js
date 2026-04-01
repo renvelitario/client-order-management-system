@@ -14,6 +14,7 @@ export const useSessionTimeout = (isAuthenticated) => {
   const logoutTimeoutRef = useRef(null);
   const warningTimeoutRef = useRef(null);
   const countdownIntervalRef = useRef(null);
+  const lastActivityWriteAtRef = useRef(0);
 
   useEffect(() => {
     const clearScheduledTimers = () => {
@@ -34,6 +35,7 @@ export const useSessionTimeout = (isAuthenticated) => {
     if (!isAuthenticated) {
       clearScheduledTimers();
       closeWarning();
+      lastActivityWriteAtRef.current = 0;
       localStorage.removeItem(LAST_ACTIVITY_STORAGE_KEY);
       return undefined;
     }
@@ -99,6 +101,11 @@ export const useSessionTimeout = (isAuthenticated) => {
 
     const recordActivity = () => {
       const now = Date.now();
+      if ((now - lastActivityWriteAtRef.current) < 500) {
+        return;
+      }
+
+      lastActivityWriteAtRef.current = now;
       localStorage.setItem(LAST_ACTIVITY_STORAGE_KEY, String(now));
       scheduleLogout(now);
     };

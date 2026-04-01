@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import api from '../utils/api';
 import { setStoredInactivityDurationMinutes } from '../utils/inactivity';
@@ -69,11 +69,11 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  const refreshLocalUser = async () => {
+  const refreshLocalUser = useCallback(async () => {
     const { data } = await api.get('/auth/me');
     setLocalUser(data);
     return data;
-  };
+  }, []);
 
   const value = useMemo(() => ({
     session,
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin: String(localUser?.acc_type || '').toLowerCase() === 'admin',
     isDeliveryUser: Boolean(session) && String(localUser?.acc_type || '').toLowerCase() !== 'admin',
     refreshLocalUser,
-  }), [session, localUser, loading, authError]);
+  }), [session, localUser, loading, authError, refreshLocalUser]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -13,8 +13,39 @@ const api = axios.create({
   baseURL: apiBaseUrl,
 });
 
+const SESSION_CACHE_MS = 10_000;
+let cachedSession = null;
+let cachedSessionAt = 0;
+let sessionRequestPromise = null;
+
+const getCachedSession = async () => {
+  const now = Date.now();
+  if (cachedSession && (now - cachedSessionAt) < SESSION_CACHE_MS) {
+    return cachedSession;
+  }
+
+  if (!sessionRequestPromise) {
+    sessionRequestPromise = supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        cachedSession = session || null;
+        cachedSessionAt = Date.now();
+        return cachedSession;
+      })
+      .finally(() => {
+        sessionRequestPromise = null;
+      });
+  }
+
+  return sessionRequestPromise;
+};
+
+supabase.auth.onAuthStateChange((_event, session) => {
+  cachedSession = session || null;
+  cachedSessionAt = Date.now();
+});
+
 api.interceptors.request.use(async (config) => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const session = await getCachedSession();
   if (session?.access_token) {
     config.headers.Authorization = `Bearer ${session.access_token}`;
   }

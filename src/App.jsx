@@ -1,26 +1,34 @@
+import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/Login';
-import ProductsList from './pages/products/List';
-import ProductsAdd from './pages/products/Create';
-import CustomersList from './pages/customers/List';
-import CustomersAdd from './pages/customers/Create';
-import OrdersList from './pages/orders/List';
-import OrdersAdd from './pages/orders/Create';
-import DeliveryTodayOrders from './pages/delivery/TodayOrders';
-import PurchasesList from './pages/purchases/List';
-import PurchasesAdd from './pages/purchases/Create';
-import CreateUserAccount from './pages/account/CreateUserAccount';
-import ProductsUpdate from './pages/products/Update';
-import CustomersUpdate from './pages/customers/Update';
-import AccountSettings from './pages/account/AccountSettings';
-import AccountSecurity from './pages/account/AccountSecurity';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import { useAuth } from './hooks/useAuth';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
 import './styles/base/app.css';
+
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Login = lazy(() => import('./pages/Login'));
+const ProductsList = lazy(() => import('./pages/products/List'));
+const ProductsAdd = lazy(() => import('./pages/products/Create'));
+const CustomersList = lazy(() => import('./pages/customers/List'));
+const CustomersAdd = lazy(() => import('./pages/customers/Create'));
+const OrdersList = lazy(() => import('./pages/orders/List'));
+const OrdersAdd = lazy(() => import('./pages/orders/Create'));
+const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
+const PurchasesList = lazy(() => import('./pages/purchases/List'));
+const PurchasesAdd = lazy(() => import('./pages/purchases/Create'));
+const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
+const ProductsUpdate = lazy(() => import('./pages/products/Update'));
+const CustomersUpdate = lazy(() => import('./pages/customers/Update'));
+const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
+const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
+
+const RouteLoader = () => (
+  <div className="app-loader" role="status" aria-live="polite" aria-label="Loading application">
+    <img src="/logo.png" className="app-loader-logo" alt="Order Management System" />
+  </div>
+);
 
 function App() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -36,11 +44,7 @@ function App() {
   } = useSessionTimeout(isAuthenticated);
 
   if (loading) {
-    return (
-      <div className="app-loader" role="status" aria-live="polite" aria-label="Loading application">
-        <img src="/logo.png" className="app-loader-logo" alt="Order Management System" />
-      </div>
-    );
+    return <RouteLoader />;
   }
 
   const defaultAuthenticatedRoute = isAdmin ? '/dashboard' : '/delivery/orders';
@@ -73,44 +77,48 @@ function App() {
               <Header />
               <main className="app-main">
                 <div className="app-content">
-                  <Routes>
-                    <Route path="/" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
-                    <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
-                    <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
-                    <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
-                    <Route path="/products/new" element={<AdminRoute><ProductsAdd /></AdminRoute>} />
-                    <Route path="/products/edit" element={<AdminRoute><ProductsUpdate /></AdminRoute>} />
-                    <Route path="/customers" element={<ProtectedRoute><CustomersList /></ProtectedRoute>} />
-                    <Route path="/customers/new" element={<AdminRoute><CustomersAdd /></AdminRoute>} />
-                    <Route path="/customers/edit" element={<AdminRoute><CustomersUpdate /></AdminRoute>} />
-                    <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
-                    <Route path="/orders/new" element={<AdminRoute><OrdersAdd /></AdminRoute>} />
-                    <Route path="/purchases" element={<ProtectedRoute><PurchasesList /></ProtectedRoute>} />
-                    <Route path="/purchases/new" element={<AdminRoute><PurchasesAdd /></AdminRoute>} />
-                    <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
-                    <Route path="/account/settings" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
-                    <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />
-                    <Route path="/products_list" element={<Navigate to="/products" replace />} />
-                    <Route path="/products_add" element={<Navigate to="/products/new" replace />} />
-                    <Route path="/products_update" element={<Navigate to="/products/edit" replace />} />
-                    <Route path="/cust_list" element={<Navigate to="/customers" replace />} />
-                    <Route path="/cust_add" element={<Navigate to="/customers/new" replace />} />
-                    <Route path="/cust_update" element={<Navigate to="/customers/edit" replace />} />
-                    <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
-                    <Route path="/orders_add" element={<Navigate to="/orders/new" replace />} />
-                    <Route path="/purchases_list" element={<Navigate to="/purchases" replace />} />
-                    <Route path="/purchases_add" element={<Navigate to="/purchases/new" replace />} />
-                    <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
-                  </Routes>
+                  <Suspense fallback={<RouteLoader />}>
+                    <Routes>
+                      <Route path="/" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
+                      <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
+                      <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
+                      <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
+                      <Route path="/products/new" element={<AdminRoute><ProductsAdd /></AdminRoute>} />
+                      <Route path="/products/edit" element={<AdminRoute><ProductsUpdate /></AdminRoute>} />
+                      <Route path="/customers" element={<ProtectedRoute><CustomersList /></ProtectedRoute>} />
+                      <Route path="/customers/new" element={<AdminRoute><CustomersAdd /></AdminRoute>} />
+                      <Route path="/customers/edit" element={<AdminRoute><CustomersUpdate /></AdminRoute>} />
+                      <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
+                      <Route path="/orders/new" element={<AdminRoute><OrdersAdd /></AdminRoute>} />
+                      <Route path="/purchases" element={<ProtectedRoute><PurchasesList /></ProtectedRoute>} />
+                      <Route path="/purchases/new" element={<AdminRoute><PurchasesAdd /></AdminRoute>} />
+                      <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
+                      <Route path="/account/settings" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
+                      <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />
+                      <Route path="/products_list" element={<Navigate to="/products" replace />} />
+                      <Route path="/products_add" element={<Navigate to="/products/new" replace />} />
+                      <Route path="/products_update" element={<Navigate to="/products/edit" replace />} />
+                      <Route path="/cust_list" element={<Navigate to="/customers" replace />} />
+                      <Route path="/cust_add" element={<Navigate to="/customers/new" replace />} />
+                      <Route path="/cust_update" element={<Navigate to="/customers/edit" replace />} />
+                      <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
+                      <Route path="/orders_add" element={<Navigate to="/orders/new" replace />} />
+                      <Route path="/purchases_list" element={<Navigate to="/purchases" replace />} />
+                      <Route path="/purchases_add" element={<Navigate to="/purchases/new" replace />} />
+                      <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
+                    </Routes>
+                  </Suspense>
                 </div>
               </main>
             </div>
           </>
         ) : (
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
+          <Suspense fallback={<RouteLoader />}>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </Routes>
+          </Suspense>
         )}
       </div>
     </Router>
