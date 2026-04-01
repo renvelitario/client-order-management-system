@@ -56,7 +56,9 @@ const AccountSecurity = () => {
             <input
               type="password"
               name="new_password"
-              minLength="4"
+              minLength="8"
+              pattern="(?=.*[A-Za-z])(?=.*\d).{8,}"
+              title="Password must be at least 8 characters and include letters and numbers."
               value={formData.new_password}
               onChange={handleChange}
               required
@@ -68,7 +70,9 @@ const AccountSecurity = () => {
             <input
               type="password"
               name="confirm_password"
-              minLength="4"
+              minLength="8"
+              pattern="(?=.*[A-Za-z])(?=.*\d).{8,}"
+              title="Password must be at least 8 characters and include letters and numbers."
               value={formData.confirm_password}
               onChange={handleChange}
               required

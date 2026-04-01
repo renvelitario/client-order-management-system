@@ -1,16 +1,26 @@
-import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/Pagination';
+import { usePaginatedList } from '../../hooks/usePaginatedList';
+import { useAuth } from '../../hooks/useAuth';
 
 const CustomersList = () => {
-  const [customers, setCustomers] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const { isAdmin } = useAuth();
+  const {
+    rows: customers,
+    searchInput,
+    loading,
+    currentPage,
+    pageSize,
+    totalRows,
+    totalPages,
+    setCurrentPage,
+    handleSearchChange,
+    handlePageSizeChange,
+    refetch,
+  } = usePaginatedList({ endpoint: '/customers', initialSort: 'desc' });
   const {
     deleteDialog,
     notification,
@@ -24,54 +34,14 @@ const CustomersList = () => {
     return err.response?.data?.error || 'Failed to delete record.';
   });
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
-
-  const fetchCustomers = async () => {
-    try {
-      const { data } = await api.get("/customers");
-      setCustomers(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDeleteConfirm = async () => {
     await confirmDelete(
       (id) => api.delete(`/customers/${id}`),
-      (id) => setCustomers((prev) => prev.filter((c) => c.customer_id !== id)),
+      () => refetch(),
     );
   };
 
-  const filteredCustomers = customers.filter((customer) => {
-    const term = searchInput.trim().toLowerCase();
-    if (!term) return true;
-    return [
-      String(customer.customer_id),
-      customer.name,
-      customer.address,
-      customer.contact_no,
-    ].some((value) => String(value).toLowerCase().includes(term));
-  });
-
-  const totalPages = Math.ceil(filteredCustomers.length / pageSize);
-  const pageCustomers = filteredCustomers.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const handleSearchChange = (e) => {
-    setSearchInput(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handlePageSizeChange = (newSize) => {
-    setPageSize(newSize);
-    setCurrentPage(1);
-  };
+  const pageCustomers = customers;
 
   if (loading) return <div className="container">Loading...</div>;
 
@@ -99,13 +69,15 @@ const CustomersList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={handleSearchChange}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <Link to="/customers/new" className="create-button">
-            <span className="material-icons">add</span>
-            Create
-          </Link>
+          {isAdmin && (
+            <Link to="/customers/new" className="create-button">
+              <span className="material-icons">add</span>
+              Create
+            </Link>
+          )}
         </div>
       </div>
 
@@ -162,7 +134,7 @@ const CustomersList = () => {
         onPageChange={setCurrentPage}
         pageSize={pageSize}
         onPageSizeChange={handlePageSizeChange}
-        totalRows={filteredCustomers.length}
+        totalRows={totalRows}
       />
     </div>
   );

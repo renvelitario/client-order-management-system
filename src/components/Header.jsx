@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import api from '../utils/api';
+import { useAuth } from '../hooks/useAuth';
 import '../styles/components/header.css';
 
 const mainLinks = [
@@ -106,6 +106,7 @@ const Header = () => {
   const [accountEmail, setAccountEmail] = useState('');
   const accountMenuRef = useRef(null);
   const navigate = useNavigate();
+  const { localUser, isAdmin } = useAuth();
 
   useEffect(() => {
     if (!isAccountMenuOpen) return undefined;
@@ -132,29 +133,18 @@ const Header = () => {
   }, [isAccountMenuOpen]);
 
   useEffect(() => {
-    let mounted = true;
+    if (localUser) {
+      const nextName = (localUser.username || localUser.email || 'Account').trim();
+      setAccountName(nextName || 'Account');
+      setAccountEmail(localUser.email || '');
+      return;
+    }
 
-    const loadAccountName = async () => {
-      try {
-        const { data } = await api.get('/auth/me');
-        if (!mounted) return;
-        const nextName = (data?.username || data?.email || 'Account').trim();
-        setAccountName(nextName || 'Account');
-        setAccountEmail(data?.email || '');
-      } catch {
-        const { data } = await supabase.auth.getUser();
-        if (!mounted) return;
-        setAccountName(data?.user?.email || 'Account');
-        setAccountEmail(data?.user?.email || '');
-      }
-    };
-
-    loadAccountName();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    supabase.auth.getUser().then(({ data }) => {
+      setAccountName(data?.user?.email || 'Account');
+      setAccountEmail(data?.user?.email || '');
+    });
+  }, [localUser]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -234,15 +224,17 @@ const Header = () => {
               <Icon name="security" />
               <span>Security</span>
             </NavLink>
-            <NavLink
-              to="/account/users/new"
-              className={({ isActive }) => `top-account-item${isActive ? ' is-active' : ''}`}
-              role="menuitem"
-              onClick={() => setIsAccountMenuOpen(false)}
-            >
-              <Icon name="users" />
-              <span>Add User</span>
-            </NavLink>
+            {isAdmin && (
+              <NavLink
+                to="/account/users/new"
+                className={({ isActive }) => `top-account-item${isActive ? ' is-active' : ''}`}
+                role="menuitem"
+                onClick={() => setIsAccountMenuOpen(false)}
+              >
+                <Icon name="users" />
+                <span>Add User</span>
+              </NavLink>
+            )}
 
             <div className="top-account-divider" role="separator" />
 

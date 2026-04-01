@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
@@ -6,13 +5,24 @@ import { formatPeso } from '../../utils/currency';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import { formatDateTime } from '../../utils/date';
 import Pagination from '../../components/Pagination';
+import { usePaginatedList } from '../../hooks/usePaginatedList';
+import { useAuth } from '../../hooks/useAuth';
 
 const OrdersList = () => {
-  const [orders, setOrders] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const { isAdmin } = useAuth();
+  const {
+    rows: orders,
+    searchInput,
+    loading,
+    currentPage,
+    pageSize,
+    totalRows,
+    totalPages,
+    setCurrentPage,
+    handleSearchChange,
+    handlePageSizeChange,
+    refetch,
+  } = usePaginatedList({ endpoint: '/orders', initialSort: 'desc' });
   const {
     deleteDialog,
     notification,
@@ -21,52 +31,13 @@ const OrdersList = () => {
     handleDeleteConfirm: confirmDelete,
   } = useDeleteDialog((err) => err.response?.data?.error || 'Failed to delete order.');
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const { data } = await api.get('/orders');
-      setOrders(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredOrders = orders.filter((order) => {
-    const term = searchInput.trim().toLowerCase();
-    if (!term) return true;
-    return [
-      String(order.order_id),
-      String(order.customer_id),
-      String(order.total_amount),
-      String(order.order_date),
-    ].some((value) => String(value).toLowerCase().includes(term));
-  });
-
-  const totalPages = Math.ceil(filteredOrders.length / pageSize);
-  const pageOrders = filteredOrders.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const handleSearchChange = (e) => {
-    setSearchInput(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handlePageSizeChange = (newSize) => {
-    setPageSize(newSize);
-    setCurrentPage(1);
-  };
+  
+  const pageOrders = orders;
 
   const handleDeleteConfirm = async () => {
     await confirmDelete(
       (id) => api.delete(`/orders/${id}`),
-      (id) => setOrders((prev) => prev.filter((order) => order.order_id !== id)),
+      () => refetch(),
       { success: 'Order deleted successfully.' },
     );
   };
@@ -97,13 +68,15 @@ const OrdersList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={handleSearchChange}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <Link to="/orders/new" className="create-button">
-            <span className="material-icons">add</span>
-            Create
-          </Link>
+          {isAdmin && (
+            <Link to="/orders/new" className="create-button">
+              <span className="material-icons">add</span>
+              Create
+            </Link>
+          )}
         </div>
       </div>
 
@@ -168,7 +141,7 @@ const OrdersList = () => {
         onPageChange={setCurrentPage}
         pageSize={pageSize}
         onPageSizeChange={handlePageSizeChange}
-        totalRows={filteredOrders.length}
+        totalRows={totalRows}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
+import { getListData } from '../../utils/listResponse';
 
 const PurchasesAdd = () => {
   const [formData, setFormData] = useState({
@@ -13,11 +14,12 @@ const PurchasesAdd = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/products')
+    api.get('/products', { params: { page: 1, limit: 100, sort: 'desc' } })
       .then((res) => {
-        setProducts(res.data);
-        if (res.data.length) {
-          setFormData((prev) => ({ ...prev, product_id: String(res.data[0].product_id) }));
+        const rows = getListData(res.data).data;
+        setProducts(rows);
+        if (rows.length) {
+          setFormData((prev) => ({ ...prev, product_id: String(rows[0].product_id) }));
         }
       })
       .catch(console.error);

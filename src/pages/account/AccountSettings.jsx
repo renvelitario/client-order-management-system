@@ -14,8 +14,6 @@ const AccountSettings = () => {
   const [formData, setFormData] = useState({
     email: '',
     username: '',
-    acc_type: 'User',
-    status: 'Active',
     password: ''
   });
   const [loading, setLoading] = useState(true);
@@ -34,9 +32,7 @@ const AccountSettings = () => {
         setFormData((prev) => ({
           ...prev,
           email: data.email || '',
-          username: data.username || '',
-          acc_type: data.acc_type || 'User',
-          status: data.status || 'Active'
+          username: data.username || ''
         }));
       } catch (err) {
         setError(err.response?.data?.error || 'Failed to load account details.');
@@ -111,22 +107,6 @@ const AccountSettings = () => {
           <div className="form-group">
             <label>Username:</label>
             <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Account Type:</label>
-            <select name="acc_type" value={formData.acc_type} onChange={handleChange} required>
-              <option value="Admin">Admin</option>
-              <option value="User">User</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Status:</label>
-            <select name="status" value={formData.status} onChange={handleChange} required>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
           </div>
 
           <div className="form-group">

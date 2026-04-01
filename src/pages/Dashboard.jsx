@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import api from '../utils/api';
 import {
   ResponsiveContainer,
@@ -17,8 +17,6 @@ import {
 } from 'recharts';
 import '../styles/pages/dashboard.css';
 import { formatPeso } from '../utils/currency';
-
-const RECENT_ORDERS_LIMIT = 10;
 
 const RANGE_OPTIONS = [
   { value: 'this_month', label: 'This Month' },
@@ -59,64 +57,21 @@ const getDateRange = (rangeKey) => {
   return { start, end };
 };
 
-const isWithinRange = (dateValue, rangeKey) => {
+const getRangeQuery = (rangeKey) => {
   const { start, end } = getDateRange(rangeKey);
-  if (!start || !end) return true;
+  if (!start || !end) {
+    return {};
+  }
 
-  const parsed = new Date(dateValue);
-  if (Number.isNaN(parsed.getTime())) return false;
-  return parsed >= start && parsed <= end;
-};
-
-const buildOrderTrend = (orders) => {
-  const totals = new Map();
-
-  orders.forEach((order) => {
-    const d = new Date(order.order_date);
-    if (Number.isNaN(d.getTime())) return;
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    totals.set(key, (totals.get(key) || 0) + 1);
-  });
-
-  const points = [...totals.entries()]
-    .sort((a, b) => new Date(a[0]) - new Date(b[0]))
-    .slice(-7)
-    .map(([date, count]) => ({
-      label: date.slice(5),
-      value: count,
-    }));
-
-  return points;
-};
-
-const buildTopProducts = (orders, productNameById) => {
-  const totals = new Map();
-
-  orders.forEach((order) => {
-    (order.items || []).forEach((item) => {
-      const key = String(item.product_id);
-      totals.set(key, (totals.get(key) || 0) + Number(item.quantity || 0));
-    });
-  });
-
-  const ranked = [...totals.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([productId, qty]) => ({
-      product: productNameById.get(productId) || `Product #${productId}`,
-      quantity: qty,
-    }));
-
-  return ranked;
+  return {
+    from: start.toISOString(),
+    to: end.toISOString(),
+  };
 };
 
 const Dashboard = () => {
   const [range, setRange] = useState('this_month');
   const [username, setUsername] = useState('User');
-  const [rawProducts, setRawProducts] = useState([]);
-  const [rawCustomers, setRawCustomers] = useState([]);
-  const [rawPurchases, setRawPurchases] = useState([]);
-  const [rawOrders, setRawOrders] = useState([]);
   const [stats, setStats] = useState({
     totalProducts: 0,
     lowStockProducts: 0,
@@ -132,88 +87,79 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const rangeParams = useMemo(() => getRangeQuery(range), [range]);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUser = async () => {
       setError('');
       try {
-        const [productsRes, custRes, purchRes, ordersRes, authMeRes] = await Promise.all([
-          api.get('/products'),
-          api.get('/customers'),
-          api.get('/purchases'),
-          api.get('/orders'),
-          api.get('/auth/me')
-        ]);
-
-        setRawProducts(productsRes.data || []);
-        setRawCustomers(custRes.data || []);
-        setRawPurchases(purchRes.data || []);
-        setRawOrders(ordersRes.data || []);
-        setUsername((authMeRes.data?.username || authMeRes.data?.email || 'User').trim());
+        const { data: authMeRes } = await api.get('/auth/me');
+        setUsername((authMeRes?.username || authMeRes?.email || 'User').trim());
       } catch (error) {
         console.error("Dashboard fetch error", error);
         setError(error.response?.data?.error || 'Failed to load dashboard data.');
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const [summaryRes, recentOrdersRes] = await Promise.all([
+          api.get('/dashboard/summary', { params: rangeParams }),
+          api.get('/dashboard/recent-orders', { params: rangeParams }),
+        ]);
+
+        const inventorySummary = summaryRes.data?.summary?.inventorySummary || {};
+        setStats({
+          totalProducts: Number(inventorySummary.totalProducts || 0),
+          lowStockProducts: Number(inventorySummary.lowStockProducts || 0),
+          outOfStockProducts: Number(inventorySummary.outOfStockProducts || 0),
+          totalCustomers: Number(summaryRes.data?.summary?.totalCustomers || 0),
+          totalPurchases: Number(summaryRes.data?.summary?.totalPurchases || 0),
+          totalOrders: Number(summaryRes.data?.summary?.totalOrders || 0),
+        });
+
+        setBarData({
+          low: Number(inventorySummary.lowStockProducts || 0),
+          out: Number(inventorySummary.outOfStockProducts || 0),
+          healthy: Number(inventorySummary.healthyStockProducts || 0),
+        });
+
+        const monthly = summaryRes.data?.monthlyRevenue || [];
+        setLineData(monthly.map((entry) => ({ label: entry.month, value: Number(entry.revenue || 0) })));
+
+        const top = summaryRes.data?.topProducts || [];
+        setTopProducts(top.map((entry) => ({
+          product: entry.product_name,
+          quantity: Number(entry.sold_quantity || 0),
+        })));
+
+        const latestOrders = (recentOrdersRes.data?.data || []).map((order) => ({
+          ...order,
+          product_name: (order.items || []).length
+            ? order.items.map((item) => item.product_name || `Product #${item.product_id}`).join(', ')
+            : 'N/A',
+          item_count: (order.items || []).length,
+          total_amount: Number(order.total_amount || 0),
+        }));
+
+        setRecentOrders(latestOrders);
+      } catch (fetchError) {
+        console.error('Dashboard fetch error', fetchError);
+        setError(fetchError.response?.data?.error || 'Failed to load dashboard data.');
       } finally {
         setLoading(false);
       }
     };
-    
-    fetchData();
-  }, []);
 
-  useEffect(() => {
-    const products = rawProducts;
-    const customers = rawCustomers;
-    const filteredPurchases = rawPurchases.filter((p) => isWithinRange(p.purchase_date, range));
-    const filteredOrders = rawOrders.filter((o) => isWithinRange(o.order_date, range));
-
-    const productNameById = new Map(products.map((product) => [String(product.product_id), product.product_name]));
-    const customerNameById = new Map(customers.map((customer) => [Number(customer.customer_id), customer.name]));
-
-    const lowStock = products.filter((p) => Number(p.quantity) > 0 && Number(p.quantity) <= 10).length;
-    const outOfStock = products.filter((p) => Number(p.quantity) === 0).length;
-    const healthyStock = products.filter((p) => Number(p.quantity) > 10).length;
-
-    setStats({
-      totalProducts: products.length,
-      lowStockProducts: lowStock,
-      outOfStockProducts: outOfStock,
-      totalCustomers: customers.length,
-      totalPurchases: filteredPurchases.length,
-      totalOrders: filteredOrders.length,
-    });
-
-    setBarData({
-      low: lowStock,
-      out: outOfStock,
-      healthy: healthyStock,
-    });
-
-    setLineData(buildOrderTrend(filteredOrders));
-    setTopProducts(buildTopProducts(filteredOrders, productNameById));
-
-    const latestOrders = [...rawOrders]
-      .sort((left, right) => new Date(right.order_date) - new Date(left.order_date))
-      .slice(0, RECENT_ORDERS_LIMIT)
-      .map((order) => {
-        const productNames = (order.items || []).length
-          ? (order.items || [])
-            .map((item) => productNameById.get(String(item.product_id)) || `Product #${item.product_id}`)
-            .join(', ')
-          : 'N/A';
-
-        const item_count = (order.items || []).length;
-
-        return {
-          ...order,
-          product_name: productNames,
-          customer_name: customerNameById.get(Number(order.customer_id)) || `Customer #${order.customer_id}`,
-          item_count,
-          total_amount: Number(order.total_amount || 0),
-        };
-      });
-
-    setRecentOrders(latestOrders);
-  }, [range, rawProducts, rawCustomers, rawPurchases, rawOrders]);
+    fetchAnalytics();
+  }, [rangeParams]);
 
   if (loading) {
     return (

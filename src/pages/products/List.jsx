@@ -1,17 +1,27 @@
-import { useEffect, useState } from "react";
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
 import { formatPeso } from "../../utils/currency";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/Pagination';
+import { usePaginatedList } from '../../hooks/usePaginatedList';
+import { useAuth } from '../../hooks/useAuth';
 
 const ProductsList = () => {
-  const [products, setProducts] = useState([]);
-  const [searchInput, setSearchInput] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const { isAdmin } = useAuth();
+  const {
+    rows: products,
+    searchInput,
+    loading,
+    currentPage,
+    pageSize,
+    totalRows,
+    totalPages,
+    setCurrentPage,
+    handleSearchChange,
+    handlePageSizeChange,
+    refetch,
+  } = usePaginatedList({ endpoint: '/products', initialSort: 'desc' });
   const {
     deleteDialog,
     notification,
@@ -25,55 +35,14 @@ const ProductsList = () => {
     return err.response?.data?.error || 'Failed to delete record.';
   });
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const { data } = await api.get("/products");
-      setProducts(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDeleteConfirm = async () => {
     await confirmDelete(
       (id) => api.delete(`/products/${id}`),
-      (id) => setProducts((prev) => prev.filter((p) => p.product_id !== id)),
+      () => refetch(),
     );
   };
 
-  const filteredProducts = products.filter((product) => {
-    const term = searchInput.trim().toLowerCase();
-    if (!term) return true;
-    return [
-      String(product.product_id),
-      product.product_name,
-      String(product.quantity),
-      String(product.price),
-      product.status,
-    ].some((value) => String(value).toLowerCase().includes(term));
-  });
-
-  const totalPages = Math.ceil(filteredProducts.length / pageSize);
-  const pageProducts = filteredProducts.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const handleSearchChange = (e) => {
-    setSearchInput(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handlePageSizeChange = (newSize) => {
-    setPageSize(newSize);
-    setCurrentPage(1);
-  };
+  const pageProducts = products;
 
   if (loading) return <div className="container">Loading...</div>;
 
@@ -101,13 +70,15 @@ const ProductsList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={handleSearchChange}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <Link to="/products/new" className="create-button">
-            <span className="material-icons">add</span>
-            Create
-          </Link>
+          {isAdmin && (
+            <Link to="/products/new" className="create-button">
+              <span className="material-icons">add</span>
+              Create
+            </Link>
+          )}
         </div>
       </div>
 
@@ -169,7 +140,7 @@ const ProductsList = () => {
         onPageChange={setCurrentPage}
         pageSize={pageSize}
         onPageSizeChange={handlePageSizeChange}
-        totalRows={filteredProducts.length}
+        totalRows={totalRows}
       />
     </div>
   );

@@ -3,6 +3,7 @@ import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
 import { formatPeso } from '../../utils/currency';
+import { getListData } from '../../utils/listResponse';
 
 const OrdersAdd = () => {
   const [formData, setFormData] = useState({
@@ -17,18 +18,20 @@ const OrdersAdd = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/products')
+    api.get('/products', { params: { page: 1, limit: 100, sort: 'desc' } })
       .then((res) => {
-        const activeProducts = res.data.filter((p) => String(p.status).toLowerCase() === 'active');
+        const rows = getListData(res.data).data;
+        const activeProducts = rows.filter((p) => String(p.status).toLowerCase() === 'active');
         setProducts(activeProducts);
       })
       .catch(console.error);
 
-    api.get('/customers')
+    api.get('/customers', { params: { page: 1, limit: 100, sort: 'desc' } })
       .then((res) => {
-        setCustomers(res.data);
-        if (res.data.length) {
-          setFormData((prev) => ({ ...prev, customer_id: String(res.data[0].customer_id) }));
+        const rows = getListData(res.data).data;
+        setCustomers(rows);
+        if (rows.length) {
+          setFormData((prev) => ({ ...prev, customer_id: String(rows[0].customer_id) }));
         }
       })
       .catch(console.error);

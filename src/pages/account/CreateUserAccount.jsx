@@ -85,7 +85,8 @@ const CreateUserAccount = () => {
           <label>Status:</label>
           <select name="status" value={formData.status} onChange={handleChange}>
             <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="Disabled">Disabled</option>
+            <option value="Suspended">Suspended</option>
           </select>
         </div>
 

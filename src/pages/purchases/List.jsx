@@ -1,17 +1,27 @@
-import { useEffect, useState } from 'react';
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import { formatDateTime } from '../../utils/date';
 import Pagination from '../../components/Pagination';
+import { usePaginatedList } from '../../hooks/usePaginatedList';
+import { useAuth } from '../../hooks/useAuth';
 
 const PurchasesList = () => {
-  const [purchases, setPurchases] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const { isAdmin } = useAuth();
+  const {
+    rows: purchases,
+    searchInput,
+    loading,
+    currentPage,
+    pageSize,
+    totalRows,
+    totalPages,
+    setCurrentPage,
+    handleSearchChange,
+    handlePageSizeChange,
+    refetch,
+  } = usePaginatedList({ endpoint: '/purchases', initialSort: 'desc' });
   const {
     deleteDialog,
     notification,
@@ -20,54 +30,14 @@ const PurchasesList = () => {
     handleDeleteConfirm: confirmDelete,
   } = useDeleteDialog((err) => err.response?.data?.error || 'Failed to delete record.');
 
-  useEffect(() => {
-    fetchPurchases();
-  }, []);
-
-  const fetchPurchases = async () => {
-    try {
-      const { data } = await api.get('/purchases');
-      setPurchases(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDeleteConfirm = async () => {
     await confirmDelete(
       (id) => api.delete(`/purchases/${id}`),
-      (id) => setPurchases((prev) => prev.filter((p) => p.purchase_id !== id)),
+      () => refetch(),
     );
   };
 
-  const filteredPurchases = purchases.filter((purchase) => {
-    const term = searchInput.trim().toLowerCase();
-    if (!term) return true;
-    return [
-      String(purchase.purchase_id),
-      String(purchase.product_id),
-      String(purchase.quantity),
-      String(purchase.purchase_date),
-    ].some((value) => String(value).toLowerCase().includes(term));
-  });
-
-  const totalPages = Math.ceil(filteredPurchases.length / pageSize);
-  const pagePurchases = filteredPurchases.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const handleSearchChange = (e) => {
-    setSearchInput(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handlePageSizeChange = (newSize) => {
-    setPageSize(newSize);
-    setCurrentPage(1);
-  };
+  const pagePurchases = purchases;
 
   if (loading) return <div className="container">Loading...</div>;
 
@@ -95,13 +65,15 @@ const PurchasesList = () => {
               type="text"
               placeholder="Search..."
               value={searchInput}
-              onChange={handleSearchChange}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
-          <Link to="/purchases/new" className="create-button">
-            <span className="material-icons">add</span>
-            Create
-          </Link>
+          {isAdmin && (
+            <Link to="/purchases/new" className="create-button">
+              <span className="material-icons">add</span>
+              Create
+            </Link>
+          )}
         </div>
       </div>
 
@@ -149,7 +121,7 @@ const PurchasesList = () => {
         onPageChange={setCurrentPage}
         pageSize={pageSize}
         onPageSizeChange={handlePageSizeChange}
-        totalRows={filteredPurchases.length}
+        totalRows={totalRows}
       />
     </div>
   );
