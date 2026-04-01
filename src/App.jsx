@@ -20,12 +20,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import { useAuth } from './hooks/useAuth';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
-import { usePullToRefresh } from './hooks/usePullToRefresh';
 import './styles/base/app.css';
 
 function App() {
   const { isAuthenticated, isAdmin, loading } = useAuth();
-  const { pullDistance, isPulling, isReadyToRefresh } = usePullToRefresh();
   const {
     warningState,
     minutesRemaining,
@@ -50,13 +48,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <div
-          className={`pull-refresh-indicator${isPulling ? ' visible' : ''}${isReadyToRefresh ? ' ready' : ''}`}
-          style={{ top: `${-56 + pullDistance}px` }}
-          aria-hidden="true"
-        >
-          {isReadyToRefresh ? 'Release to reload' : 'Pull down to reload'}
-        </div>
         {isAuthenticated ? (
           <>
             {warningState.isOpen && (
