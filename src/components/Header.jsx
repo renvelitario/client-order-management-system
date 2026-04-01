@@ -116,6 +116,7 @@ const Header = () => {
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [fallbackAccount, setFallbackAccount] = useState({ name: 'Account', email: '' });
   const accountMenuRef = useRef(null);
+  const sidebarRef = useRef(null);
   const navigate = useNavigate();
   const { localUser, isAdmin } = useAuth();
   const navLinks = isAdmin ? adminLinks : deliveryLinks;
@@ -161,6 +162,43 @@ const Header = () => {
       });
     });
   }, [localUser]);
+
+  useEffect(() => {
+    if (!isSidebarOpen) {
+      return undefined;
+    }
+
+    const isMobileView = window.matchMedia('(max-width: 980px)').matches;
+    if (!isMobileView) {
+      return undefined;
+    }
+
+    const previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handlePointerDownOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDownOutside, true);
+    document.addEventListener('touchstart', handlePointerDownOutside, true);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.removeEventListener('mousedown', handlePointerDownOutside, true);
+      document.removeEventListener('touchstart', handlePointerDownOutside, true);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSidebarOpen]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -262,7 +300,7 @@ const Header = () => {
         </div>
       </header>
 
-      <aside className={`dashboard-sidebar${isSidebarOpen ? ' is-open' : ''}`}>
+      <aside ref={sidebarRef} className={`dashboard-sidebar${isSidebarOpen ? ' is-open' : ''}`}>
         <nav className="sidebar-nav" aria-label="Primary navigation">
           <div className="sidebar-section">
             {navLinks.map(({ to, label, icon, end }) => (

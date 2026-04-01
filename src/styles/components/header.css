@@ -370,6 +370,10 @@
     display: none;
   }
 
+  .mobile-shell-bar {
+    z-index: 1100;
+  }
+
   .sidebar-backdrop {
     position: fixed;
     inset: 0;
@@ -380,7 +384,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
-    z-index: 1105;
+    z-index: 1150;
   }
 
   .sidebar-backdrop.is-open {
@@ -401,6 +405,7 @@
     -webkit-backdrop-filter: blur(22px) saturate(120%);
     border-right: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 18px 0 40px rgba(15, 23, 42, 0.26);
+    z-index: 1160;
   }
 
   .dashboard-sidebar:hover {
