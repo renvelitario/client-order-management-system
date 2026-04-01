@@ -6,6 +6,7 @@ import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
+import DeleteConfirmModal from '../../components/DeleteConfirmModal';
 
 const ProductsList = () => {
   const { isAdmin } = useAuth();
@@ -48,18 +49,13 @@ const ProductsList = () => {
 
   return (
     <div className="container">
-      {deleteDialog.show && (
-        <div className="modal-overlay">
-          <div className="modal-box">
-            <h3>Delete Product</h3>
-            <p>Are you sure you want to delete this record? This action cannot be undone.</p>
-            <div className="modal-actions">
-              <button className="modal-cancel" onClick={handleDeleteCancel}>Cancel</button>
-              <button className="modal-confirm-delete" onClick={handleDeleteConfirm}>Delete</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmModal
+        open={deleteDialog.show}
+        title="Delete Product"
+        message="Are you sure you want to delete this record? This action cannot be undone."
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
 
       <div className="header-row">
         <h2>Products</h2>
