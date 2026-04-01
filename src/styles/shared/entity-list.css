@@ -17,11 +17,17 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 6px 10px;
-    width: 260px;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    width: 280px;
+    transition: var(--transition-fast);
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--border-focus);
 }
 
 .search-input-wrapper .material-icons {
@@ -41,19 +47,22 @@
 .create-button {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 8px 14px;
-    background-color: #4caf50;
-    color: #fff;
-    border-radius: 6px;
+    gap: 6px;
+    padding: 10px 16px;
+    background-color: var(--primary);
+    color: var(--text-inverse);
+    border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-sm);
 }
 
 .create-button:hover {
-    background-color: #45a049;
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .create-button .material-icons {
@@ -68,20 +77,27 @@ table {
 
 th,
 td {
-    padding: 10px;
+    padding: 12px 16px;
     text-align: left;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-color);
 }
 
 th {
-    background: #f8fafc;
-    color: #334155;
+    background: var(--surface-alt);
+    color: var(--text-muted);
     font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* ROW HOVER EFFECT */
+tbody tr {
+    transition: var(--transition-fast);
+}
+
 tbody tr:hover {
-    background: #f8fafc;
+    background: var(--surface-alt);
 }
 
 /* INACTIVE ROW */
@@ -96,16 +112,16 @@ tbody tr:hover {
     align-items: center;
     gap: 4px;
     padding: 6px 12px;
-    background-color: #4caf50;
-    color: #fff;
-    border-radius: 5px;
+    background-color: var(--primary);
+    color: var(--text-inverse);
+    border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 13px;
-    transition: background-color 0.3s ease;
+    transition: var(--transition-fast);
 }
 
 .edit-button:hover {
-    background-color: #45a049;
+    background-color: var(--primary-hover);
 }
 
 .edit-button .material-icons {
@@ -118,17 +134,17 @@ tbody tr:hover {
     align-items: center;
     gap: 4px;
     padding: 6px 12px;
-    background-color: #1e88e5;
-    color: #fff;
+    background-color: var(--secondary);
+    color: var(--text-inverse);
     border: none;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: var(--transition-fast);
 }
 
 .view-button:hover {
-    background-color: #1565c0;
+    background-color: var(--secondary-hover);
 }
 
 .view-button .material-icons {
@@ -141,18 +157,18 @@ tbody tr:hover {
     align-items: center;
     gap: 4px;
     padding: 6px 12px;
-    background-color: #e53935;
-    color: #fff;
+    background-color: var(--danger);
+    color: var(--text-inverse);
     border: none;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     font-size: 13px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: var(--transition-fast);
     margin-left: 6px;
 }
 
 .delete-button:hover {
-    background-color: #c62828;
+    background-color: var(--danger-hover);
 }
 
 .delete-button .material-icons {
@@ -399,25 +415,27 @@ tbody tr:hover {
 }
 
 .rows-per-page select {
-    height: 34px;
-    padding: 0 28px 0 10px;
-    border: 1px solid #dde3ec;
-    border-radius: 5px;
+    height: 38px;
+    padding: 0 28px 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     font-size: 13px;
     font-family: 'Montserrat', Arial, sans-serif;
-    color: #334155;
-    background: #fff;
+    color: var(--text-main);
+    background: var(--surface);
     cursor: pointer;
     outline: none;
     appearance: none;
     -webkit-appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 8px center;
+    background-position: right 10px center;
+    transition: var(--transition-fast);
 }
 
 .rows-per-page select:focus {
-    border-color: #4caf50;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--border-focus);
 }
 
 /* PAGINATION CONTROLS */
@@ -428,32 +446,33 @@ tbody tr:hover {
 }
 
 .pagination-btn {
-    min-width: 34px;
-    height: 34px;
-    padding: 0 6px;
-    border: 1px solid #dde3ec;
-    background: #fff;
-    color: #334155;
-    border-radius: 5px;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 8px;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-main);
+    border-radius: var(--radius-sm);
     font-size: 13px;
     font-family: 'Montserrat', Arial, sans-serif;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    transition: var(--transition-fast);
 }
 
 .pagination-btn:hover:not(:disabled) {
-    background-color: #f1f5f9;
-    border-color: #cbd5e1;
+    background-color: var(--surface-alt);
+    border-color: var(--border-color);
 }
 
 .pagination-btn:disabled {
-    color: #b0bec5;
-    border-color: #e8edf2;
-    background: #f8fafc;
+    color: var(--text-muted);
+    border-color: var(--border-color);
+    background: var(--surface-alt);
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .pagination-btn .material-icons {
@@ -464,27 +483,30 @@ tbody tr:hover {
 
 .pagination-input {
     width: 48px;
-    height: 34px;
+    height: 38px;
     padding: 0 6px;
-    border: 1px solid #dde3ec;
-    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     font-size: 13px;
     font-family: 'Montserrat', Arial, sans-serif;
-    color: #334155;
+    color: var(--text-main);
     text-align: center;
     outline: none;
     box-sizing: border-box;
+    appearance: textfield;
     -moz-appearance: textfield;
+    transition: var(--transition-fast);
 }
 
 .pagination-input::-webkit-outer-spin-button,
 .pagination-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
+    appearance: none;
     margin: 0;
 }
 
 .pagination-input:focus {
-    border-color: #4caf50;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--border-focus);
 }
 
 .pagination-of {

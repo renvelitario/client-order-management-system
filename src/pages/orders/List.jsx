@@ -166,7 +166,7 @@ const OrdersList = () => {
                     )}
                   >
                     <span className="material-icons">visibility</span>
-                    <span className="view-text">View Items</span>
+                    <span className="view-text">View</span>
                   </button>
                   <button className="view-button" onClick={() => handlePrintReceipt(o)}>
                     <span className="material-icons">qr_code_2</span>

@@ -55,13 +55,31 @@
 .update-form select,
 .form-group input[type="text"],
 .form-group textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 10px;
-    }
+    margin-bottom: 12px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 14px;
+    transition: var(--transition-fast);
+}
+
+.product-container input[type="text"]:focus,
+.product-container input[type="number"]:focus,
+.add-customer input[type="text"]:focus,
+.add-customer textarea:focus,
+.order-container input[type="text"]:focus,
+.purchase-container input[type="text"]:focus,
+.update-form input[type="text"]:focus,
+.update-form input[type="number"]:focus,
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--border-focus);
+}
 
     .product-container select,
     .order-container select,
@@ -69,21 +87,22 @@
     .update-form select,
     .form-group select {
         display: block;
-        height: 34px;
-        padding: 0 28px 0 10px;
-        border: 1px solid #dde3ec;
-        border-radius: 5px;
-        font-size: 13px;
+        height: 44px;
+        padding: 0 28px 0 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 14px;
         font-family: 'Montserrat', Arial, sans-serif;
-        color: #334155;
-        background: #fff;
+        color: var(--text-main);
+        background: var(--surface);
         cursor: pointer;
         outline: none;
         appearance: none;
         -webkit-appearance: none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
-        background-position: right 8px center;
+        background-position: right 12px center;
+        transition: var(--transition-fast);
     }
 
     .product-container select:focus,
@@ -91,7 +110,8 @@
     .purchase-container select:focus,
     .update-form select:focus,
     .form-group select:focus {
-        border-color: #4caf50;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--border-focus);
     }
 
 .add-customer textarea,
@@ -105,17 +125,19 @@
 .purchase-container input[type="submit"],
 .update-form input[type="submit"],
 .form-group input[type="submit"] {
-    padding: 10px;
-    background-color: #4caf50;
-    color: #fff;
+    padding: 12px;
+    background-color: var(--primary);
+    color: var(--text-inverse);
     border: none;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    transition: var(--transition-fast);
     text-transform: uppercase;
     width: 40%;
     margin-top: 10px;
+    box-shadow: var(--shadow-sm);
 }
 
 .product-container input[type="submit"]:hover,
@@ -124,7 +146,9 @@
 .purchase-container input[type="submit"]:hover,
 .update-form input[type="submit"]:hover,
 .form-group input[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .form-group {
