@@ -16,7 +16,7 @@ import {
   Legend,
 } from 'recharts';
 import '../styles/pages/dashboard.css';
-import { formatPeso } from '../utils/currency';
+import { formatPeso } from '../utils/formatters';
 
 const RANGE_OPTIONS = [
   { value: 'this_month', label: 'This Month' },

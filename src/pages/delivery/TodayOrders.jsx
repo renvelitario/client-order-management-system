@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import api from '../../utils/api';
-import Pagination from '../../components/Pagination';
-import OrderScanner from '../../components/OrderScanner';
+import Pagination from '../../components/ui/Pagination';
+import OrderScanner from '../../components/features/OrderScanner';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { formatDateTime } from '../../utils/date';
 import '../../styles/pages/delivery/today-orders.css';

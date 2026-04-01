@@ -1,26 +1,25 @@
 import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Header from './components/Header';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminRoute from './components/AdminRoute';
+import AppLayout from './components/layout/AppLayout';
+import { ProtectedRoute, AdminRoute } from './components/auth/RouteGuards';
 import { useAuth } from './hooks/useAuth';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
 import './styles/base/app.css';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
-const ProductsList = lazy(() => import('./pages/products/List'));
-const ProductsAdd = lazy(() => import('./pages/products/Create'));
-const CustomersList = lazy(() => import('./pages/customers/List'));
-const CustomersAdd = lazy(() => import('./pages/customers/Create'));
-const OrdersList = lazy(() => import('./pages/orders/List'));
-const OrdersAdd = lazy(() => import('./pages/orders/Create'));
+const ProductsList = lazy(() => import('./pages/products/ProductList'));
+const ProductsAdd = lazy(() => import('./pages/products/ProductCreate'));
+const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
+const CustomersAdd = lazy(() => import('./pages/customers/CustomerCreate'));
+const OrdersList = lazy(() => import('./pages/orders/OrderList'));
+const OrdersAdd = lazy(() => import('./pages/orders/OrderCreate'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
-const PurchasesList = lazy(() => import('./pages/purchases/List'));
-const PurchasesAdd = lazy(() => import('./pages/purchases/Create'));
+const PurchasesList = lazy(() => import('./pages/purchases/PurchaseList'));
+const PurchasesAdd = lazy(() => import('./pages/purchases/PurchaseCreate'));
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
-const ProductsUpdate = lazy(() => import('./pages/products/Update'));
-const CustomersUpdate = lazy(() => import('./pages/customers/Update'));
+const ProductsUpdate = lazy(() => import('./pages/products/ProductUpdate'));
+const CustomersUpdate = lazy(() => import('./pages/customers/CustomerUpdate'));
 const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
 
@@ -73,11 +72,8 @@ function App() {
                 </div>
               </div>
             )}
-            <div className="app-shell">
-              <Header />
-              <main className="app-main">
-                <div className="app-content">
-                  <Suspense fallback={<RouteLoader />}>
+            <AppLayout>
+              <Suspense fallback={<RouteLoader />}>
                     <Routes>
                       <Route path="/" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                       <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
@@ -108,9 +104,7 @@ function App() {
                       <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                     </Routes>
                   </Suspense>
-                </div>
-              </main>
-            </div>
+            </AppLayout>
           </>
         ) : (
           <Suspense fallback={<RouteLoader />}>

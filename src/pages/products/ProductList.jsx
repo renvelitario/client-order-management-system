@@ -1,17 +1,17 @@
-import api from '../../utils/api';
-import { Link } from 'react-router-dom';
-import '../../styles/shared/entity-list.css';
+import api from "../../utils/api";
+import { Link } from "react-router-dom";
+import "../../styles/shared/entity-list.css";
+import { formatPeso } from "../../utils/currency";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
-import { formatDateTime } from '../../utils/date';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
-import DeleteConfirmModal from '../../components/DeleteConfirmModal';
+import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 
-const PurchasesList = () => {
+const ProductsList = () => {
   const { isAdmin } = useAuth();
   const {
-    rows: purchases,
+    rows: products,
     searchInput,
     loading,
     currentPage,
@@ -22,23 +22,28 @@ const PurchasesList = () => {
     handleSearchChange,
     handlePageSizeChange,
     refetch,
-  } = usePaginatedList({ endpoint: '/purchases', initialSort: 'desc' });
+  } = usePaginatedList({ endpoint: '/products', initialSort: 'desc' });
   const {
     deleteDialog,
     notification,
     handleDeleteClick,
     handleDeleteCancel,
     handleDeleteConfirm: confirmDelete,
-  } = useDeleteDialog((err) => err.response?.data?.error || 'Failed to delete record.');
+  } = useDeleteDialog((err) => {
+    if (err.response?.status === 409) {
+      return 'This record cannot be deleted because it is used in other records.';
+    }
+    return err.response?.data?.error || 'Failed to delete record.';
+  });
 
   const handleDeleteConfirm = async () => {
     await confirmDelete(
-      (id) => api.delete(`/purchases/${id}`),
+      (id) => api.delete(`/products/${id}`),
       () => refetch(),
     );
   };
 
-  const pagePurchases = purchases;
+  const pageProducts = products;
 
   if (loading) return <div className="container">Loading...</div>;
 
@@ -46,14 +51,14 @@ const PurchasesList = () => {
     <div className="container">
       <DeleteConfirmModal
         open={deleteDialog.show}
-        title="Delete Purchase"
+        title="Delete Product"
         message="Are you sure you want to delete this record? This action cannot be undone."
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
       />
 
       <div className="header-row">
-        <h2>Purchases</h2>
+        <h2>Products</h2>
         <div className="search-container">
           <div className="search-input-wrapper">
             <span className="material-icons">search</span>
@@ -65,7 +70,7 @@ const PurchasesList = () => {
             />
           </div>
           {isAdmin && (
-            <Link to="/purchases/new" className="create-button">
+            <Link to="/products/new" className="create-button">
               <span className="material-icons">add</span>
               Create
             </Link>
@@ -77,28 +82,40 @@ const PurchasesList = () => {
         <div className={`notification ${notification.type}`}>{notification.message}</div>
       )}
 
-      <table id="purchases-table">
+      <table id="products-table">
         <thead>
           <tr>
-            <th>Purchase ID</th>
             <th>Product ID</th>
+            <th>Product Name</th>
             <th>Quantity</th>
-            <th>Purchase Date</th>
+            <th>Price</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {pagePurchases.length > 0 ? (
-            pagePurchases.map(p => (
-              <tr key={p.purchase_id}>
-                <td>{p.purchase_id}</td>
+          {pageProducts.length > 0 ? (
+            pageProducts.map((p) => (
+              <tr
+                key={p.product_id}
+                className={p.status === "inactive" ? "inactive-row" : ""}
+              >
                 <td>{p.product_id}</td>
+                <td>{p.product_name}</td>
                 <td>{p.quantity}</td>
-                <td>{formatDateTime(p.purchase_date)}</td>
+                <td>{formatPeso(p.price)}</td>
+                <td>{p.status}</td>
                 <td>
+                  <Link
+                    to={`/products/edit?product_id=${p.product_id}`}
+                    className="edit-button"
+                  >
+                    <span className="material-icons">edit</span>
+                    <span className="edit-text">Edit</span>
+                  </Link>
                   <button
                     className="delete-button"
-                    onClick={() => handleDeleteClick(p.purchase_id)}
+                    onClick={() => handleDeleteClick(p.product_id)}
                   >
                     <span className="material-icons">delete</span>
                     <span className="delete-text">Delete</span>
@@ -107,7 +124,9 @@ const PurchasesList = () => {
               </tr>
             ))
           ) : (
-            <tr><td colSpan="5">No purchases found.</td></tr>
+            <tr>
+              <td colSpan="6">No products found.</td>
+            </tr>
           )}
         </tbody>
       </table>
@@ -123,4 +142,4 @@ const PurchasesList = () => {
   );
 };
 
-export default PurchasesList;
+export default ProductsList;

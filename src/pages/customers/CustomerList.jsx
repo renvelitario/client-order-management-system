@@ -1,17 +1,16 @@
 import api from "../../utils/api";
 import { Link } from "react-router-dom";
 import "../../styles/shared/entity-list.css";
-import { formatPeso } from "../../utils/currency";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
-import Pagination from '../../components/Pagination';
+import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
-import DeleteConfirmModal from '../../components/DeleteConfirmModal';
+import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 
-const ProductsList = () => {
+const CustomersList = () => {
   const { isAdmin } = useAuth();
   const {
-    rows: products,
+    rows: customers,
     searchInput,
     loading,
     currentPage,
@@ -22,7 +21,7 @@ const ProductsList = () => {
     handleSearchChange,
     handlePageSizeChange,
     refetch,
-  } = usePaginatedList({ endpoint: '/products', initialSort: 'desc' });
+  } = usePaginatedList({ endpoint: '/customers', initialSort: 'desc' });
   const {
     deleteDialog,
     notification,
@@ -38,12 +37,12 @@ const ProductsList = () => {
 
   const handleDeleteConfirm = async () => {
     await confirmDelete(
-      (id) => api.delete(`/products/${id}`),
+      (id) => api.delete(`/customers/${id}`),
       () => refetch(),
     );
   };
 
-  const pageProducts = products;
+  const pageCustomers = customers;
 
   if (loading) return <div className="container">Loading...</div>;
 
@@ -51,14 +50,14 @@ const ProductsList = () => {
     <div className="container">
       <DeleteConfirmModal
         open={deleteDialog.show}
-        title="Delete Product"
+        title="Delete Customer"
         message="Are you sure you want to delete this record? This action cannot be undone."
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
       />
 
       <div className="header-row">
-        <h2>Products</h2>
+        <h2>Customers</h2>
         <div className="search-container">
           <div className="search-input-wrapper">
             <span className="material-icons">search</span>
@@ -70,7 +69,7 @@ const ProductsList = () => {
             />
           </div>
           {isAdmin && (
-            <Link to="/products/new" className="create-button">
+            <Link to="/customers/new" className="create-button">
               <span className="material-icons">add</span>
               Create
             </Link>
@@ -82,32 +81,27 @@ const ProductsList = () => {
         <div className={`notification ${notification.type}`}>{notification.message}</div>
       )}
 
-      <table id="products-table">
+      <table id="customers-table">
         <thead>
           <tr>
-            <th>Product ID</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Status</th>
+            <th>Customer ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Contact No</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {pageProducts.length > 0 ? (
-            pageProducts.map((p) => (
-              <tr
-                key={p.product_id}
-                className={p.status === "inactive" ? "inactive-row" : ""}
-              >
-                <td>{p.product_id}</td>
-                <td>{p.product_name}</td>
-                <td>{p.quantity}</td>
-                <td>{formatPeso(p.price)}</td>
-                <td>{p.status}</td>
+          {pageCustomers.length > 0 ? (
+            pageCustomers.map((c) => (
+              <tr key={c.customer_id}>
+                <td>{c.customer_id}</td>
+                <td>{c.name}</td>
+                <td>{c.address}</td>
+                <td>{c.contact_no}</td>
                 <td>
                   <Link
-                    to={`/products/edit?product_id=${p.product_id}`}
+                    to={`/customers/edit?customer_id=${c.customer_id}`}
                     className="edit-button"
                   >
                     <span className="material-icons">edit</span>
@@ -115,7 +109,7 @@ const ProductsList = () => {
                   </Link>
                   <button
                     className="delete-button"
-                    onClick={() => handleDeleteClick(p.product_id)}
+                    onClick={() => handleDeleteClick(c.customer_id)}
                   >
                     <span className="material-icons">delete</span>
                     <span className="delete-text">Delete</span>
@@ -125,7 +119,7 @@ const ProductsList = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="6">No products found.</td>
+              <td colSpan="5">No customers found.</td>
             </tr>
           )}
         </tbody>
@@ -142,4 +136,4 @@ const ProductsList = () => {
   );
 };
 
-export default ProductsList;
+export default CustomersList;

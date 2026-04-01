@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
-import { formatPeso } from '../../utils/currency';
+import { formatPeso } from '../../utils/formatters';
 import { getListData } from '../../utils/listResponse';
 
 const toLocalDateInputValue = (date = new Date()) => {
