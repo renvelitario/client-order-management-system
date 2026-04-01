@@ -124,12 +124,13 @@ const TodayOrders = () => {
           <button
             ref={scanButtonRef}
             type="button"
-            className="scan-qr-button"
+            className="create-button scan-qr-button"
             onClick={() => setScannerOpen(true)}
             aria-label="Open QR scanner"
             title="Scan QR code"
           >
             <span className="material-icons" aria-hidden="true">qr_code_scanner</span>
+            <span>Scan QR</span>
           </button>
         </div>
       </div>
