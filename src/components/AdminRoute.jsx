@@ -13,7 +13,7 @@ const AdminRoute = ({ children }) => {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/delivery/orders" replace />;
   }
 
   return children;

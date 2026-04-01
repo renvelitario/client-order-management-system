@@ -4,12 +4,16 @@ import { supabase } from '../supabaseClient';
 import { useAuth } from '../hooks/useAuth';
 import '../styles/components/header.css';
 
-const mainLinks = [
+const adminLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard', end: true },
   { to: '/products', label: 'Products', icon: 'products' },
   { to: '/customers', label: 'Customers', icon: 'customers' },
   { to: '/purchases', label: 'Purchases', icon: 'purchases' },
   { to: '/orders', label: 'Orders', icon: 'orders' },
+];
+
+const deliveryLinks = [
+  { to: '/delivery/orders', label: 'Delivery Orders', icon: 'delivery', end: true },
 ];
 
 const Icon = ({ name }) => {
@@ -50,6 +54,14 @@ const Icon = ({ name }) => {
         <path d="M7 4v4h10V4" />
         <path d="M9 12h6" />
         <path d="M9 16h6" />
+      </>
+    ),
+    delivery: (
+      <>
+        <path d="M3 7h12v7H3z" />
+        <path d="M15 10h3l3 3v1h-6z" />
+        <circle cx="7" cy="18" r="2" />
+        <circle cx="17" cy="18" r="2" />
       </>
     ),
     users: (
@@ -102,11 +114,16 @@ const Icon = ({ name }) => {
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-  const [accountName, setAccountName] = useState('Account');
-  const [accountEmail, setAccountEmail] = useState('');
+  const [fallbackAccount, setFallbackAccount] = useState({ name: 'Account', email: '' });
   const accountMenuRef = useRef(null);
   const navigate = useNavigate();
   const { localUser, isAdmin } = useAuth();
+  const navLinks = isAdmin ? adminLinks : deliveryLinks;
+  const homePath = isAdmin ? '/dashboard' : '/delivery/orders';
+  const accountName = localUser
+    ? ((localUser.username || localUser.email || 'Account').trim() || 'Account')
+    : fallbackAccount.name;
+  const accountEmail = localUser?.email || fallbackAccount.email;
 
   useEffect(() => {
     if (!isAccountMenuOpen) return undefined;
@@ -134,15 +151,14 @@ const Header = () => {
 
   useEffect(() => {
     if (localUser) {
-      const nextName = (localUser.username || localUser.email || 'Account').trim();
-      setAccountName(nextName || 'Account');
-      setAccountEmail(localUser.email || '');
       return;
     }
 
     supabase.auth.getUser().then(({ data }) => {
-      setAccountName(data?.user?.email || 'Account');
-      setAccountEmail(data?.user?.email || '');
+      setFallbackAccount({
+        name: data?.user?.email || 'Account',
+        email: data?.user?.email || '',
+      });
     });
   }, [localUser]);
 
@@ -173,7 +189,7 @@ const Header = () => {
           <Icon name={isSidebarOpen ? 'close' : 'menu'} />
         </button>
 
-        <Link to="/dashboard" className="mobile-shell-brand">
+        <Link to={homePath} className="mobile-shell-brand">
           <img src="/logo.png" className="logo-image" alt="Logo" />
           <div className="mobile-shell-brand-copy">
             <strong>Order Management System</strong>
@@ -249,7 +265,7 @@ const Header = () => {
       <aside className={`dashboard-sidebar${isSidebarOpen ? ' is-open' : ''}`}>
         <nav className="sidebar-nav" aria-label="Primary navigation">
           <div className="sidebar-section">
-            {mainLinks.map(({ to, label, icon, end }) => (
+            {navLinks.map(({ to, label, icon, end }) => (
               <NavLink
                 key={to}
                 to={to}

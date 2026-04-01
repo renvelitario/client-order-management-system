@@ -33,7 +33,7 @@ const Login = () => {
 
       if (error) throw error;
 
-      navigate('/dashboard');
+      navigate('/');
     } catch (err) {
       setError(
         err.message.includes('Invalid login credentials')

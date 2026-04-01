@@ -8,6 +8,7 @@ import CustomersList from './pages/customers/List';
 import CustomersAdd from './pages/customers/Create';
 import OrdersList from './pages/orders/List';
 import OrdersAdd from './pages/orders/Create';
+import DeliveryTodayOrders from './pages/delivery/TodayOrders';
 import PurchasesList from './pages/purchases/List';
 import PurchasesAdd from './pages/purchases/Create';
 import CreateUserAccount from './pages/account/CreateUserAccount';
@@ -22,7 +23,7 @@ import { useSessionTimeout } from './hooks/useSessionTimeout';
 import './styles/base/app.css';
 
 function App() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, isAdmin, loading } = useAuth();
   const {
     warningState,
     minutesRemaining,
@@ -41,6 +42,8 @@ function App() {
       </div>
     );
   }
+
+  const defaultAuthenticatedRoute = isAdmin ? '/dashboard' : '/delivery/orders';
 
   return (
     <Router>
@@ -71,8 +74,9 @@ function App() {
               <main className="app-main">
                 <div className="app-content">
                   <Routes>
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    <Route path="/" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
+                    <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
+                    <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
                     <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
                     <Route path="/products/new" element={<AdminRoute><ProductsAdd /></AdminRoute>} />
                     <Route path="/products/edit" element={<AdminRoute><ProductsUpdate /></AdminRoute>} />
@@ -96,7 +100,7 @@ function App() {
                     <Route path="/orders_add" element={<Navigate to="/orders/new" replace />} />
                     <Route path="/purchases_list" element={<Navigate to="/purchases" replace />} />
                     <Route path="/purchases_add" element={<Navigate to="/purchases/new" replace />} />
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                   </Routes>
                 </div>
               </main>

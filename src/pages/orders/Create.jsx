@@ -6,8 +6,10 @@ import { formatPeso } from '../../utils/currency';
 import { getListData } from '../../utils/listResponse';
 
 const OrdersAdd = () => {
+  const defaultDeliveryDate = new Date().toISOString().slice(0, 16);
   const [formData, setFormData] = useState({
     customer_id: '',
+    delivery_date: defaultDeliveryDate,
     items_data: [{ product_id: '', quantity: '' }]
   });
   const [products, setProducts] = useState([]);
@@ -39,6 +41,10 @@ const OrdersAdd = () => {
 
   const handleCustomerChange = (e) => {
     setFormData({ ...formData, customer_id: e.target.value });
+  };
+
+  const handleDeliveryDateChange = (e) => {
+    setFormData({ ...formData, delivery_date: e.target.value });
   };
 
   const handleItemChange = (index, field, value) => {
@@ -116,6 +122,14 @@ const OrdersAdd = () => {
             <option key={c.customer_id} value={c.customer_id}>{c.customer_id} - {c.name}</option>
           ))}
         </select><br />
+
+        <label>Delivery Date:</label>
+        <input
+          type="datetime-local"
+          value={formData.delivery_date}
+          onChange={handleDeliveryDateChange}
+          required
+        /><br />
         
         <h3>Order Items</h3>
         {formData.items_data.map((item, index) => (

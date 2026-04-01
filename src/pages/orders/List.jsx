@@ -1,5 +1,6 @@
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
+import QRCode from 'qrcode';
 import '../../styles/shared/entity-list.css';
 import { formatPeso } from '../../utils/currency';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
@@ -7,6 +8,13 @@ import { formatDateTime } from '../../utils/date';
 import Pagination from '../../components/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
+
+const DELIVERY_STATUS_LABELS = {
+  pending: 'Pending',
+  out_for_delivery: 'Out for Delivery',
+  delivered: 'Delivered',
+  failed_delivery: 'Failed Delivery',
+};
 
 const OrdersList = () => {
   const { isAdmin } = useAuth();
@@ -33,6 +41,46 @@ const OrdersList = () => {
 
   
   const pageOrders = orders;
+
+  const handlePrintReceipt = async (order) => {
+    const qrCodeDataUrl = await QRCode.toDataURL(String(order.order_id), {
+      width: 180,
+      margin: 1,
+    });
+
+    const popup = window.open('', '_blank', 'width=420,height=700');
+    if (!popup) {
+      return;
+    }
+
+    popup.document.write(`
+      <html>
+        <head>
+          <title>Receipt #${order.order_id}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 16px; }
+            h2 { margin: 0 0 10px; }
+            .line { margin: 4px 0; }
+            .qr { margin: 16px 0; }
+            .footer { margin-top: 14px; font-size: 12px; color: #444; }
+          </style>
+        </head>
+        <body>
+          <h2>Order Receipt</h2>
+          <div class="line"><strong>Order ID:</strong> ${order.order_id}</div>
+          <div class="line"><strong>Customer ID:</strong> ${order.customer_id}</div>
+          <div class="line"><strong>Total:</strong> ${formatPeso(order.total_amount || 0)}</div>
+          <div class="line"><strong>Status:</strong> ${DELIVERY_STATUS_LABELS[order.delivery_status] || 'Pending'}</div>
+          <div class="qr"><img src="${qrCodeDataUrl}" alt="Order QR Code" /></div>
+          <div class="footer">Scan this QR to quickly open Order #${order.order_id} during delivery.</div>
+          <script>
+            window.onload = function () { window.print(); };
+          </script>
+        </body>
+      </html>
+    `);
+    popup.document.close();
+  };
 
   const handleDeleteConfirm = async () => {
     await confirmDelete(
@@ -92,6 +140,7 @@ const OrdersList = () => {
             <th>Items</th>
             <th>Total Amount</th>
             <th>Order Date</th>
+            <th>Delivery Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -108,6 +157,7 @@ const OrdersList = () => {
                 </td>
                 <td>{formatPeso(o.total_amount || 0)}</td>
                 <td>{formatDateTime(o.order_date)}</td>
+                <td>{DELIVERY_STATUS_LABELS[o.delivery_status] || 'Pending'}</td>
                 <td>
                   <button
                     className="view-button"
@@ -120,18 +170,24 @@ const OrdersList = () => {
                     <span className="material-icons">visibility</span>
                     <span className="view-text">View Items</span>
                   </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteClick(o.order_id)}
-                  >
-                    <span className="material-icons">delete</span>
-                    <span className="delete-text">Delete</span>
+                  <button className="view-button" onClick={() => handlePrintReceipt(o)}>
+                    <span className="material-icons">qr_code_2</span>
+                    <span className="view-text">Receipt</span>
                   </button>
+                  {isAdmin && (
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteClick(o.order_id)}
+                    >
+                      <span className="material-icons">delete</span>
+                      <span className="delete-text">Delete</span>
+                    </button>
+                  )}
                 </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan="6">No orders found.</td></tr>
+            <tr><td colSpan="7">No orders found.</td></tr>
           )}
         </tbody>
       </table>

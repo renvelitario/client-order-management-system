@@ -1,0 +1,146 @@
+.delivery-page {
+  --delivery-success-bg: #e8f5e9;
+  --delivery-success-fg: #2e7d32;
+  --delivery-warning-bg: #fff8e1;
+  --delivery-warning-fg: #8d6e00;
+  --delivery-danger-bg: #ffebee;
+  --delivery-danger-fg: #b71c1c;
+  --delivery-info-bg: #e3f2fd;
+  --delivery-info-fg: #0d47a1;
+}
+
+.delivery-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.delivery-scanner-card,
+.delivery-selected-order {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.delivery-scanner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.scanner-toggle,
+.delivery-status-actions button {
+  border: none;
+  border-radius: 6px;
+  background: #1565c0;
+  color: #ffffff;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.scanner-preview-shell {
+  border: 1px dashed #94a3b8;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.scanner-preview {
+  min-height: 220px;
+}
+
+.scanner-help {
+  margin: 0;
+  color: #475569;
+  font-size: 13px;
+}
+
+.scanner-manual-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.scanner-manual-form input,
+.delivery-status-actions select {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.scanner-manual-form input {
+  flex: 1;
+}
+
+.scanner-error {
+  color: #c62828;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.delivery-order-card p {
+  margin: 6px 0;
+}
+
+.delivery-table-wrap {
+  overflow-x: auto;
+}
+
+.delivery-status-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.status-pending {
+  background: var(--delivery-warning-bg);
+  color: var(--delivery-warning-fg);
+}
+
+.status-out_for_delivery {
+  background: var(--delivery-info-bg);
+  color: var(--delivery-info-fg);
+}
+
+.status-delivered {
+  background: var(--delivery-success-bg);
+  color: var(--delivery-success-fg);
+}
+
+.status-failed_delivery {
+  background: var(--delivery-danger-bg);
+  color: var(--delivery-danger-fg);
+}
+
+.delivery-meta {
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.delivery-status-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .delivery-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-status-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .delivery-status-actions button {
+    width: 100%;
+  }
+}

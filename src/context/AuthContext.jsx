@@ -1,9 +1,8 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../supabaseClient';
 import api from '../utils/api';
 import { setStoredInactivityDurationMinutes } from '../utils/inactivity';
-
-export const AuthContext = createContext(null);
+import { AuthContext } from './authContextObject';
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
@@ -73,6 +72,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: Boolean(session),
     isAdmin: String(localUser?.acc_type || '').toLowerCase() === 'admin',
+    isDeliveryUser: Boolean(session) && String(localUser?.acc_type || '').toLowerCase() !== 'admin',
     refreshLocalUser,
   }), [session, localUser, loading]);
 
