@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [localUser, setLocalUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }) => {
       if (!nextSession) {
         setSession(null);
         setLocalUser(null);
+        setAuthError('');
         setLoading(false);
         return;
       }
@@ -33,11 +35,18 @@ export const AuthProvider = ({ children }) => {
         setStoredInactivityDurationMinutes(data.inactivity_timeout_minutes, { notify: false });
         setSession(nextSession);
         setLocalUser(data);
-      } catch {
+        setAuthError('');
+      } catch (err) {
+        const apiError = err?.response?.data?.error;
+        const networkError = err?.message;
+        const message = apiError || networkError || 'Failed to load user profile after login.';
+
+        console.error('[AUTH_CONTEXT] Failed to load authenticated user profile.', err);
         await supabase.auth.signOut();
         if (mounted) {
           setSession(null);
           setLocalUser(null);
+          setAuthError(message);
         }
       } finally {
         if (mounted) {
@@ -70,11 +79,12 @@ export const AuthProvider = ({ children }) => {
     session,
     localUser,
     loading,
+    authError,
     isAuthenticated: Boolean(session),
     isAdmin: String(localUser?.acc_type || '').toLowerCase() === 'admin',
     isDeliveryUser: Boolean(session) && String(localUser?.acc_type || '').toLowerCase() !== 'admin',
     refreshLocalUser,
-  }), [session, localUser, loading]);
+  }), [session, localUser, loading, authError]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

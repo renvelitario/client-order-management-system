@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { useAuth } from '../hooks/useAuth';
 
 import '../styles/pages/login.css';
 
@@ -10,6 +11,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { authError } = useAuth();
 
   const navigate = useNavigate();
 
@@ -97,6 +99,7 @@ const Login = () => {
 
         {/* ERROR */}
         {error && <div className="notification error">{error}</div>}
+        {!error && authError && <div className="notification error">{authError}</div>}
       </form>
     </div>
   );
