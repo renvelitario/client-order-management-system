@@ -17,6 +17,32 @@
 	min-height: 100vh;
 }
 
+.pull-refresh-indicator {
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 8px 14px;
+	border-radius: 999px;
+	background: rgba(15, 23, 42, 0.88);
+	color: #f8fafc;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	opacity: 0;
+	transition: opacity 0.2s ease, top 0.08s linear, background-color 0.2s ease;
+	pointer-events: none;
+	z-index: 1200;
+	will-change: top, opacity;
+}
+
+.pull-refresh-indicator.visible {
+	opacity: 1;
+}
+
+.pull-refresh-indicator.ready {
+	background: rgba(22, 101, 52, 0.92);
+}
+
 .container {
 	width: min(100%, 1280px);
 	margin: 0 auto;
@@ -198,6 +224,10 @@
 @media (max-width: 600px) {
 	.container {
 		padding: 16px;
+	}
+
+	body {
+		overscroll-behavior-y: contain;
 	}
 
 	.app-content > .container,
