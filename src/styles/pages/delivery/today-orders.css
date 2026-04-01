@@ -286,7 +286,8 @@
 @media (max-width: 640px) {
   /* search wrapper width adjustment for mobile */
   .search-input-wrapper {
-    width: 180px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .delivery-order-grid {
