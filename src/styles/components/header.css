@@ -380,7 +380,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
-    z-index: 1090;
+    z-index: 1105;
   }
 
   .sidebar-backdrop.is-open {
