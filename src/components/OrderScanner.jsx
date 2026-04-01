@@ -1,6 +1,9 @@
+import { createPortal } from 'react-dom';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 const ORDER_ID_REGEX = /(\d{1,12})/;
+const SCAN_BOX_RATIO = 0.68;
+const SCAN_BOX_MAX_SIZE = 420;
 
 const parseOrderIdFromValue = (value) => {
   const trimmed = String(value || '').trim();
@@ -17,89 +20,147 @@ const parseOrderIdFromValue = (value) => {
   return parsed;
 };
 
-const OrderScanner = ({ onDetected }) => {
+const pickPreferredCameraId = (cameras) => {
+  if (!Array.isArray(cameras) || cameras.length === 0) {
+    return null;
+  }
+
+  const rearCamera = cameras.find((camera) => /rear|back|environment/i.test(camera.label || ''));
+  return (rearCamera || cameras[0]).id;
+};
+
+const resolveScannerErrorMessage = (error) => {
+  if (!window.isSecureContext) {
+    return 'Camera access requires a secure context (HTTPS) or localhost. You can still enter an Order ID manually.';
+  }
+
+  const errorName = String(error?.name || '').toLowerCase();
+  const message = String(error?.message || '').toLowerCase();
+
+  if (errorName.includes('notallowed') || message.includes('permission')) {
+    return 'Camera permission was blocked. Allow camera access in browser settings, then try again.';
+  }
+
+  if (errorName.includes('notfound') || message.includes('no camera')) {
+    return 'No camera was detected on this device. You can still enter an Order ID manually.';
+  }
+
+  return 'Unable to start camera scanner on this device. You can still enter an Order ID manually.';
+};
+
+// isOpen  — controls visibility; scanner starts when true, stops when false
+// onClose — called after a successful scan or when the user dismisses
+const OrderScanner = ({ isOpen, onClose, onDetected }) => {
   const elementId = useId().replace(/[:]/g, '-');
   const scannerId = useMemo(() => `order-scanner-${elementId}`, [elementId]);
   const scannerRef = useRef(null);
-  const [isScanning, setIsScanning] = useState(false);
+  const closeButtonRef = useRef(null);
   const [loadingCamera, setLoadingCamera] = useState(false);
   const [scannerError, setScannerError] = useState('');
-  const [manualInput, setManualInput] = useState('');
+  const [selectedCameraId, setSelectedCameraId] = useState('');
 
+  // Enumerate cameras once on mount so we can prefer the rear camera
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadCameras = async () => {
+      try {
+        const { Html5Qrcode } = await import('html5-qrcode');
+        const cameras = await Html5Qrcode.getCameras();
+        if (cancelled) return;
+
+        const preferredId = pickPreferredCameraId(cameras || []);
+        if (preferredId) setSelectedCameraId(preferredId);
+      } catch {
+        // Ignore enumeration failures; start configs will try fallbacks.
+      }
+    };
+
+    loadCameras();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Start the scanner whenever the overlay opens; stop on close / unmount
   useEffect(() => {
     let unmounted = false;
 
     const stopScanner = async () => {
-      if (!scannerRef.current) {
-        return;
-      }
-
-      try {
-        await scannerRef.current.stop();
-      } catch {
-        // Ignore stop errors to avoid breaking cleanup.
-      }
-
-      try {
-        await scannerRef.current.clear();
-      } catch {
-        // Ignore clear errors during cleanup.
-      }
-
+      if (!scannerRef.current) return;
+      try { await scannerRef.current.stop(); } catch { /* ignore */ }
+      try { await scannerRef.current.clear(); } catch { /* ignore */ }
       scannerRef.current = null;
-      if (!unmounted) {
-        setLoadingCamera(false);
-      }
+      if (!unmounted) setLoadingCamera(false);
     };
 
+    if (!isOpen) {
+      stopScanner();
+      return undefined;
+    }
+
+    setScannerError('');
+    setLoadingCamera(true);
+
     const startScanner = async () => {
-      if (!isScanning) {
-        await stopScanner();
-        return;
-      }
-
-      setScannerError('');
-      setLoadingCamera(true);
-
       try {
-        const { Html5Qrcode } = await import('html5-qrcode');
-        if (unmounted || !isScanning) {
-          setLoadingCamera(false);
-          return;
-        }
+        const { Html5Qrcode, Html5QrcodeSupportedFormats } = await import('html5-qrcode');
+        if (unmounted || !isOpen) { setLoadingCamera(false); return; }
 
         const scanner = new Html5Qrcode(scannerId, {
-          formatsToSupport: undefined,
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.UPC_A,
+          ],
           verbose: false,
+          experimentalFeatures: { useBarCodeDetectorIfSupported: true },
         });
-
         scannerRef.current = scanner;
 
-        await scanner.start(
+        const startConfigs = [
+          ...(selectedCameraId ? [{ deviceId: { exact: selectedCameraId } }] : []),
+          { facingMode: { exact: 'environment' } },
           { facingMode: 'environment' },
-          {
-            fps: 10,
-            qrbox: { width: 240, height: 240 },
-          },
-          async (decodedText) => {
-            const orderId = parseOrderIdFromValue(decodedText);
-            if (!orderId) {
-              return;
-            }
+          { facingMode: 'user' },
+        ];
 
-            await onDetected(orderId);
-            setIsScanning(false);
-          },
-          () => {
-            // Ignore continuous decode errors while camera is active.
+        let started = false;
+        let startError = null;
+
+        for (const config of startConfigs) {
+          if (started || unmounted || !isOpen) break;
+
+          try {
+            await scanner.start(
+              config,
+              {
+                fps: 10,
+                // qrbox matches the visible guide box for intuitive alignment.
+                qrbox: (w, h) => {
+                  const size = Math.floor(Math.min(Math.min(w, h) * SCAN_BOX_RATIO, SCAN_BOX_MAX_SIZE));
+                  return { width: size, height: size };
+                },
+              },
+              async (decodedText) => {
+                const orderId = parseOrderIdFromValue(decodedText);
+                if (!orderId) return;
+                await onDetected(orderId);
+                onClose();
+              },
+              () => { /* ignore per-frame decode misses */ },
+            );
+            started = true;
+          } catch (err) {
+            startError = err;
           }
-        );
-      } catch {
-        setScannerError('Unable to start camera scanner on this device. You can still enter an Order ID manually.');
-      } finally {
-        if (!unmounted) {
-          setLoadingCamera(false);
         }
+
+        if (!started) throw startError || new Error('Unable to start camera.');
+      } catch (error) {
+        if (!unmounted) setScannerError(resolveScannerErrorMessage(error));
+      } finally {
+        if (!unmounted) setLoadingCamera(false);
       }
     };
 
@@ -109,58 +170,54 @@ const OrderScanner = ({ onDetected }) => {
       unmounted = true;
       stopScanner();
     };
-  }, [isScanning, onDetected, scannerId]);
+  }, [isOpen, onDetected, onClose, scannerId, selectedCameraId]);
 
-  const handleManualSubmit = async (event) => {
-    event.preventDefault();
-
-    const parsedOrderId = parseOrderIdFromValue(manualInput);
-    if (!parsedOrderId) {
-      setScannerError('Enter a valid Order ID.');
-      return;
+  // Auto-focus the close button when the overlay opens (accessibility)
+  useEffect(() => {
+    if (isOpen && closeButtonRef.current) {
+      closeButtonRef.current.focus();
     }
+  }, [isOpen]);
 
-    setScannerError('');
-    await onDetected(parsedOrderId);
-    setManualInput('');
-  };
+  // Escape key dismisses the overlay
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const handleKeyDown = (event) => { if (event.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
-  return (
-    <section className="delivery-scanner-card" aria-label="Order scanner">
-      <div className="delivery-scanner-header">
-        <h3>Scan Receipt QR / Barcode</h3>
-        <button
-          type="button"
-          className="scanner-toggle"
-          onClick={() => setIsScanning((value) => !value)}
-        >
-          {isScanning ? 'Stop Scanner' : 'Start Scanner'}
-        </button>
-      </div>
+  if (!isOpen) return null;
 
-      {isScanning && (
-        <div className="scanner-preview-shell">
-          <div id={scannerId} className="scanner-preview" />
-          {loadingCamera && <p className="scanner-help">Starting camera...</p>}
-        </div>
+  return createPortal(
+    <div
+      className="fs-scanner-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="QR code scanner"
+    >
+      <button
+        ref={closeButtonRef}
+        type="button"
+        className="fs-scanner-close"
+        onClick={onClose}
+        aria-label="Close scanner"
+      >
+        <span className="material-icons" aria-hidden="true">close</span>
+      </button>
+
+      {loadingCamera && (
+        <p className="fs-scanner-hint" aria-live="polite">Starting camera…</p>
       )}
 
-      {!isScanning && <p className="scanner-help">Use the scanner or type an Order ID manually.</p>}
+      {scannerError && (
+        <p className="fs-scanner-error" role="alert">{scannerError}</p>
+      )}
 
-      <form className="scanner-manual-form" onSubmit={handleManualSubmit}>
-        <input
-          type="text"
-          value={manualInput}
-          onChange={(event) => setManualInput(event.target.value)}
-          placeholder="Enter Order ID"
-          inputMode="numeric"
-          aria-label="Manual order lookup"
-        />
-        <button type="submit">Find Order</button>
-      </form>
-
-      {scannerError && <p className="scanner-error">{scannerError}</p>}
-    </section>
+      <div id={scannerId} className="fs-scanner-view" />
+      <div className="fs-scanner-guide" aria-hidden="true" />
+    </div>,
+    document.body,
   );
 };
 

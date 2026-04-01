@@ -4,7 +4,7 @@ import QRCode from 'qrcode';
 import '../../styles/shared/entity-list.css';
 import { formatPeso } from '../../utils/currency';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
-import { formatDateTime } from '../../utils/date';
+import { formatDateOnly } from '../../utils/date';
 import Pagination from '../../components/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
@@ -140,6 +140,7 @@ const OrdersList = () => {
             <th>Items</th>
             <th>Total Amount</th>
             <th>Order Date</th>
+            <th>Delivery Date</th>
             <th>Delivery Status</th>
             <th>Actions</th>
           </tr>
@@ -156,7 +157,8 @@ const OrdersList = () => {
                     : 'No items'}
                 </td>
                 <td>{formatPeso(o.total_amount || 0)}</td>
-                <td>{formatDateTime(o.order_date)}</td>
+                <td>{formatDateOnly(o.order_date)}</td>
+                <td>{formatDateOnly(o.delivery_date)}</td>
                 <td>{DELIVERY_STATUS_LABELS[o.delivery_status] || 'Pending'}</td>
                 <td>
                   <button
@@ -187,7 +189,7 @@ const OrdersList = () => {
               </tr>
             ))
           ) : (
-            <tr><td colSpan="7">No orders found.</td></tr>
+            <tr><td colSpan="8">No orders found.</td></tr>
           )}
         </tbody>
       </table>

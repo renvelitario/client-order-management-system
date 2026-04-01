@@ -1,137 +1,324 @@
+/* ── Delivery page custom properties ─────────────────────────────── */
 .delivery-page {
-  --delivery-success-bg: #e8f5e9;
-  --delivery-success-fg: #2e7d32;
-  --delivery-warning-bg: #fff8e1;
-  --delivery-warning-fg: #8d6e00;
-  --delivery-danger-bg: #ffebee;
-  --delivery-danger-fg: #b71c1c;
-  --delivery-info-bg: #e3f2fd;
-  --delivery-info-fg: #0d47a1;
+  --ds-success-bg: #e8f5e9;
+  --ds-success-fg: #2e7d32;
+  --ds-warning-bg: #fff8e1;
+  --ds-warning-fg: #8d6e00;
+  --ds-danger-bg: #ffebee;
+  --ds-danger-fg: #b71c1c;
+  --ds-info-bg: #e3f2fd;
+  --ds-info-fg: #0d47a1;
 }
 
-.delivery-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
+/* ── Search icon on the right ───────────────────────────────────── */
+.delivery-search-wrapper {
+  flex-direction: row;
 }
 
-.delivery-scanner-card,
-.delivery-selected-order {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 14px;
+.delivery-search-wrapper input {
+  order: 0;
 }
 
-.delivery-scanner-header {
-  display: flex;
+.delivery-search-icon {
+  order: 1;
+  margin-right: 0;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+/* ── QR scan button ──────────────────────────────────────────────── */
+.scan-qr-button {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.scanner-toggle,
-.delivery-status-actions button {
+  justify-content: center;
+  padding: 0 12px;
+  height: 38px;
   border: none;
   border-radius: 6px;
   background: #1565c0;
-  color: #ffffff;
-  padding: 8px 12px;
+  color: #fff;
   cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
 }
 
-.scanner-preview-shell {
-  border: 1px dashed #94a3b8;
+.scan-qr-button:hover,
+.scan-qr-button:focus-visible {
+  background: #0d47a1;
+  outline: 2px solid #0d47a1;
+  outline-offset: 2px;
+}
+
+.scan-qr-button .material-icons {
+  font-size: 22px;
+}
+
+/* ── Fullscreen QR scanner overlay ──────────────────────────────── */
+.fs-scanner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Camera viewfinder fills entire overlay */
+.fs-scanner-view {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Force html5-qrcode injected elements to fill container */
+.fs-scanner-view > div {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.fs-scanner-view video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
+
+/* Center scan guide and dim the outside area */
+.fs-scanner-guide {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(68vmin, 420px);
+  aspect-ratio: 1 / 1;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  border-radius: 14px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.38);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.fs-scanner-guide::before,
+.fs-scanner-guide::after {
+  content: '';
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: #8cf0ff;
+  border-style: solid;
+  border-width: 0;
+}
+
+.fs-scanner-guide::before {
+  top: -2px;
+  left: -2px;
+  border-top-width: 4px;
+  border-left-width: 4px;
+  border-top-left-radius: 10px;
+}
+
+.fs-scanner-guide::after {
+  right: -2px;
+  bottom: -2px;
+  border-right-width: 4px;
+  border-bottom-width: 4px;
+  border-bottom-right-radius: 10px;
+}
+
+/* Close button — top-right corner */
+.fs-scanner-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: background 0.15s;
+}
+
+.fs-scanner-close:hover,
+.fs-scanner-close:focus-visible {
+  background: rgba(0, 0, 0, 0.85);
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.fs-scanner-close .material-icons {
+  font-size: 26px;
+}
+
+/* Status messages overlaid at bottom */
+.fs-scanner-hint,
+.fs-scanner-error {
+  position: absolute;
+  bottom: max(24px, calc((100vh - min(68vmin, 420px)) / 2 - 56px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 10px 18px;
   border-radius: 8px;
-  padding: 8px;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.fs-scanner-hint {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+.fs-scanner-error {
+  background: rgba(183, 28, 28, 0.85);
+  color: #fff;
+}
+
+/* ── Selected order panel ────────────────────────────────────────── */
+.delivery-selected-order {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.delivery-selected-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 
-.scanner-preview {
-  min-height: 220px;
-}
-
-.scanner-help {
+.delivery-selected-header h3 {
   margin: 0;
-  color: #475569;
-  font-size: 13px;
+  font-size: 15px;
+  color: #1e293b;
 }
 
-.scanner-manual-form {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.scanner-manual-form input,
-.delivery-status-actions select {
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 8px;
-}
-
-.scanner-manual-form input {
-  flex: 1;
-}
-
-.scanner-error {
-  color: #c62828;
-  font-size: 13px;
-  margin-top: 8px;
+.delivery-order-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 4px 16px;
+  margin-bottom: 12px;
 }
 
 .delivery-order-card p {
-  margin: 6px 0;
+  margin: 4px 0;
+  font-size: 14px;
 }
 
+/* ── Row highlight for selected order ───────────────────────────── */
+.delivery-row-selected {
+  background: #e3f2fd !important;
+}
+
+/* ── Clickable order ID in table ────────────────────────────────── */
+.delivery-order-id-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #1565c0;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.delivery-order-id-btn:hover,
+.delivery-order-id-btn:focus-visible {
+  color: #0d47a1;
+  outline: none;
+}
+
+/* ── Table ───────────────────────────────────────────────────────── */
 .delivery-table-wrap {
   overflow-x: auto;
 }
 
-.delivery-status-pill {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 999px;
-}
-
-.status-pending {
-  background: var(--delivery-warning-bg);
-  color: var(--delivery-warning-fg);
-}
-
-.status-out_for_delivery {
-  background: var(--delivery-info-bg);
-  color: var(--delivery-info-fg);
-}
-
-.status-delivered {
-  background: var(--delivery-success-bg);
-  color: var(--delivery-success-fg);
-}
-
-.status-failed_delivery {
-  background: var(--delivery-danger-bg);
-  color: var(--delivery-danger-fg);
-}
-
-.delivery-meta {
-  margin-top: 4px;
-  color: #64748b;
-  font-size: 12px;
-}
-
+/* ── Status actions in table ─────────────────────────────────────── */
 .delivery-status-actions {
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 900px) {
-  .delivery-layout {
+.delivery-status-actions select {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.delivery-status-actions button {
+  border: none;
+  border-radius: 6px;
+  background: #1565c0;
+  color: #fff;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.delivery-status-actions button:hover,
+.delivery-status-actions button:focus-visible {
+  background: #0d47a1;
+}
+
+/* ── Status pills ────────────────────────────────────────────────── */
+.delivery-status-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-pending         { background: var(--ds-warning-bg); color: var(--ds-warning-fg); }
+.status-out_for_delivery{ background: var(--ds-info-bg);    color: var(--ds-info-fg); }
+.status-delivered       { background: var(--ds-success-bg); color: var(--ds-success-fg); }
+.status-failed_delivery { background: var(--ds-danger-bg);  color: var(--ds-danger-fg); }
+
+/* ── Delivery meta (timestamp) ───────────────────────────────────── */
+.delivery-meta {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 11px;
+}
+
+/* ── Loading text ────────────────────────────────────────────────── */
+.delivery-loading {
+  color: #64748b;
+  margin: 16px 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .delivery-search-wrapper {
+    width: 180px;
+  }
+
+  .delivery-order-grid {
     grid-template-columns: 1fr;
   }
 
@@ -140,7 +327,8 @@
     align-items: stretch;
   }
 
-  .delivery-status-actions button {
+  .delivery-status-actions button,
+  .delivery-status-actions select {
     width: 100%;
   }
 }

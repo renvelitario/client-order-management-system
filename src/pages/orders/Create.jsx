@@ -5,8 +5,15 @@ import '../../styles/shared/entity-form.css';
 import { formatPeso } from '../../utils/currency';
 import { getListData } from '../../utils/listResponse';
 
+const toLocalDateInputValue = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const OrdersAdd = () => {
-  const defaultDeliveryDate = new Date().toISOString().slice(0, 16);
+  const defaultDeliveryDate = toLocalDateInputValue();
   const [formData, setFormData] = useState({
     customer_id: '',
     delivery_date: defaultDeliveryDate,
@@ -125,7 +132,7 @@ const OrdersAdd = () => {
 
         <label>Delivery Date:</label>
         <input
-          type="datetime-local"
+          type="date"
           value={formData.delivery_date}
           onChange={handleDeliveryDateChange}
           required
