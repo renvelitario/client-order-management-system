@@ -4,6 +4,7 @@ import Icon from '../ui/Icon';
 
 const adminLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard', end: true },
+  { to: '/delivery/orders', label: 'Delivery Orders', icon: 'delivery' },
   { to: '/products', label: 'Products', icon: 'products' },
   { to: '/customers', label: 'Customers', icon: 'customers' },
   { to: '/purchases', label: 'Purchases', icon: 'purchases' },
