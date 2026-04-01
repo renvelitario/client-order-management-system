@@ -375,6 +375,8 @@
     inset: 0;
     display: block;
     background: rgba(15, 23, 42, 0.42);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -394,6 +396,11 @@
     height: calc(100dvh - 74px);
     padding: 12px;
     overflow: visible;
+    background: linear-gradient(180deg, rgba(8, 44, 24, 0.68) 0%, rgba(12, 60, 33, 0.7) 58%, rgba(7, 36, 20, 0.72) 100%);
+    backdrop-filter: blur(22px) saturate(120%);
+    -webkit-backdrop-filter: blur(22px) saturate(120%);
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 18px 0 40px rgba(15, 23, 42, 0.26);
   }
 
   .dashboard-sidebar:hover {
