@@ -117,6 +117,7 @@ const Header = () => {
   const [fallbackAccount, setFallbackAccount] = useState({ name: 'Account', email: '' });
   const accountMenuRef = useRef(null);
   const sidebarRef = useRef(null);
+  const sidebarToggleRef = useRef(null);
   const navigate = useNavigate();
   const { localUser, isAdmin } = useAuth();
   const navLinks = isAdmin ? adminLinks : deliveryLinks;
@@ -177,7 +178,11 @@ const Header = () => {
     document.body.style.overflow = 'hidden';
 
     const handlePointerDownOutside = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        !sidebarToggleRef.current?.contains(event.target)
+      ) {
         setIsSidebarOpen(false);
       }
     };
@@ -219,6 +224,7 @@ const Header = () => {
 
       <header className="mobile-shell-bar">
         <button
+          ref={sidebarToggleRef}
           type="button"
           className="sidebar-toggle"
           onClick={() => setIsSidebarOpen((current) => !current)}
