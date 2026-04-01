@@ -23,7 +23,7 @@
     padding: 8px 12px;
     width: 280px;
     transition: var(--transition-fast);
-    flex-direction: row-reverse;
+    flex-direction: row;
 }
 
 .search-input-wrapper:focus-within {
@@ -34,8 +34,8 @@
 .search-input-wrapper .material-icons {
     font-size: 18px;
     color: #888;
-    margin-left: 6px;
-    margin-right: 0;
+    margin-left: 0;
+    margin-right: 6px;
 }
 
 .search-input-wrapper input {

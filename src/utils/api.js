@@ -49,6 +49,11 @@ api.interceptors.request.use(async (config) => {
   if (session?.access_token) {
     config.headers.Authorization = `Bearer ${session.access_token}`;
   }
+
+  // Send client timezone context so the server can resolve "today" in user local time.
+  config.headers['X-Client-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  config.headers['X-Client-Utc-Offset-Minutes'] = String(new Date().getTimezoneOffset());
+
   return config;
 });
 

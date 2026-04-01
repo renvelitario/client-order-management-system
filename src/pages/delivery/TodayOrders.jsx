@@ -115,7 +115,7 @@ const TodayOrders = () => {
             <span className="material-icons" aria-hidden="true">search</span>
             <input
               type="text"
-              placeholder="Search order, customer, address..."
+              placeholder="Search..."
               value={searchInput}
               onChange={(event) => handleSearchChange(event.target.value)}
               aria-label="Search delivery orders"
