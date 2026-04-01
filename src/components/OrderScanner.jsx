@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 const ORDER_ID_REGEX = /(\d{1,12})/;
 const SCAN_BOX_RATIO = 0.68;
@@ -54,10 +54,41 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
   const elementId = useId().replace(/[:]/g, '-');
   const scannerId = useMemo(() => `order-scanner-${elementId}`, [elementId]);
   const scannerRef = useRef(null);
+  const scannerHostRef = useRef(null);
   const closeButtonRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+  const onDetectedRef = useRef(onDetected);
+  const stopScannerRef = useRef(async () => {});
   const [loadingCamera, setLoadingCamera] = useState(false);
   const [scannerError, setScannerError] = useState('');
   const [selectedCameraId, setSelectedCameraId] = useState('');
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    onDetectedRef.current = onDetected;
+  }, [onClose, onDetected]);
+
+  const stopActiveVideoTracks = useCallback(() => {
+    const host = scannerHostRef.current;
+    if (!host) {
+      return;
+    }
+
+    const videoElements = host.querySelectorAll('video');
+    videoElements.forEach((videoElement) => {
+      const mediaStream = videoElement.srcObject;
+      if (mediaStream instanceof MediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop());
+      }
+
+      videoElement.srcObject = null;
+    });
+  }, []);
+
+  const handleClose = useCallback(async () => {
+    await stopScannerRef.current();
+    onCloseRef.current?.();
+  }, []);
 
   // Enumerate cameras once on mount so we can prefer the rear camera
   useEffect(() => {
@@ -88,9 +119,12 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
       if (!scannerRef.current) return;
       try { await scannerRef.current.stop(); } catch { /* ignore */ }
       try { await scannerRef.current.clear(); } catch { /* ignore */ }
+      stopActiveVideoTracks();
       scannerRef.current = null;
       if (!unmounted) setLoadingCamera(false);
     };
+
+    stopScannerRef.current = stopScanner;
 
     if (!isOpen) {
       stopScanner();
@@ -145,8 +179,9 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
               async (decodedText) => {
                 const orderId = parseOrderIdFromValue(decodedText);
                 if (!orderId) return;
-                await onDetected(orderId);
-                onClose();
+                await stopScanner();
+                await onDetectedRef.current?.(orderId);
+                onCloseRef.current?.();
               },
               () => { /* ignore per-frame decode misses */ },
             );
@@ -170,7 +205,7 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
       unmounted = true;
       stopScanner();
     };
-  }, [isOpen, onDetected, onClose, scannerId, selectedCameraId]);
+  }, [isOpen, scannerId, selectedCameraId, stopActiveVideoTracks]);
 
   // Auto-focus the close button when the overlay opens (accessibility)
   useEffect(() => {
@@ -182,10 +217,14 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
   // Escape key dismisses the overlay
   useEffect(() => {
     if (!isOpen) return undefined;
-    const handleKeyDown = (event) => { if (event.key === 'Escape') onClose(); };
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [handleClose, isOpen]);
 
   if (!isOpen) return null;
 
@@ -200,7 +239,7 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
         ref={closeButtonRef}
         type="button"
         className="fs-scanner-close"
-        onClick={onClose}
+        onClick={handleClose}
         aria-label="Close scanner"
       >
         <span className="material-icons" aria-hidden="true">close</span>
@@ -214,7 +253,7 @@ const OrderScanner = ({ isOpen, onClose, onDetected }) => {
         <p className="fs-scanner-error" role="alert">{scannerError}</p>
       )}
 
-      <div id={scannerId} className="fs-scanner-view" />
+      <div id={scannerId} ref={scannerHostRef} className="fs-scanner-view" />
       <div className="fs-scanner-guide" aria-hidden="true" />
     </div>,
     document.body,
