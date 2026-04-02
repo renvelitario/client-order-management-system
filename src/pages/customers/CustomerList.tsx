@@ -75,7 +75,7 @@ const CustomersList = () => {
       <table id="customers-table">
         <thead>
           <tr>
-            <th>Customer ID</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Address</th>
             <th>Contact No</th>

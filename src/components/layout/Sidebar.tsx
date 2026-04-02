@@ -13,8 +13,8 @@ type NavItem = {
 
 const adminLinks: NavItem[] = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard', end: true },
-  { to: '/products', label: 'Products', icon: 'products' },
   { to: '/customers', label: 'Customers', icon: 'customers' },
+  { to: '/products', label: 'Products', icon: 'products' },
   { to: '/orders', label: 'Orders', icon: 'orders' },
 ];
 
@@ -33,22 +33,25 @@ const Sidebar = ({
 }) => {
   const { isAdmin } = useAuth();
   const navLinks = isAdmin ? adminLinks : deliveryLinks;
+  const shouldRenderDividerAfter = (index: number) => isAdmin && (index === 0 || index === 2);
 
   return (
     <aside ref={sidebarRef} className={`dashboard-sidebar${isSidebarOpen ? ' is-open' : ''}`}>
       <nav className="sidebar-nav" aria-label="Primary navigation">
         <div className="sidebar-section">
-          {navLinks.map(({ to, label, icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) => `sidebar-link${isActive ? ' is-active' : ''}`}
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <span className="sidebar-link-icon"><Icon name={icon} /></span>
-              <span className="sidebar-link-label">{label}</span>
-            </NavLink>
+          {navLinks.map(({ to, label, icon, end }, index) => (
+            <div key={to} className="sidebar-nav-item">
+              <NavLink
+                to={to}
+                end={end}
+                className={({ isActive }) => `sidebar-link${isActive ? ' is-active' : ''}`}
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                <span className="sidebar-link-icon"><Icon name={icon} /></span>
+                <span className="sidebar-link-label">{label}</span>
+              </NavLink>
+              {shouldRenderDividerAfter(index) && <div className="sidebar-divider" aria-hidden="true" />}
+            </div>
           ))}
         </div>
       </nav>

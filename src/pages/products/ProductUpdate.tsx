@@ -13,8 +13,8 @@ const ProductsUpdate = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
+    sku: '',
     product_name: '',
-    quantity: '',
     price: '',
     status: 'active'
   });
@@ -32,8 +32,8 @@ const ProductsUpdate = () => {
       try {
         const { data } = await api.get(`/products/${productId}`);
         setFormData({
+          sku: data.sku || '',
           product_name: data.product_name || '',
-          quantity: data.quantity ?? '',
           price: data.price ?? '',
           status: data.status || 'active'
         });
@@ -73,11 +73,11 @@ const ProductsUpdate = () => {
         <Notification message={error} type="error" />
       ) : (
         <form onSubmit={handleSubmit} className="update-form">
+          <label>SKU:</label>
+          <input type="text" name="sku" value={formData.sku} onChange={handleChange} required maxLength={32} /><br />
+
           <label>Product Name:</label>
           <input type="text" name="product_name" value={formData.product_name} onChange={handleChange} required /><br />
-
-          <label>Quantity:</label>
-          <input type="number" min="0" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
 
           <label>Price (PHP):</label>
           <input type="number" min="0" step="0.01" name="price" value={formData.price} onChange={handleChange} required /><br />

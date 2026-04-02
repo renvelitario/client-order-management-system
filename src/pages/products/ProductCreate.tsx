@@ -8,8 +8,8 @@ import { resolveApiErrorMessage } from '../../types/app';
 
 const ProductsAdd = () => {
   const [formData, setFormData] = useState({
+    sku: '',
     product_name: '',
-    quantity: '',
     price: '',
     status: 'active'
   });
@@ -34,10 +34,17 @@ const ProductsAdd = () => {
     <div className="product-container">
       <h2>Add a Product</h2>
       <form onSubmit={handleSubmit}>
+        <label>SKU (Optional):</label>
+        <input
+          type="text"
+          name="sku"
+          value={formData.sku}
+          onChange={handleChange}
+          placeholder="Auto-generated if left blank"
+          maxLength={32}
+        /><br />
         <label>Product Name:</label>
         <input type="text" name="product_name" value={formData.product_name} onChange={handleChange} required /><br />
-        <label>Quantity:</label>
-        <input type="number" min="0" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
         <label>Price (PHP):</label>
         <input type="number" min="0" step="0.01" name="price" value={formData.price} onChange={handleChange} required /><br />
         <label>Status:</label>

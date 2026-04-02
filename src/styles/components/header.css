@@ -276,6 +276,17 @@
   gap: 6px;
 }
 
+.sidebar-nav-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-divider {
+  margin: 4px 10px;
+  border-top: 1px solid rgba(245, 247, 251, 0.3);
+}
+
 .sidebar-link {
   display: flex;
   align-items: center;

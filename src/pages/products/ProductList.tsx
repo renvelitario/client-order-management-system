@@ -76,9 +76,8 @@ const ProductsList = () => {
       <table id="products-table">
         <thead>
           <tr>
-            <th>Product ID</th>
+            <th>SKU</th>
             <th>Product Name</th>
-            <th>Quantity</th>
             <th>Price</th>
             <th>Status</th>
             <th>Actions</th>
@@ -91,9 +90,8 @@ const ProductsList = () => {
                 key={p.product_id}
                 className={p.status === "inactive" ? "inactive-row" : ""}
               >
-                <td>{p.product_id}</td>
+                <td>{p.sku}</td>
                 <td>{p.product_name}</td>
-                <td>{p.quantity}</td>
                 <td>{formatPeso(p.price)}</td>
                 <td>{p.status}</td>
                 <td>
@@ -116,7 +114,7 @@ const ProductsList = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={6}>No products found.</td>
+              <td colSpan={5}>No products found.</td>
             </tr>
           )}
         </tbody>

@@ -67,30 +67,28 @@ const CustomersUpdate = () => {
     <div className="update-customer-container">
       <h2>Update Customer</h2>
 
-      {error ? (
-        <Notification message={error} type="error" />
-      ) : (
-        <form onSubmit={handleSubmit} className="update-customer-form">
-          <div className="form-group">
-            <label>Name:</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-          </div>
+      {error && <Notification message={error} type="error" />}
 
-          <div className="form-group">
-            <label>Address:</label>
-            <textarea name="address" value={formData.address} onChange={handleChange} required />
-          </div>
+      <form onSubmit={handleSubmit} className="update-customer-form">
+        <div className="form-group">
+          <label>Name:</label>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+        </div>
 
-          <div className="form-group">
-            <label>Contact No:</label>
-            <input type="text" name="contact_no" value={formData.contact_no} onChange={handleChange} required />
-          </div>
+        <div className="form-group">
+          <label>Address:</label>
+          <textarea name="address" value={formData.address} onChange={handleChange} required />
+        </div>
 
-          <div className="form-group">
-            <input type="submit" value="Update" />
-          </div>
-        </form>
-      )}
+        <div className="form-group">
+          <label>Contact No:</label>
+          <input type="text" name="contact_no" value={formData.contact_no} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <input type="submit" value="Update" />
+        </div>
+      </form>
     </div>
   );
 };
