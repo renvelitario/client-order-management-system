@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import '../../styles/pages/auth/change-password.css';
+import Notification from '../../components/ui/Notification';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const AccountSecurity = () => {
@@ -85,7 +86,7 @@ const AccountSecurity = () => {
             <input type="submit" value="Save" />
           </div>
 
-          {error && <div className="notification error">{error}</div>}
+          <Notification message={error} type="error" />
         </form>
       </div>
     </div>

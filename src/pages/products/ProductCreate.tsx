@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
+import Notification from '../../components/ui/Notification';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const ProductsAdd = () => {
@@ -45,7 +46,7 @@ const ProductsAdd = () => {
           <option value="inactive">Inactive</option>
         </select><br />
         <input type="submit" value="Add Product" />
-        {error && <div className="notification error">{error}</div>}
+        <Notification message={error} type="error" />
       </form>
     </div>
   );

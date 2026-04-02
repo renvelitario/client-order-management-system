@@ -6,6 +6,9 @@ import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
+import ListPageHeader from '../../components/ui/ListPageHeader';
+import Notification from '../../components/ui/Notification';
+import PageLoader from '../../components/ui/PageLoader';
 import type { ApiError, Customer } from '../../types/app';
 
 const CustomersList = () => {
@@ -43,9 +46,7 @@ const CustomersList = () => {
     );
   };
 
-  const pageCustomers = customers;
-
-  if (loading) return <div className="container">Loading...</div>;
+  if (loading) return <PageLoader />;
 
   return (
     <div className="container">
@@ -57,30 +58,19 @@ const CustomersList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
-      <div className="header-row">
-        <h2>Customers</h2>
-        <div className="search-container">
-          <div className="search-input-wrapper">
-            <span className="material-icons">search</span>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchInput}
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-          </div>
-          {isAdmin && (
-            <Link to="/customers/new" className="create-button">
-              <span className="material-icons">add</span>
-              Create
-            </Link>
-          )}
-        </div>
-      </div>
+      <ListPageHeader
+        title="Customers"
+        searchInput={searchInput}
+        onSearchChange={handleSearchChange}
+        action={isAdmin && (
+          <Link to="/customers/new" className="create-button">
+            <span className="material-icons">add</span>
+            Create
+          </Link>
+        )}
+      />
 
-      {notification.message && (
-        <div className={`notification ${notification.type}`}>{notification.message}</div>
-      )}
+      <Notification message={notification.message} type={notification.type} />
 
       <table id="customers-table">
         <thead>
@@ -93,8 +83,8 @@ const CustomersList = () => {
           </tr>
         </thead>
         <tbody>
-          {pageCustomers.length > 0 ? (
-            pageCustomers.map((c) => (
+          {customers.length > 0 ? (
+            customers.map((c) => (
               <tr key={c.customer_id}>
                 <td>{c.customer_id}</td>
                 <td>{c.name}</td>

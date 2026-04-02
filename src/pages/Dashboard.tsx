@@ -17,6 +17,7 @@ import {
 } from 'recharts';
 import '../styles/pages/dashboard.css';
 import { formatPeso } from '../utils/formatters';
+import Notification from '../components/ui/Notification';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
 
@@ -228,7 +229,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {error && <div className="notification error">{error}</div>}
+      {error && <Notification message={error} type="error" />}
 
       <section className="kpi-grid">
         <article className="kpi-card kpi-good">

@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
+import Notification from '../../components/ui/Notification';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const CustomersAdd = () => {
@@ -39,7 +40,7 @@ const CustomersAdd = () => {
         <label>Contact No:</label>
         <input type="text" name="contact_no" value={formData.contact_no} onChange={handleChange} required /><br />
         <input type="submit" value="Add Customer" />
-        {error && <div className="notification error">{error}</div>}
+        <Notification message={error} type="error" />
       </form>
     </div>
   );

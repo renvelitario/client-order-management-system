@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
 import { formatPeso } from '../../utils/formatters';
 import { getListData } from '../../utils/listResponse';
+import Notification from '../../components/ui/Notification';
 import type { Customer, Product } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
 
@@ -195,7 +196,7 @@ const OrdersAdd = () => {
         </button><br />
         
         <input type="submit" value="Create Order" />
-        {error && <div className="notification error">{error}</div>}
+        <Notification message={error} type="error" />
       </form>
     </div>
   );

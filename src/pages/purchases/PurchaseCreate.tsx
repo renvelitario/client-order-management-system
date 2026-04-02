@@ -4,6 +4,7 @@ import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
 import { getListData } from '../../utils/listResponse';
+import Notification from '../../components/ui/Notification';
 import type { Product } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
 
@@ -61,7 +62,7 @@ const PurchasesAdd = () => {
         <label>Quantity:</label>
         <input type="text" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
         <input type="submit" value="Add Purchase" />
-        {error && <div className="notification error">{error}</div>}
+        <Notification message={error} type="error" />
       </form>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import '../../styles/pages/auth/register.css';
+import Notification from '../../components/ui/Notification';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const CreateUserAccount = () => {
@@ -96,8 +97,8 @@ const CreateUserAccount = () => {
           <input type="submit" value="Register" />
         </div>
 
-        {error && <div className="notification error">{error}</div>}
-        {success && <div className="notification success">{success}</div>}
+        {error && <Notification message={error} type="error" />}
+        {success && <Notification message={success} type="success" />}
       </form>
     </div>
   );

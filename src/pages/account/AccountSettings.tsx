@@ -10,6 +10,8 @@ import {
   WARNING_LEAD_MINUTES,
 } from '../../utils/inactivity';
 import '../../styles/pages/auth/settings.css';
+import Notification from '../../components/ui/Notification';
+import PageLoader from '../../components/ui/PageLoader';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const AccountSettings = () => {
@@ -92,7 +94,7 @@ const AccountSettings = () => {
     }
   };
 
-  if (loading) return <div className="container">Loading...</div>;
+  if (loading) return <PageLoader />;
 
   return (
     <div className="settings-container">
@@ -120,7 +122,7 @@ const AccountSettings = () => {
             <input type="submit" value="Save" />
           </div>
 
-          {error && <div className="notification error">{error}</div>}
+          <Notification message={error} type="error" />
         </form>
       </div>
 

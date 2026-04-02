@@ -4,29 +4,14 @@ import Pagination from '../../components/ui/Pagination';
 import OrderScanner from '../../components/features/OrderScanner';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { formatDateTime } from '../../utils/formatters';
+import ListPageHeader from '../../components/ui/ListPageHeader';
+import Notification from '../../components/ui/Notification';
 import '../../styles/shared/entity-list.css';
 import '../../styles/pages/delivery/today-orders.css';
+import { DELIVERY_STATUS_LABELS, DELIVERY_STATUS_OPTIONS } from '../../types/delivery';
+import type { DeliveryStatusKey } from '../../types/delivery';
 import type { Order } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
-
-type DeliveryStatusKey = 'pending' | 'out_for_delivery' | 'delivered' | 'failed_delivery';
-
-const STATUS_OPTIONS: Array<{ value: DeliveryStatusKey; label: string }> = [
-  { value: 'pending', label: 'Pending' },
-  { value: 'out_for_delivery', label: 'Out for Delivery' },
-  { value: 'delivered', label: 'Delivered' },
-  { value: 'failed_delivery', label: 'Failed Delivery' },
-];
-
-const STATUS_LABELS = STATUS_OPTIONS.reduce<Record<DeliveryStatusKey, string>>((acc, s) => {
-  acc[s.value] = s.label;
-  return acc;
-}, {
-  pending: 'Pending',
-  out_for_delivery: 'Out for Delivery',
-  delivered: 'Delivered',
-  failed_delivery: 'Failed Delivery',
-});
 
 const TodayOrders = () => {
   const {
@@ -117,19 +102,12 @@ const TodayOrders = () => {
     <div className="container delivery-page">
 
       {/* ── Top controls ── */}
-      <div className="header-row">
-        <h2>Delivery Orders (Today)</h2>
-        <div className="search-container">
-          <div className="search-input-wrapper">
-            <span className="material-icons" aria-hidden="true">search</span>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchInput}
-              onChange={(event) => handleSearchChange(event.target.value)}
-              aria-label="Search delivery orders"
-            />
-          </div>
+      <ListPageHeader
+        title="Delivery Orders (Today)"
+        searchInput={searchInput}
+        onSearchChange={handleSearchChange}
+        searchAriaLabel="Search delivery orders"
+        action={
           <button
             ref={scanButtonRef}
             type="button"
@@ -141,8 +119,8 @@ const TodayOrders = () => {
             <span className="material-icons" aria-hidden="true">qr_code_scanner</span>
             <span>Scan QR</span>
           </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Fullscreen scanner overlay — renders via portal over everything */}
       <OrderScanner
@@ -151,16 +129,7 @@ const TodayOrders = () => {
         onDetected={handleScanDetected}
       />
 
-      {/* ── Notification ── */}
-      {notification.message && (
-        <div
-          className={`notification ${notification.type}`}
-          role="status"
-          aria-live="polite"
-        >
-          {notification.message}
-        </div>
-      )}
+      <Notification message={notification.message} type={notification.type} />
 
       {/* ── Selected order panel ── */}
       {selectedOrder && (
@@ -184,7 +153,7 @@ const TodayOrders = () => {
               <p>
                 <strong>Status:</strong>{' '}
                 <span className={`delivery-status-pill status-${selectedOrder.delivery_status}`}>
-                  {STATUS_LABELS[selectedOrder.delivery_status as DeliveryStatusKey] || selectedOrder.delivery_status}
+                  {DELIVERY_STATUS_LABELS[selectedOrder.delivery_status as DeliveryStatusKey] || selectedOrder.delivery_status}
                 </span>
               </p>
             </div>
@@ -199,7 +168,7 @@ const TodayOrders = () => {
                 }
                 aria-label="Change delivery status"
               >
-                {STATUS_OPTIONS.map((s) => (
+                {DELIVERY_STATUS_OPTIONS.map((s) => (
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>
@@ -261,7 +230,7 @@ const TodayOrders = () => {
                       <td>{order.contact_no || 'N/A'}</td>
                       <td>
                         <span className={`delivery-status-pill status-${activeStatus}`}>
-                          {STATUS_LABELS[activeStatus] || activeStatus}
+                          {DELIVERY_STATUS_LABELS[activeStatus] || activeStatus}
                         </span>
                         {order.delivered_at && (
                           <div className="delivery-meta">
@@ -281,7 +250,7 @@ const TodayOrders = () => {
                             }
                             aria-label={`Change status for order ${order.order_id}`}
                           >
-                            {STATUS_OPTIONS.map((s) => (
+                            {DELIVERY_STATUS_OPTIONS.map((s) => (
                               <option key={s.value} value={s.value}>{s.label}</option>
                             ))}
                           </select>

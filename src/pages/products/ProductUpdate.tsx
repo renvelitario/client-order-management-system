@@ -3,6 +3,8 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
 import '../../styles/shared/entity-form.css';
+import Notification from '../../components/ui/Notification';
+import PageLoader from '../../components/ui/PageLoader';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const ProductsUpdate = () => {
@@ -61,14 +63,14 @@ const ProductsUpdate = () => {
     }
   };
 
-  if (loading) return <div className="container">Loading...</div>;
+  if (loading) return <PageLoader />;
 
   return (
     <div className="update-product">
       <h2>Update a Product</h2>
 
       {error ? (
-        <div className="notification error">{error}</div>
+        <Notification message={error} type="error" />
       ) : (
         <form onSubmit={handleSubmit} className="update-form">
           <label>Product Name:</label>

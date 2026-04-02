@@ -7,6 +7,9 @@ import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
+import ListPageHeader from '../../components/ui/ListPageHeader';
+import Notification from '../../components/ui/Notification';
+import PageLoader from '../../components/ui/PageLoader';
 import type { ApiError, Purchase } from '../../types/app';
 
 const PurchasesList = () => {
@@ -39,9 +42,7 @@ const PurchasesList = () => {
     );
   };
 
-  const pagePurchases = purchases;
-
-  if (loading) return <div className="container">Loading...</div>;
+  if (loading) return <PageLoader />;
 
   return (
     <div className="container">
@@ -53,30 +54,19 @@ const PurchasesList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
-      <div className="header-row">
-        <h2>Purchases</h2>
-        <div className="search-container">
-          <div className="search-input-wrapper">
-            <span className="material-icons">search</span>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchInput}
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-          </div>
-          {isAdmin && (
-            <Link to="/purchases/new" className="create-button">
-              <span className="material-icons">add</span>
-              Create
-            </Link>
-          )}
-        </div>
-      </div>
+      <ListPageHeader
+        title="Purchases"
+        searchInput={searchInput}
+        onSearchChange={handleSearchChange}
+        action={isAdmin && (
+          <Link to="/purchases/new" className="create-button">
+            <span className="material-icons">add</span>
+            Create
+          </Link>
+        )}
+      />
 
-      {notification.message && (
-        <div className={`notification ${notification.type}`}>{notification.message}</div>
-      )}
+      <Notification message={notification.message} type={notification.type} />
 
       <table id="purchases-table">
         <thead>
@@ -89,8 +79,8 @@ const PurchasesList = () => {
           </tr>
         </thead>
         <tbody>
-          {pagePurchases.length > 0 ? (
-            pagePurchases.map(p => (
+          {purchases.length > 0 ? (
+            purchases.map(p => (
               <tr key={p.purchase_id}>
                 <td>{p.purchase_id}</td>
                 <td>{p.product_id}</td>

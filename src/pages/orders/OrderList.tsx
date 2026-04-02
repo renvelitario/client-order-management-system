@@ -2,23 +2,18 @@ import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import QRCode from 'qrcode';
 import '../../styles/shared/entity-list.css';
-import { formatPeso } from '../../utils/formatters';
+import { formatPeso, formatDateOnly } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
-import { formatDateOnly } from '../../utils/formatters';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
+import ListPageHeader from '../../components/ui/ListPageHeader';
+import Notification from '../../components/ui/Notification';
+import PageLoader from '../../components/ui/PageLoader';
+import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
+import type { DeliveryStatusKey } from '../../types/delivery';
 import type { ApiError, Order } from '../../types/app';
-
-type DeliveryStatusKey = 'pending' | 'out_for_delivery' | 'delivered' | 'failed_delivery';
-
-const DELIVERY_STATUS_LABELS: Record<DeliveryStatusKey, string> = {
-  pending: 'Pending',
-  out_for_delivery: 'Out for Delivery',
-  delivered: 'Delivered',
-  failed_delivery: 'Failed Delivery',
-};
 
 const OrdersList = () => {
   const { isAdmin } = useAuth();
@@ -42,9 +37,6 @@ const OrdersList = () => {
     handleDeleteCancel,
     handleDeleteConfirm: confirmDelete,
   } = useDeleteDialog<number>((err: ApiError) => err.response?.data?.error || 'Failed to delete order.');
-
-  
-  const pageOrders = orders;
 
   const handlePrintReceipt = async (order: Order) => {
     const qrCodeDataUrl = await QRCode.toDataURL(String(order.order_id), {
@@ -94,7 +86,7 @@ const OrdersList = () => {
     );
   };
 
-  if (loading) return <div className="container">Loading...</div>;
+  if (loading) return <PageLoader />;
 
   return (
     <div className="container">
@@ -106,30 +98,19 @@ const OrdersList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
-      <div className="header-row">
-        <h2>Orders</h2>
-        <div className="search-container">
-          <div className="search-input-wrapper">
-            <span className="material-icons">search</span>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchInput}
-              onChange={(e) => handleSearchChange(e.target.value)}
-            />
-          </div>
-          {isAdmin && (
-            <Link to="/orders/new" className="create-button">
-              <span className="material-icons">add</span>
-              Create
-            </Link>
-          )}
-        </div>
-      </div>
+      <ListPageHeader
+        title="Orders"
+        searchInput={searchInput}
+        onSearchChange={handleSearchChange}
+        action={isAdmin && (
+          <Link to="/orders/new" className="create-button">
+            <span className="material-icons">add</span>
+            Create
+          </Link>
+        )}
+      />
 
-      {notification.message && (
-        <div className={`notification ${notification.type}`}>{notification.message}</div>
-      )}
+      <Notification message={notification.message} type={notification.type} />
 
       <table id="orders-table">
         <thead>
@@ -145,8 +126,8 @@ const OrdersList = () => {
           </tr>
         </thead>
         <tbody>
-          {pageOrders.length > 0 ? (
-            pageOrders.map(o => (
+          {orders.length > 0 ? (
+            orders.map(o => (
               <tr key={o.order_id}>
                 <td>{o.order_id}</td>
                 <td>{o.customer_id}</td>
