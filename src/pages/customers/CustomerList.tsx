@@ -1,18 +1,40 @@
 import api from "../../utils/api";
-import { Link } from "react-router-dom";
+import type { ChangeEvent, FormEvent } from 'react';
+import { useCallback, useState } from 'react';
 import "../../styles/shared/entity-list.css";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
+import CustomerFormModal from '../../components/ui/CustomerFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
+import { resolveApiErrorMessage } from '../../types/app';
 import type { ApiError, Customer } from '../../types/app';
+
+type CustomerFormData = {
+  name: string;
+  address: string;
+  contact_no: string;
+};
+
+const emptyCustomerForm: CustomerFormData = {
+  name: '',
+  address: '',
+  contact_no: '',
+};
 
 const CustomersList = () => {
   const { isAdmin } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'update'>('create');
+  const [activeCustomerId, setActiveCustomerId] = useState<number | null>(null);
+  const [formData, setFormData] = useState<CustomerFormData>(emptyCustomerForm);
+  const [modalError, setModalError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
   const {
     rows: customers,
     searchInput,
@@ -46,6 +68,90 @@ const CustomersList = () => {
     );
   };
 
+  const resetCustomerModalState = useCallback(() => {
+    setIsModalOpen(false);
+    setModalError('');
+    setActiveCustomerId(null);
+    setFormData(emptyCustomerForm);
+  }, []);
+
+  const closeCustomerModal = useCallback(() => {
+    if (isSubmitting) {
+      return;
+    }
+    resetCustomerModalState();
+  }, [isSubmitting, resetCustomerModalState]);
+
+  const openCreateModal = () => {
+    setPageNotification({ message: '', type: 'success' });
+    setModalMode('create');
+    setActiveCustomerId(null);
+    setFormData(emptyCustomerForm);
+    setModalError('');
+    setIsModalOpen(true);
+  };
+
+  const openUpdateModal = (customer: Customer) => {
+    setPageNotification({ message: '', type: 'success' });
+    setModalMode('update');
+    setActiveCustomerId(customer.customer_id);
+    setFormData({
+      name: customer.name,
+      address: customer.address,
+      contact_no: customer.contact_no,
+    });
+    setModalError('');
+    setIsModalOpen(true);
+  };
+
+  const handleFormChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((previous) => ({
+      ...previous,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleModalSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setModalError('');
+    setIsSubmitting(true);
+
+    try {
+      if (modalMode === 'create') {
+        await api.post('/customers', formData);
+        setPageNotification({ message: 'Customer created successfully.', type: 'success' });
+      } else {
+        if (!activeCustomerId) {
+          throw new Error('Missing customer id for update.');
+        }
+        await api.put(`/customers/${activeCustomerId}`, formData);
+        setPageNotification({ message: 'Customer updated successfully.', type: 'success' });
+      }
+
+      await refetch();
+      resetCustomerModalState();
+    } catch (err) {
+      const fallbackMessage = modalMode === 'create' ? 'Failed to add customer.' : 'Failed to update customer.';
+      setModalError(resolveApiErrorMessage(err, fallbackMessage));
+      setPageNotification({ message: '', type: 'success' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const customerModal = (
+    <CustomerFormModal
+      open={isAdmin && isModalOpen}
+      mode={modalMode}
+      formData={formData}
+      error={modalError}
+      isSubmitting={isSubmitting}
+      onChange={handleFormChange}
+      onSubmit={handleModalSubmit}
+      onRequestClose={closeCustomerModal}
+    />
+  );
+
   if (loading) return <PageLoader />;
 
   return (
@@ -63,14 +169,16 @@ const CustomersList = () => {
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         action={isAdmin && (
-          <Link to="/customers/new" className="create-button">
+          <button type="button" className="create-button" onClick={openCreateModal}>
             <span className="material-icons">add</span>
             Create
-          </Link>
+          </button>
         )}
       />
 
+      <Notification message={pageNotification.message} type={pageNotification.type} />
       <Notification message={notification.message} type={notification.type} />
+      {customerModal}
 
       <table id="customers-table">
         <thead>
@@ -91,13 +199,13 @@ const CustomersList = () => {
                 <td>{c.address}</td>
                 <td>{c.contact_no}</td>
                 <td>
-                  <Link
-                    to={`/customers/edit?customer_id=${c.customer_id}`}
+                  <button
                     className="edit-button"
+                    onClick={() => openUpdateModal(c)}
                   >
                     <span className="material-icons">edit</span>
                     <span className="edit-text">Edit</span>
-                  </Link>
+                  </button>
                   <button
                     className="delete-button"
                     onClick={() => handleDeleteClick(c.customer_id)}
