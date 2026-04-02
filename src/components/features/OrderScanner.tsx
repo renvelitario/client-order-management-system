@@ -264,7 +264,12 @@ const OrderScanner = ({
       )}
 
       <div id={scannerId} ref={scannerHostRef} className="fs-scanner-view" />
-      <div className="fs-scanner-guide" aria-hidden="true" />
+      <div className="fs-scanner-guide" aria-hidden="true">
+        <span className="fs-scanner-corner fs-scanner-corner--tl" />
+        <span className="fs-scanner-corner fs-scanner-corner--tr" />
+        <span className="fs-scanner-corner fs-scanner-corner--bl" />
+        <span className="fs-scanner-corner fs-scanner-corner--br" />
+      </div>
     </div>,
     document.body,
   );
