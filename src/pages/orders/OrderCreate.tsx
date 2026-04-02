@@ -4,8 +4,8 @@ import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
 import { formatPeso } from '../../utils/formatters';
-import { getListData } from '../../utils/listResponse';
 import Notification from '../../components/ui/Notification';
+import { useListOptions } from '../../hooks/useListOptions';
 import type { Customer, Product } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
 
@@ -27,6 +27,8 @@ const toLocalDateInputValue = (date = new Date()) => {
   return `${year}-${month}-${day}`;
 };
 
+const isActiveProduct = (product: Product) => String(product.status).toLowerCase() === 'active';
+
 const OrdersAdd = () => {
   const defaultDeliveryDate = toLocalDateInputValue();
   const [formData, setFormData] = useState<OrderForm>({
@@ -34,32 +36,23 @@ const OrdersAdd = () => {
     delivery_date: defaultDeliveryDate,
     items_data: [{ product_id: '', quantity: '' }]
   });
-  const [products, setProducts] = useState<Product[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const products = useListOptions<Product>({ endpoint: '/products', filter: isActiveProduct });
+  const customers = useListOptions<Customer>({ endpoint: '/customers' });
   const [error, setError] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
   const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/products', { params: { page: 1, limit: 100, sort: 'desc' } })
-      .then((res) => {
-        const rows = getListData<Product>(res.data).data;
-        const activeProducts = rows.filter((p) => String(p.status).toLowerCase() === 'active');
-        setProducts(activeProducts);
-      })
-      .catch(console.error);
-
-    api.get('/customers', { params: { page: 1, limit: 100, sort: 'desc' } })
-      .then((res) => {
-        const rows = getListData<Customer>(res.data).data;
-        setCustomers(rows);
-        if (rows.length) {
-          setFormData((prev) => ({ ...prev, customer_id: String(rows[0].customer_id) }));
+    if (customers.length) {
+      setFormData((prev) => {
+        if (prev.customer_id) {
+          return prev;
         }
-      })
-      .catch(console.error);
-  }, []);
+        return { ...prev, customer_id: String(customers[0].customer_id) };
+      });
+    }
+  }, [customers]);
 
   const handleCustomerChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, customer_id: e.target.value });

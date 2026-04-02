@@ -3,8 +3,8 @@ import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/shared/entity-form.css';
-import { getListData } from '../../utils/listResponse';
 import Notification from '../../components/ui/Notification';
+import { useListOptions } from '../../hooks/useListOptions';
 import type { Product } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
 
@@ -13,21 +13,20 @@ const PurchasesAdd = () => {
     product_id: '',
     quantity: ''
   });
-  const [products, setProducts] = useState<Product[]>([]);
+  const products = useListOptions<Product>({ endpoint: '/products' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/products', { params: { page: 1, limit: 100, sort: 'desc' } })
-      .then((res) => {
-        const rows = getListData<Product>(res.data).data;
-        setProducts(rows);
-        if (rows.length) {
-          setFormData((prev) => ({ ...prev, product_id: String(rows[0].product_id) }));
+    if (products.length) {
+      setFormData((prev) => {
+        if (prev.product_id) {
+          return prev;
         }
-      })
-      .catch(console.error);
-  }, []);
+        return { ...prev, product_id: String(products[0].product_id) };
+      });
+    }
+  }, [products]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

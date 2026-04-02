@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../hooks/useAuth';
+import Notification from '../components/ui/Notification';
 
 import '../styles/pages/login.css';
 
@@ -103,8 +104,7 @@ const Login = () => {
         </p>
 
         {/* ERROR */}
-        {error && <div className="notification error">{error}</div>}
-        {!error && authError && <div className="notification error">{authError}</div>}
+        <Notification message={error || authError} type="error" />
       </form>
     </div>
   );
