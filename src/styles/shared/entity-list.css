@@ -53,6 +53,7 @@
     padding: 10px 16px;
     background-color: var(--primary);
     color: var(--text-inverse);
+    border: none;
     border-radius: var(--radius-sm);
     text-decoration: none;
     font-size: 14px;
@@ -63,7 +64,6 @@
 
 .create-button:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
@@ -328,8 +328,8 @@ tbody tr:hover {
     background: #c62828;
 }
 
-/* CUSTOMER FORM MODAL */
-.customer-form-modal {
+/* SHARED ENTITY FORM MODAL */
+.entity-form-modal {
     background: #fff;
     border-radius: 10px;
     width: min(540px, 100%);
@@ -339,7 +339,7 @@ tbody tr:hover {
     box-shadow: 0 22px 44px rgba(15, 23, 42, 0.24);
 }
 
-.customer-form-modal-header {
+.entity-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -347,13 +347,13 @@ tbody tr:hover {
     margin-bottom: 12px;
 }
 
-.customer-form-modal-header h3 {
+.entity-modal-header h3 {
     margin: 0;
     font-size: 20px;
     color: var(--text-main);
 }
 
-.customer-modal-close {
+.entity-modal-close {
     width: 34px;
     height: 34px;
     border: none;
@@ -367,27 +367,30 @@ tbody tr:hover {
     transition: var(--transition-fast);
 }
 
-.customer-modal-close:hover {
+.entity-modal-close:hover {
     background: #dde6f2;
 }
 
-.customer-modal-close .material-icons {
+.entity-modal-close .material-icons {
     font-size: 20px;
 }
 
-.customer-modal-form {
+.entity-modal-form {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.customer-modal-form label {
+.entity-modal-form label {
     font-weight: 600;
     color: var(--text-main);
 }
 
-.customer-modal-form input[type="text"],
-.customer-modal-form textarea {
+.entity-modal-form input[type="text"],
+.entity-modal-form input[type="number"],
+.entity-modal-form input[type="date"],
+.entity-modal-form select,
+.entity-modal-form textarea {
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
@@ -398,21 +401,159 @@ tbody tr:hover {
     transition: var(--transition-fast);
 }
 
-.customer-modal-form input[type="text"]:focus,
-.customer-modal-form textarea:focus {
+.entity-modal-form input[type="text"]:focus,
+.entity-modal-form input[type="number"]:focus,
+.entity-modal-form input[type="date"]:focus,
+.entity-modal-form select:focus,
+.entity-modal-form textarea:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.customer-modal-form textarea {
+.order-form-modal {
+    background: #fff;
+    border-radius: 10px;
+    width: min(760px, 100%);
+    max-height: min(760px, calc(100dvh - 40px));
+    overflow-y: auto;
+    padding: 22px;
+    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.24);
+}
+
+.order-modal-loading {
+    margin: 10px 0 0;
+    color: var(--text-muted);
+}
+
+.order-items-grid {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px;
+    background: #f9fbfd;
+}
+
+.order-items-grid-head {
+    display: grid;
+    grid-template-columns: 80px 90px minmax(180px, 1fr) 130px 44px;
+    gap: 8px;
+    padding: 4px 2px 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.order-item-grid-row {
+    display: grid;
+    grid-template-columns: 80px 90px minmax(180px, 1fr) 130px 44px;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 2px;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.order-item-grid-row:first-of-type {
+    border-top: none;
+}
+
+.order-item-grid-row-highlight {
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.order-item-grid-row input,
+.order-item-grid-row select {
+    margin: 0;
+    padding: 10px;
+}
+
+.order-product-combobox {
+    position: relative;
+}
+
+.order-item-grid-row input[readonly] {
+    background: #eef3f8;
+    color: #4b5563;
+}
+
+.order-item-product-input::placeholder {
+    color: #9ca3af;
+}
+
+.order-item-product-input.is-empty {
+    color: #9ca3af;
+}
+
+.order-product-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+    z-index: 8;
+}
+
+.order-product-option {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #eef2f7;
+    background: #fff;
+    padding: 9px 10px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.order-product-option:last-child {
+    border-bottom: none;
+}
+
+.order-product-option:hover {
+    background: #f5f9ff;
+}
+
+.order-product-empty {
+    padding: 9px 10px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.order-item-row-remove {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #b91c1c;
+    font-size: 16px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.order-item-row-remove:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.entity-modal-form textarea {
     resize: vertical;
     max-height: 220px;
     min-height: 96px;
     overflow-y: auto;
 }
 
-.customer-modal-actions {
+.entity-modal-actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -420,12 +561,12 @@ tbody tr:hover {
     margin-top: 10px;
 }
 
-.customer-modal-actions .create-button {
+.entity-modal-actions .create-button {
     border: none;
 }
 
-.customer-modal-actions .modal-cancel,
-.customer-modal-actions .create-button {
+.entity-modal-actions .modal-cancel,
+.entity-modal-actions .create-button {
     min-width: 148px;
     height: 42px;
     padding: 0 16px;
@@ -437,7 +578,7 @@ tbody tr:hover {
     box-sizing: border-box;
 }
 
-.customer-modal-actions button:disabled {
+.entity-modal-actions button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
 }
@@ -485,6 +626,11 @@ tbody tr:hover {
         font-size: 12px;
         padding: 8px;
         white-space: nowrap;
+    }
+
+    .order-items-grid-head,
+    .order-item-grid-row {
+        grid-template-columns: 70px 80px minmax(140px, 1fr) 110px 40px;
     }
 }
 

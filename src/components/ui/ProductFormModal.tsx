@@ -1,0 +1,101 @@
+import type { ChangeEvent, FormEvent } from 'react';
+import EntityModalShell from './EntityModalShell';
+import Notification from './Notification';
+
+type ProductFormData = {
+  sku: string;
+  product_name: string;
+  price: string;
+  status: string;
+};
+
+type ProductFormModalProps = {
+  open: boolean;
+  mode: 'create' | 'update';
+  formData: ProductFormData;
+  error: string;
+  isSubmitting: boolean;
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+  onRequestClose: () => void;
+};
+
+const ProductFormModal = ({
+  open,
+  mode,
+  formData,
+  error,
+  isSubmitting,
+  onChange,
+  onSubmit,
+  onRequestClose,
+}: ProductFormModalProps) => {
+  return (
+    <EntityModalShell
+      open={open}
+      title={mode === 'create' ? 'Create Product' : 'Update Product'}
+      titleId="product-modal-title"
+      className="entity-form-modal"
+      closeLabel="Close product form"
+      onRequestClose={onRequestClose}
+    >
+      <Notification message={error} type="error" />
+
+      <form className="entity-modal-form" onSubmit={onSubmit}>
+        <label htmlFor="product-sku">SKU (Optional):</label>
+        <input
+          id="product-sku"
+          type="text"
+          name="sku"
+          value={formData.sku}
+          onChange={onChange}
+          placeholder="Auto-generated if left blank"
+          maxLength={32}
+        />
+
+        <label htmlFor="product-name">Product Name:</label>
+        <input
+          id="product-name"
+          type="text"
+          name="product_name"
+          value={formData.product_name}
+          onChange={onChange}
+          required
+        />
+
+        <label htmlFor="product-price">Price (PHP):</label>
+        <input
+          id="product-price"
+          type="number"
+          min="0"
+          step="0.01"
+          name="price"
+          value={formData.price}
+          onChange={onChange}
+          required
+        />
+
+        <label htmlFor="product-status">Status:</label>
+        <select
+          id="product-status"
+          name="status"
+          value={formData.status}
+          onChange={onChange}
+          required
+        >
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+
+        <div className="entity-modal-actions">
+          <button type="button" className="modal-cancel" onClick={onRequestClose} disabled={isSubmitting}>Cancel</button>
+          <button type="submit" className="create-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Product' : 'Update Product'}
+          </button>
+        </div>
+      </form>
+    </EntityModalShell>
+  );
+};
+
+export default ProductFormModal;

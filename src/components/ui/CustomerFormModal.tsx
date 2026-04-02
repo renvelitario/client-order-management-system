@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import type { ChangeEvent, FormEvent } from 'react';
+import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
 
 type CustomerFormData = {
@@ -30,90 +29,55 @@ const CustomerFormModal = ({
   onSubmit,
   onRequestClose,
 }: CustomerFormModalProps) => {
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
+  return (
+    <EntityModalShell
+      open={open}
+      title={mode === 'create' ? 'Create Customer' : 'Update Customer'}
+      titleId="customer-modal-title"
+      className="entity-form-modal"
+      closeLabel="Close customer form"
+      onRequestClose={onRequestClose}
+    >
+      <Notification message={error} type="error" />
 
-    const previousBodyOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+      <form className="entity-modal-form" onSubmit={onSubmit}>
+        <label htmlFor="customer-name">Name:</label>
+        <input
+          id="customer-name"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={onChange}
+          required
+        />
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onRequestClose();
-      }
-    };
+        <label htmlFor="customer-address">Address:</label>
+        <textarea
+          id="customer-address"
+          name="address"
+          value={formData.address}
+          onChange={onChange}
+          required
+        />
 
-    document.addEventListener('keydown', handleEscape);
+        <label htmlFor="customer-contact-no">Contact No:</label>
+        <input
+          id="customer-contact-no"
+          type="text"
+          name="contact_no"
+          value={formData.contact_no}
+          onChange={onChange}
+          required
+        />
 
-    return () => {
-      document.body.style.overflow = previousBodyOverflow;
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [open, onRequestClose]);
-
-  if (!open) {
-    return null;
-  }
-
-  return createPortal(
-    <div className="modal-overlay" role="presentation" onClick={onRequestClose}>
-      <div
-        className="customer-form-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="customer-modal-title"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="customer-form-modal-header">
-          <h3 id="customer-modal-title">{mode === 'create' ? 'Create Customer' : 'Update Customer'}</h3>
-          <button type="button" className="customer-modal-close" onClick={onRequestClose} aria-label="Close customer form">
-            <span className="material-icons">close</span>
+        <div className="entity-modal-actions">
+          <button type="button" className="modal-cancel" onClick={onRequestClose} disabled={isSubmitting}>Cancel</button>
+          <button type="submit" className="create-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Customer' : 'Update Customer'}
           </button>
         </div>
-
-        <Notification message={error} type="error" />
-
-        <form className="customer-modal-form" onSubmit={onSubmit}>
-          <label htmlFor="customer-name">Name:</label>
-          <input
-            id="customer-name"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={onChange}
-            required
-          />
-
-          <label htmlFor="customer-address">Address:</label>
-          <textarea
-            id="customer-address"
-            name="address"
-            value={formData.address}
-            onChange={onChange}
-            required
-          />
-
-          <label htmlFor="customer-contact-no">Contact No:</label>
-          <input
-            id="customer-contact-no"
-            type="text"
-            name="contact_no"
-            value={formData.contact_no}
-            onChange={onChange}
-            required
-          />
-
-          <div className="customer-modal-actions">
-            <button type="button" className="modal-cancel" onClick={onRequestClose} disabled={isSubmitting}>Cancel</button>
-            <button type="submit" className="create-button" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : mode === 'create' ? 'Create Customer' : 'Update Customer'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>,
-    document.body,
+      </form>
+    </EntityModalShell>
   );
 };
 

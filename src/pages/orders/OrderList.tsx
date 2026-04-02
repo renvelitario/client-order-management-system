@@ -1,22 +1,76 @@
 import api from '../../utils/api';
-import { Link } from 'react-router-dom';
+import type { ChangeEvent, FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 import '../../styles/shared/entity-list.css';
 import { formatPeso, formatDateOnly } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
+import { useListOptions } from '../../hooks/useListOptions';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
+import OrderFormModal from '../../components/ui/OrderFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
+import { resolveApiErrorMessage } from '../../types/app';
 import type { DeliveryStatusKey } from '../../types/delivery';
-import type { ApiError, Order } from '../../types/app';
+import type { ApiError, Customer, Order, Product } from '../../types/app';
+
+type OrderItemForm = {
+  product_id: string;
+  quantity: string;
+};
+
+type OrderForm = {
+  customer_id: string;
+  delivery_date: string;
+  items_data: OrderItemForm[];
+};
+
+const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '' });
+const MIN_ORDER_ROWS = 2;
+
+const ensureMinimumOrderRows = (items: OrderItemForm[]) => {
+  const nextItems = [...items];
+  while (nextItems.length < MIN_ORDER_ROWS) {
+    nextItems.push(emptyOrderItem());
+  }
+  return nextItems;
+};
+
+const toLocalDateInputValue = (value?: string | Date | null) => {
+  const date = value ? new Date(value) : new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const isActiveProduct = (product: Product) => String(product.status).toLowerCase() === 'active';
+
+const emptyOrderForm = (): OrderForm => ({
+  customer_id: '',
+  delivery_date: toLocalDateInputValue(),
+  items_data: ensureMinimumOrderRows([emptyOrderItem()]),
+});
 
 const OrdersList = () => {
   const { isAdmin } = useAuth();
+  const customers = useListOptions<Customer>({ endpoint: '/customers' });
+  const products = useListOptions<Product>({ endpoint: '/products', filter: isActiveProduct });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'update'>('create');
+  const [activeOrderId, setActiveOrderId] = useState<number | null>(null);
+  const [isLoadingModalData, setIsLoadingModalData] = useState(false);
+  const [formData, setFormData] = useState<OrderForm>(emptyOrderForm);
+  const [modalError, setModalError] = useState('');
+  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
+  const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
     rows: orders,
     searchInput,
@@ -37,6 +91,25 @@ const OrdersList = () => {
     handleDeleteCancel,
     handleDeleteConfirm: confirmDelete,
   } = useDeleteDialog<number>((err: ApiError) => err.response?.data?.error || 'Failed to delete order.');
+
+  useEffect(() => {
+    if (!customers.length || !isModalOpen) {
+      return;
+    }
+
+    if (modalMode === 'create') {
+      setFormData((previous) => {
+        if (previous.customer_id) {
+          return previous;
+        }
+
+        return {
+          ...previous,
+          customer_id: String(customers[0].customer_id),
+        };
+      });
+    }
+  }, [customers, isModalOpen, modalMode]);
 
   const handleViewOrderItems = (order: Order) => {
     alert(
@@ -94,6 +167,218 @@ const OrdersList = () => {
     );
   };
 
+  const resetOrderModalState = useCallback(() => {
+    if (highlightTimerRef.current) {
+      clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = null;
+    }
+
+    setIsModalOpen(false);
+    setModalMode('create');
+    setActiveOrderId(null);
+    setIsLoadingModalData(false);
+    setFormData(emptyOrderForm());
+    setModalError('');
+    setHighlightedIndex(null);
+  }, []);
+
+  const closeOrderModal = useCallback(() => {
+    if (isSubmitting) {
+      return;
+    }
+
+    resetOrderModalState();
+  }, [isSubmitting, resetOrderModalState]);
+
+  const openCreateModal = () => {
+    setPageNotification({ message: '', type: 'success' });
+    setModalMode('create');
+    setActiveOrderId(null);
+    setIsLoadingModalData(false);
+    setModalError('');
+    setHighlightedIndex(null);
+    setFormData(emptyOrderForm());
+    setIsModalOpen(true);
+  };
+
+  const openUpdateModal = async (orderId: number) => {
+    setPageNotification({ message: '', type: 'success' });
+    setModalMode('update');
+    setActiveOrderId(orderId);
+    setModalError('');
+    setHighlightedIndex(null);
+    setIsLoadingModalData(true);
+    setIsModalOpen(true);
+
+    try {
+      const { data } = await api.get<Order>(`/orders/${orderId}`);
+      const items = (data.items || []).map((item) => ({
+        product_id: String(item.product_id),
+        quantity: String(item.quantity),
+      }));
+
+      setFormData({
+        customer_id: String(data.customer_id || ''),
+        delivery_date: toLocalDateInputValue(data.delivery_date),
+        items_data: ensureMinimumOrderRows(items.length ? [...items, emptyOrderItem()] : [emptyOrderItem()]),
+      });
+    } catch (err) {
+      setModalError(resolveApiErrorMessage(err, 'Order not found.'));
+    } finally {
+      setIsLoadingModalData(false);
+    }
+  };
+
+  const handleCustomerChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setFormData((previous) => ({
+      ...previous,
+      customer_id: event.target.value,
+    }));
+  };
+
+  const handleDeliveryDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFormData((previous) => ({
+      ...previous,
+      delivery_date: event.target.value,
+    }));
+  };
+
+  const handleItemChange = (index: number, field: keyof OrderItemForm, value: string) => {
+    if (field === 'product_id' && value) {
+      const duplicateIndex = formData.items_data.findIndex(
+        (item, itemIndex) => itemIndex !== index && String(item.product_id) === String(value),
+      );
+
+      if (duplicateIndex !== -1) {
+        if (highlightTimerRef.current) {
+          clearTimeout(highlightTimerRef.current);
+        }
+
+        setHighlightedIndex(duplicateIndex);
+        setModalError('This product is already selected in another order item.');
+
+        const existingBlock = document.getElementById(`item-block-${duplicateIndex}`);
+        if (existingBlock) {
+          existingBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        highlightTimerRef.current = setTimeout(() => {
+          setHighlightedIndex(null);
+        }, 1500);
+
+        return;
+      }
+    }
+
+    setFormData((previous) => {
+      const newItems = [...previous.items_data];
+      newItems[index] = {
+        ...newItems[index],
+        [field]: value,
+      };
+
+      if (field === 'product_id' && value) {
+        const hasOtherDraftRow = newItems.some(
+          (item, itemIndex) => itemIndex !== index && !String(item.product_id).trim(),
+        );
+
+        if (!hasOtherDraftRow) {
+          newItems.push(emptyOrderItem());
+        }
+      }
+
+      return {
+        ...previous,
+        items_data: newItems,
+      };
+    });
+
+    if (modalError) {
+      setModalError('');
+    }
+  };
+
+  const removeItem = (index: number) => {
+    setFormData((previous) => ({
+      ...previous,
+      items_data: ensureMinimumOrderRows(
+        previous.items_data.filter((_, itemIndex) => itemIndex !== index),
+      ),
+    }));
+  };
+
+  const handleModalSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setModalError('');
+    setIsSubmitting(true);
+
+    const sanitizedItems = formData.items_data.filter(
+      (item) => String(item.product_id).trim() && String(item.quantity).trim(),
+    );
+
+    if (!sanitizedItems.length) {
+      setModalError('Add at least one order item before submitting.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    const payload: OrderForm = {
+      ...formData,
+      items_data: sanitizedItems,
+    };
+
+    try {
+      if (modalMode === 'create') {
+        if (!window.confirm('Are you sure you want to add this order?')) {
+          return;
+        }
+
+        await api.post('/orders', payload);
+        setPageNotification({ message: 'Order created successfully.', type: 'success' });
+      } else {
+        if (!activeOrderId) {
+          throw new Error('Missing order id for update.');
+        }
+
+        if (!window.confirm('Are you sure you want to update this order?')) {
+          return;
+        }
+
+        await api.put(`/orders/${activeOrderId}`, payload);
+        setPageNotification({ message: 'Order updated successfully.', type: 'success' });
+      }
+
+      await refetch();
+      resetOrderModalState();
+    } catch (err) {
+      const fallbackMessage = modalMode === 'create' ? 'Failed to add order.' : 'Failed to update order.';
+      setModalError(resolveApiErrorMessage(err, fallbackMessage));
+      setPageNotification({ message: '', type: 'success' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const orderModal = (
+    <OrderFormModal
+      open={isAdmin && isModalOpen}
+      mode={modalMode}
+      formData={formData}
+      error={modalError}
+      isSubmitting={isSubmitting}
+      isLoading={isLoadingModalData}
+      highlightedIndex={highlightedIndex}
+      customers={customers}
+      products={products}
+      onCustomerChange={handleCustomerChange}
+      onDeliveryDateChange={handleDeliveryDateChange}
+      onItemChange={handleItemChange}
+      onRemoveItem={removeItem}
+      onSubmit={handleModalSubmit}
+      onRequestClose={closeOrderModal}
+    />
+  );
+
   if (loading) return <PageLoader />;
 
   return (
@@ -111,14 +396,16 @@ const OrdersList = () => {
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         action={isAdmin && (
-          <Link to="/orders/new" className="create-button">
+          <button type="button" className="create-button" onClick={openCreateModal}>
             <span className="material-icons">add</span>
             Create
-          </Link>
+          </button>
         )}
       />
 
+      <Notification message={pageNotification.message} type={pageNotification.type} />
       <Notification message={notification.message} type={notification.type} />
+      {orderModal}
 
       <table id="orders-table">
         <thead>
@@ -168,14 +455,16 @@ const OrdersList = () => {
                   </span>
                 </td>
                 <td>
-                  <Link
-                    to={`/orders/edit?order_id=${o.order_id}`}
+                  <button
                     className="edit-button"
-                    onClick={(event) => event.stopPropagation()}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      void openUpdateModal(o.order_id);
+                    }}
                   >
                     <span className="material-icons">edit</span>
                     <span className="edit-text">Edit</span>
-                  </Link>
+                  </button>
                   <button
                     className="view-button"
                     onClick={(event) => {
