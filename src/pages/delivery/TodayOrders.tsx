@@ -6,6 +6,7 @@ import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { formatDateTime } from '../../utils/formatters';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
+import PageLoader from '../../components/ui/PageLoader';
 import '../../styles/shared/entity-list.css';
 import '../../styles/pages/delivery/today-orders.css';
 import { DELIVERY_STATUS_LABELS, DELIVERY_STATUS_OPTIONS } from '../../types/delivery';
@@ -98,6 +99,10 @@ const TodayOrders = () => {
     }
   };
 
+  if (loading) {
+    return <PageLoader message="Loading delivery orders..." />;
+  }
+
   return (
     <div className="container delivery-page">
 
@@ -189,91 +194,87 @@ const TodayOrders = () => {
       )}
 
       {/* ── Orders table ── */}
-      {loading ? (
-        <p className="delivery-loading" aria-live="polite">Loading delivery orders...</p>
-      ) : (
-        <div className="delivery-table-wrap">
-          <table aria-label="Today's delivery orders">
-            <thead>
-              <tr>
-                <th scope="col">Order ID</th>
-                <th scope="col">Customer</th>
-                <th scope="col">Address</th>
-                <th scope="col">Contact</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.length ? (
-                orders.map((order) => {
-                  const activeStatus = resolvedStatus(order);
-                  const isSelected = selectedOrder?.order_id === order.order_id;
+      <div className="delivery-table-wrap">
+        <table aria-label="Today's delivery orders">
+          <thead>
+            <tr>
+              <th scope="col">Order ID</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Address</th>
+              <th scope="col">Contact</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.length ? (
+              orders.map((order) => {
+                const activeStatus = resolvedStatus(order);
+                const isSelected = selectedOrder?.order_id === order.order_id;
 
-                  return (
-                    <tr
-                      key={order.order_id}
-                      className={isSelected ? 'delivery-row-selected' : ''}
-                    >
-                      <td>
+                return (
+                  <tr
+                    key={order.order_id}
+                    className={isSelected ? 'delivery-row-selected' : ''}
+                  >
+                    <td>
+                      <button
+                        type="button"
+                        className="delivery-order-id-btn"
+                        onClick={() => selectOrder(order)}
+                        aria-pressed={isSelected}
+                      >
+                        #{order.order_id}
+                      </button>
+                    </td>
+                    <td>{order.customer_name || 'N/A'}</td>
+                    <td>{order.address || 'N/A'}</td>
+                    <td>{order.contact_no || 'N/A'}</td>
+                    <td>
+                      <span className={`delivery-status-pill status-${activeStatus}`}>
+                        {DELIVERY_STATUS_LABELS[activeStatus] || activeStatus}
+                      </span>
+                      {order.delivered_at && (
+                        <div className="delivery-meta">
+                          At {formatDateTime(order.delivered_at)}
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <div className="delivery-status-actions">
+                        <select
+                          value={activeStatus}
+                          onChange={(event) =>
+                            setStatusDrafts((prev) => ({
+                              ...prev,
+                              [order.order_id]: event.target.value as DeliveryStatusKey,
+                            }))
+                          }
+                          aria-label={`Change status for order ${order.order_id}`}
+                        >
+                          {DELIVERY_STATUS_OPTIONS.map((s) => (
+                            <option key={s.value} value={s.value}>{s.label}</option>
+                          ))}
+                        </select>
                         <button
                           type="button"
-                          className="delivery-order-id-btn"
-                          onClick={() => selectOrder(order)}
-                          aria-pressed={isSelected}
+                          onClick={() => updateStatus(order.order_id, activeStatus)}
                         >
-                          #{order.order_id}
+                          Save
                         </button>
-                      </td>
-                      <td>{order.customer_name || 'N/A'}</td>
-                      <td>{order.address || 'N/A'}</td>
-                      <td>{order.contact_no || 'N/A'}</td>
-                      <td>
-                        <span className={`delivery-status-pill status-${activeStatus}`}>
-                          {DELIVERY_STATUS_LABELS[activeStatus] || activeStatus}
-                        </span>
-                        {order.delivered_at && (
-                          <div className="delivery-meta">
-                            At {formatDateTime(order.delivered_at)}
-                          </div>
-                        )}
-                      </td>
-                      <td>
-                        <div className="delivery-status-actions">
-                          <select
-                            value={activeStatus}
-                            onChange={(event) =>
-                              setStatusDrafts((prev) => ({
-                                ...prev,
-                                [order.order_id]: event.target.value as DeliveryStatusKey,
-                              }))
-                            }
-                            aria-label={`Change status for order ${order.order_id}`}
-                          >
-                            {DELIVERY_STATUS_OPTIONS.map((s) => (
-                              <option key={s.value} value={s.value}>{s.label}</option>
-                            ))}
-                          </select>
-                          <button
-                            type="button"
-                            onClick={() => updateStatus(order.order_id, activeStatus)}
-                          >
-                            Save
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={6}>No delivery orders scheduled for today.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan={6}>No delivery orders scheduled for today.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <Pagination
         currentPage={currentPage}
