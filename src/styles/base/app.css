@@ -17,6 +17,10 @@
 	min-height: 100vh;
 }
 
+.app-boot-content {
+	animation: appContentFadeIn 220ms ease-out;
+}
+
 .container {
 	width: min(100%, 1280px);
 	margin: 0 auto;
@@ -106,6 +110,16 @@
 	100% {
 		opacity: 0.75;
 		transform: scale(0.94);
+	}
+}
+
+@keyframes appContentFadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
 	}
 }
 

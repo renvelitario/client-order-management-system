@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute } from './components/auth/RouteGuards';
@@ -30,6 +30,7 @@ const RouteLoader = () => (
 );
 
 function App() {
+  const [appBootComplete, setAppBootComplete] = useState(false);
   const { isAuthenticated, isAdmin, loading } = useAuth();
   const {
     warningState,
@@ -42,7 +43,41 @@ function App() {
     handleLogoutNow,
   } = useSessionTimeout(isAuthenticated);
 
-  if (loading) {
+  useEffect(() => {
+    let cancelled = false;
+
+    const waitForWindowLoad = new Promise<void>((resolve) => {
+      if (document.readyState === 'complete') {
+        resolve();
+        return;
+      }
+
+      const handleLoad = () => {
+        resolve();
+      };
+
+      window.addEventListener('load', handleLoad, { once: true });
+    });
+
+    const preloadCriticalChunks = Promise.all([
+      import('./pages/Login'),
+    ]);
+
+    Promise.all([waitForWindowLoad, preloadCriticalChunks]).then(() => {
+      // Delay to the next paint so the first visible frame is fully styled.
+      requestAnimationFrame(() => {
+        if (!cancelled) {
+          setAppBootComplete(true);
+        }
+      });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!appBootComplete || loading) {
     return <RouteLoader />;
   }
 
@@ -50,7 +85,7 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
+      <div className="App app-boot-content">
         {isAuthenticated ? (
           <>
             {warningState.isOpen && (
