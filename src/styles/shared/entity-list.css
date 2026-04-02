@@ -98,9 +98,53 @@ tbody tr {
     transition: var(--transition-fast);
 }
 
+.order-row-clickable {
+    cursor: pointer;
+}
+
 tbody tr:hover {
     background: var(--surface-alt);
 }
+
+.order-row-clickable:focus-within {
+    background: var(--surface-alt);
+}
+
+.delivery-order-id-chip {
+    display: inline-flex;
+    align-items: center;
+    background: var(--surface-alt);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+}
+
+.order-row-clickable:hover .delivery-order-id-chip,
+.order-row-clickable:focus-within .delivery-order-id-chip {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Delivery status pill (shared with delivery page style) */
+.delivery-status-pill {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.status-pending { background: #fff8e1; color: #8d6e00; }
+.status-out_for_delivery { background: #e3f2fd; color: var(--primary-hover); }
+.status-delivered { background: #e8f5e9; color: #2e7d32; }
+.status-failed_delivery { background: #ffebee; color: #b71c1c; }
 
 /* INACTIVE ROW */
 .inactive-row td {

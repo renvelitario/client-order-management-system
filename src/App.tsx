@@ -15,9 +15,9 @@ const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const CustomersAdd = lazy(() => import('./pages/customers/CustomerCreate'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
 const OrdersAdd = lazy(() => import('./pages/orders/OrderCreate'));
+const OrdersUpdate = lazy(() => import('./pages/orders/OrderUpdate'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
-const PurchasesList = lazy(() => import('./pages/purchases/PurchaseList'));
-const PurchasesAdd = lazy(() => import('./pages/purchases/PurchaseCreate'));
+// Purchases pages are archived under src/archive/purchases and intentionally not routable.
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
 const ProductsUpdate = lazy(() => import('./pages/products/ProductUpdate'));
 const CustomersUpdate = lazy(() => import('./pages/customers/CustomerUpdate'));
@@ -108,8 +108,8 @@ function App() {
                       <Route path="/customers/edit" element={<AdminRoute><CustomersUpdate /></AdminRoute>} />
                       <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
                       <Route path="/orders/new" element={<AdminRoute><OrdersAdd /></AdminRoute>} />
-                      <Route path="/purchases" element={<ProtectedRoute><PurchasesList /></ProtectedRoute>} />
-                      <Route path="/purchases/new" element={<AdminRoute><PurchasesAdd /></AdminRoute>} />
+                      <Route path="/orders/edit" element={<AdminRoute><OrdersUpdate /></AdminRoute>} />
+                      {/* Archived: Purchases routes intentionally disabled. */}
                       <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
                       <Route path="/account/settings" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
                       <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />
@@ -121,8 +121,8 @@ function App() {
                       <Route path="/cust_update" element={<Navigate to="/customers/edit" replace />} />
                       <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
                       <Route path="/orders_add" element={<Navigate to="/orders/new" replace />} />
-                      <Route path="/purchases_list" element={<Navigate to="/purchases" replace />} />
-                      <Route path="/purchases_add" element={<Navigate to="/purchases/new" replace />} />
+                      <Route path="/orders_update" element={<Navigate to="/orders/edit" replace />} />
+                      {/* Archived legacy redirects intentionally disabled with Purchases UI. */}
                       <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                     </Routes>
                   </Suspense>

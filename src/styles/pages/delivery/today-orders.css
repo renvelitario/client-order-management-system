@@ -1,15 +1,3 @@
-/* ── Delivery page custom properties ─────────────────────────────── */
-.delivery-page {
-  --ds-success-bg: #e8f5e9;
-  --ds-success-fg: #2e7d32;
-  --ds-warning-bg: #fff8e1;
-  --ds-warning-fg: #8d6e00;
-  --ds-danger-bg: #ffebee;
-  --ds-danger-fg: #b71c1c;
-  --ds-info-bg: #e3f2fd;
-  --ds-info-fg: var(--primary-hover);
-}
-
 /* ── Removed Search icon override ── */
 
 /* Reuse shared create-button styles for Scan QR while normalizing button defaults */
@@ -387,21 +375,6 @@
 .delivery-status-actions button:focus-visible {
   background: var(--primary-hover);
 }
-
-/* ── Status pills ────────────────────────────────────────────────── */
-.delivery-status-pill {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.status-pending         { background: var(--ds-warning-bg); color: var(--ds-warning-fg); }
-.status-out_for_delivery{ background: var(--ds-info-bg);    color: var(--ds-info-fg); }
-.status-delivered       { background: var(--ds-success-bg); color: var(--ds-success-fg); }
-.status-failed_delivery { background: var(--ds-danger-bg);  color: var(--ds-danger-fg); }
 
 /* ── Delivery meta (timestamp) ───────────────────────────────────── */
 .delivery-meta {

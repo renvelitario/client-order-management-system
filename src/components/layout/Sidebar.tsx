@@ -13,15 +13,13 @@ type NavItem = {
 
 const adminLinks: NavItem[] = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard', end: true },
-  { to: '/delivery/orders', label: 'Delivery Orders', icon: 'delivery' },
   { to: '/products', label: 'Products', icon: 'products' },
   { to: '/customers', label: 'Customers', icon: 'customers' },
-  { to: '/purchases', label: 'Purchases', icon: 'purchases' },
   { to: '/orders', label: 'Orders', icon: 'orders' },
 ];
 
 const deliveryLinks: NavItem[] = [
-  { to: '/delivery/orders', label: 'Delivery Orders', icon: 'delivery', end: true },
+  { to: '/delivery/orders', label: "Today's Delivery", icon: 'delivery', end: true },
 ];
 
 const Sidebar = ({

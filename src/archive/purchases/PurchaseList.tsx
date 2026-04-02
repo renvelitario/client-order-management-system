@@ -1,3 +1,4 @@
+// Archived Purchases page (UI route disabled). Kept for future reference.
 import api from '../../utils/api';
 import { Link } from 'react-router-dom';
 import '../../styles/shared/entity-list.css';

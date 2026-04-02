@@ -38,6 +38,14 @@ const OrdersList = () => {
     handleDeleteConfirm: confirmDelete,
   } = useDeleteDialog<number>((err: ApiError) => err.response?.data?.error || 'Failed to delete order.');
 
+  const handleViewOrderItems = (order: Order) => {
+    alert(
+      order.items && order.items.length > 0
+        ? `Order Items:\n${order.items.map((item) => `Product #${item.product_id}: ${item.quantity} x ${formatPeso(item.price || 0)}`).join('\n')}`
+        : 'No items in this order',
+    );
+  };
+
   const handlePrintReceipt = async (order: Order) => {
     const qrCodeDataUrl = await QRCode.toDataURL(String(order.order_id), {
       width: 180,
@@ -128,8 +136,23 @@ const OrdersList = () => {
         <tbody>
           {orders.length > 0 ? (
             orders.map(o => (
-              <tr key={o.order_id}>
-                <td>{o.order_id}</td>
+              <tr
+                key={o.order_id}
+                className="order-row-clickable"
+                onClick={() => handleViewOrderItems(o)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleViewOrderItems(o);
+                  }
+                }}
+                aria-label={`View order ${o.order_id} items`}
+              >
+                <td>
+                  <span className="delivery-order-id-chip">#{o.order_id}</span>
+                </td>
                 <td>{o.customer_id}</td>
                 <td>
                   {o.items && o.items.length > 0
@@ -139,27 +162,37 @@ const OrdersList = () => {
                 <td>{formatPeso(o.total_amount || 0)}</td>
                 <td>{formatDateOnly(o.order_date)}</td>
                 <td>{formatDateOnly(o.delivery_date)}</td>
-                <td>{DELIVERY_STATUS_LABELS[o.delivery_status as DeliveryStatusKey] || 'Pending'}</td>
                 <td>
+                  <span className={`delivery-status-pill status-${o.delivery_status}`}>
+                    {DELIVERY_STATUS_LABELS[o.delivery_status as DeliveryStatusKey] || 'Pending'}
+                  </span>
+                </td>
+                <td>
+                  <Link
+                    to={`/orders/edit?order_id=${o.order_id}`}
+                    className="edit-button"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <span className="material-icons">edit</span>
+                    <span className="edit-text">Edit</span>
+                  </Link>
                   <button
                     className="view-button"
-                    onClick={() => alert(
-                      o.items && o.items.length > 0
-                        ? `Order Items:\n${o.items.map((item) => `Product #${item.product_id}: ${item.quantity} x ${formatPeso(item.price || 0)}`).join('\n')}`
-                        : 'No items in this order'
-                    )}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handlePrintReceipt(o);
+                    }}
                   >
-                    <span className="material-icons">visibility</span>
-                    <span className="view-text">View</span>
-                  </button>
-                  <button className="view-button" onClick={() => handlePrintReceipt(o)}>
                     <span className="material-icons">qr_code_2</span>
                     <span className="view-text">Receipt</span>
                   </button>
                   {isAdmin && (
                     <button
                       className="delete-button"
-                      onClick={() => handleDeleteClick(o.order_id)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleDeleteClick(o.order_id);
+                      }}
                     >
                       <span className="material-icons">delete</span>
                       <span className="delete-text">Delete</span>

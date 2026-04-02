@@ -1,3 +1,4 @@
+// Archived Purchases page (UI route disabled). Kept for future reference.
 import { useState, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
@@ -18,14 +19,22 @@ const PurchasesAdd = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (products.length) {
+    if (!products.length) {
+      return;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
       setFormData((prev) => {
         if (prev.product_id) {
           return prev;
         }
         return { ...prev, product_id: String(products[0].product_id) };
       });
-    }
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
   }, [products]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -57,7 +66,7 @@ const PurchasesAdd = () => {
             <option key={p.product_id} value={p.product_id}>{p.product_id}</option>
           ))}
         </select><br />
-        
+
         <label>Quantity:</label>
         <input type="text" name="quantity" value={formData.quantity} onChange={handleChange} required /><br />
         <input type="submit" value="Add Purchase" />
