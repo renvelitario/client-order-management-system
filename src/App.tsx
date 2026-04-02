@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AppLayout from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute } from './components/auth/RouteGuards';
 import { useAuth } from './hooks/useAuth';
+import { useAppInitialization } from './hooks/useAppInitialization';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
 import './styles/base/app.css';
 
@@ -30,8 +31,10 @@ const RouteLoader = () => (
 );
 
 function App() {
-  const [appBootComplete, setAppBootComplete] = useState(false);
+  const [showStartupOverlay, setShowStartupOverlay] = useState(true);
+  const [hideStartupOverlay, setHideStartupOverlay] = useState(false);
   const { isAuthenticated, isAdmin, loading } = useAuth();
+  const { isInitializing } = useAppInitialization(loading);
   const {
     warningState,
     minutesRemaining,
@@ -44,42 +47,23 @@ function App() {
   } = useSessionTimeout(isAuthenticated);
 
   useEffect(() => {
-    let cancelled = false;
+    if (isInitializing || !showStartupOverlay) {
+      return undefined;
+    }
 
-    const waitForWindowLoad = new Promise<void>((resolve) => {
-      if (document.readyState === 'complete') {
-        resolve();
-        return;
-      }
+    const fadeTimeoutId = window.setTimeout(() => {
+      setHideStartupOverlay(true);
+    }, 0);
 
-      const handleLoad = () => {
-        resolve();
-      };
-
-      window.addEventListener('load', handleLoad, { once: true });
-    });
-
-    const preloadCriticalChunks = Promise.all([
-      import('./pages/Login'),
-    ]);
-
-    Promise.all([waitForWindowLoad, preloadCriticalChunks]).then(() => {
-      // Delay to the next paint so the first visible frame is fully styled.
-      requestAnimationFrame(() => {
-        if (!cancelled) {
-          setAppBootComplete(true);
-        }
-      });
-    });
+    const timeoutId = window.setTimeout(() => {
+      setShowStartupOverlay(false);
+    }, 280);
 
     return () => {
-      cancelled = true;
+      window.clearTimeout(fadeTimeoutId);
+      window.clearTimeout(timeoutId);
     };
-  }, []);
-
-  if (!appBootComplete || loading) {
-    return <RouteLoader />;
-  }
+  }, [isInitializing, showStartupOverlay]);
 
   const defaultAuthenticatedRoute = isAdmin ? '/dashboard' : '/delivery/orders';
 
@@ -148,6 +132,17 @@ function App() {
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </Suspense>
+        )}
+
+        {showStartupOverlay && (
+          <div
+            className={`app-startup-overlay ${hideStartupOverlay ? 'app-startup-overlay--hidden' : ''}`}
+            role="status"
+            aria-live="polite"
+            aria-label="Initializing application"
+          >
+            <RouteLoader />
+          </div>
         )}
       </div>
     </Router>

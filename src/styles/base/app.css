@@ -6,6 +6,20 @@
 	background: #f8fafc;
 }
 
+.app-startup-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 20000;
+	opacity: 1;
+	transition: opacity 280ms ease;
+	pointer-events: all;
+}
+
+.app-startup-overlay--hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
 .app-loader-logo {
 	width: clamp(120px, 20vw, 190px);
 	height: auto;
