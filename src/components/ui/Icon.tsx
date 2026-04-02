@@ -1,0 +1,110 @@
+export type IconName =
+  | 'dashboard'
+  | 'products'
+  | 'customers'
+  | 'purchases'
+  | 'orders'
+  | 'delivery'
+  | 'users'
+  | 'settings'
+  | 'security'
+  | 'menu'
+  | 'close'
+  | 'logout';
+
+const Icon = ({ name }: { name: IconName }) => {
+  const icons = {
+    dashboard: (
+      <>
+        <path d="M4 4h7v7H4z" />
+        <path d="M13 4h7v4h-7z" />
+        <path d="M13 10h7v10h-7z" />
+        <path d="M4 13h7v7H4z" />
+      </>
+    ),
+    products: (
+      <>
+        <path d="M12 3 4 7v10l8 4 8-4V7z" />
+        <path d="M4 7l8 4 8-4" />
+        <path d="M12 11v10" />
+      </>
+    ),
+    customers: (
+      <>
+        <path d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        <path d="M5 19a4 4 0 0 1 8 0" />
+        <path d="M16 10a2.5 2.5 0 1 0 0-5" />
+        <path d="M15 19a4 4 0 0 1 4-3.5" />
+      </>
+    ),
+    purchases: (
+      <>
+        <path d="M4 6h15l-1.2 8.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.7L4.8 4.8A1 1 0 0 0 3.8 4H2" />
+        <path d="M9 20a1 1 0 1 0 0 .01" />
+        <path d="M17 20a1 1 0 1 0 0 .01" />
+      </>
+    ),
+    orders: (
+      <>
+        <path d="M7 4h10l3 4v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8z" />
+        <path d="M7 4v4h10V4" />
+        <path d="M9 12h6" />
+        <path d="M9 16h6" />
+      </>
+    ),
+    delivery: (
+      <>
+        <path d="M3 7h12v7H3z" />
+        <path d="M15 10h3l3 3v1h-6z" />
+        <circle cx="7" cy="18" r="2" />
+        <circle cx="17" cy="18" r="2" />
+      </>
+    ),
+    users: (
+      <>
+        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+        <path d="M5 20a7 7 0 0 1 14 0" />
+      </>
+    ),
+    settings: (
+      <>
+        <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" />
+        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 0 1-4 0v-.09a1.7 1.7 0 0 0-1.12-1.58 1.7 1.7 0 0 0-1.78.36l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 0 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.03 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9c0 .7.42 1.33 1.06 1.6.16.07.33.1.5.1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1.03Z" />
+      </>
+    ),
+    security: (
+      <>
+        <path d="M12 3 5 6v6c0 4.5 3 7.8 7 9 4-1.2 7-4.5 7-9V6z" />
+        <path d="m9.5 12 1.7 1.7 3.3-3.4" />
+      </>
+    ),
+    menu: (
+      <>
+        <path d="M4 7h16" />
+        <path d="M4 12h16" />
+        <path d="M4 17h16" />
+      </>
+    ),
+    close: (
+      <>
+        <path d="M6 6l12 12" />
+        <path d="M18 6 6 18" />
+      </>
+    ),
+    logout: (
+      <>
+        <path d="M10 17v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-8a1 1 0 0 0-1 1v2" />
+        <path d="M15 12H3" />
+        <path d="m6 9-3 3 3 3" />
+      </>
+    ),
+  };
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      {icons[name]}
+    </svg>
+  );
+};
+
+export default Icon;
