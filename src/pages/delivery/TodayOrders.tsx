@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
 import OrderScanner from '../../components/features/OrderScanner';
@@ -42,11 +42,6 @@ const TodayOrders = () => {
     }
   }, [scannerOpen]);
 
-  const resolvedStatus = useCallback(
-    (order: Order): DeliveryStatusKey => statusDrafts[order.order_id] || (order.delivery_status as DeliveryStatusKey),
-    [statusDrafts],
-  );
-
   const selectedOrderStatus = useMemo(() => {
     if (!selectedOrder) return null;
     return statusDrafts[selectedOrder.order_id] || (selectedOrder.delivery_status as DeliveryStatusKey);
@@ -75,11 +70,11 @@ const TodayOrders = () => {
       }
 
       await refetch();
-      setNotification({ type: 'success', message: 'Delivery status updated.' });
+      setNotification({ type: 'success', message: `Order #${orderId} status updated.` });
     } catch (err) {
       setNotification({
         type: 'error',
-        message: resolveApiErrorMessage(err, 'Unable to update delivery status.'),
+        message: resolveApiErrorMessage(err, `Unable to update status for order #${orderId}.`),
       });
     }
   };
@@ -143,24 +138,33 @@ const TodayOrders = () => {
             <h3>Order #{selectedOrder.order_id}</h3>
             <button
               type="button"
-              className="scanner-modal-close"
+              className="delivery-panel-close"
               onClick={() => setSelectedOrder(null)}
               aria-label="Dismiss selected order"
             >
-              <span className="material-icons" aria-hidden="true">close</span>
+              <span className="material-icons" aria-hidden="true">cancel</span>
             </button>
           </div>
           <div className="delivery-order-card">
             <div className="delivery-order-grid">
-              <p><strong>Customer:</strong> {selectedOrder.customer_name || 'N/A'}</p>
-              <p><strong>Address:</strong> {selectedOrder.address || 'N/A'}</p>
-              <p><strong>Contact:</strong> {selectedOrder.contact_no || 'N/A'}</p>
-              <p>
-                <strong>Status:</strong>{' '}
+              <div className="delivery-detail-item">
+                <span className="delivery-detail-label">Customer</span>
+                <span className="delivery-detail-value">{selectedOrder.customer_name || 'N/A'}</span>
+              </div>
+              <div className="delivery-detail-item">
+                <span className="delivery-detail-label">Address</span>
+                <span className="delivery-detail-value">{selectedOrder.address || 'N/A'}</span>
+              </div>
+              <div className="delivery-detail-item">
+                <span className="delivery-detail-label">Contact</span>
+                <span className="delivery-detail-value">{selectedOrder.contact_no || 'N/A'}</span>
+              </div>
+              <div className="delivery-detail-item">
+                <span className="delivery-detail-label">Status</span>
                 <span className={`delivery-status-pill status-${selectedOrder.delivery_status}`}>
                   {DELIVERY_STATUS_LABELS[selectedOrder.delivery_status as DeliveryStatusKey] || selectedOrder.delivery_status}
                 </span>
-              </p>
+              </div>
             </div>
             <div className="delivery-status-actions">
               <select
@@ -179,6 +183,7 @@ const TodayOrders = () => {
               </select>
               <button
                 type="button"
+                className="delivery-status-update-btn"
                 onClick={() =>
                   updateStatus(
                     selectedOrder.order_id,
@@ -186,7 +191,8 @@ const TodayOrders = () => {
                   )
                 }
               >
-                Update Status
+                <span className="material-icons" aria-hidden="true">update</span>
+                <span>Update</span>
               </button>
             </div>
           </div>
@@ -203,36 +209,37 @@ const TodayOrders = () => {
               <th scope="col">Address</th>
               <th scope="col">Contact</th>
               <th scope="col">Status</th>
-              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
             {orders.length ? (
               orders.map((order) => {
-                const activeStatus = resolvedStatus(order);
                 const isSelected = selectedOrder?.order_id === order.order_id;
 
                 return (
                   <tr
                     key={order.order_id}
-                    className={isSelected ? 'delivery-row-selected' : ''}
+                    className={`delivery-row-clickable${isSelected ? ' delivery-row-selected' : ''}`}
+                    onClick={() => selectOrder(order)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        selectOrder(order);
+                      }
+                    }}
+                    aria-label={`Open order ${order.order_id}`}
                   >
                     <td>
-                      <button
-                        type="button"
-                        className="delivery-order-id-btn"
-                        onClick={() => selectOrder(order)}
-                        aria-pressed={isSelected}
-                      >
-                        #{order.order_id}
-                      </button>
+                      <span className="delivery-order-id-chip">#{order.order_id}</span>
                     </td>
                     <td>{order.customer_name || 'N/A'}</td>
                     <td>{order.address || 'N/A'}</td>
                     <td>{order.contact_no || 'N/A'}</td>
                     <td>
-                      <span className={`delivery-status-pill status-${activeStatus}`}>
-                        {DELIVERY_STATUS_LABELS[activeStatus] || activeStatus}
+                      <span className={`delivery-status-pill status-${order.delivery_status}`}>
+                        {DELIVERY_STATUS_LABELS[order.delivery_status as DeliveryStatusKey] || order.delivery_status}
                       </span>
                       {order.delivered_at && (
                         <div className="delivery-meta">
@@ -240,36 +247,12 @@ const TodayOrders = () => {
                         </div>
                       )}
                     </td>
-                    <td>
-                      <div className="delivery-status-actions">
-                        <select
-                          value={activeStatus}
-                          onChange={(event) =>
-                            setStatusDrafts((prev) => ({
-                              ...prev,
-                              [order.order_id]: event.target.value as DeliveryStatusKey,
-                            }))
-                          }
-                          aria-label={`Change status for order ${order.order_id}`}
-                        >
-                          {DELIVERY_STATUS_OPTIONS.map((s) => (
-                            <option key={s.value} value={s.value}>{s.label}</option>
-                          ))}
-                        </select>
-                        <button
-                          type="button"
-                          onClick={() => updateStatus(order.order_id, activeStatus)}
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan={6}>No delivery orders scheduled for today.</td>
+                <td colSpan={5}>No delivery orders scheduled for today.</td>
               </tr>
             )}
           </tbody>

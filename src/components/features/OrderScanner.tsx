@@ -1,5 +1,6 @@
 import { createPortal } from 'react-dom';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import type { Html5Qrcode } from 'html5-qrcode';
 
 const ORDER_ID_REGEX = /(\d{1,12})/;
@@ -66,6 +67,7 @@ const OrderScanner = ({
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const scannerHostRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const onCloseRef = useRef(onClose);
   const onDetectedRef = useRef(onDetected);
   const stopScannerRef = useRef<() => Promise<void>>(async () => {});
@@ -99,6 +101,62 @@ const OrderScanner = ({
     await stopScannerRef.current();
     onCloseRef.current?.();
   }, []);
+
+  const handleImageUpload = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setScannerError('');
+    setLoadingCamera(true);
+
+    try {
+      await stopScannerRef.current();
+
+      const { Html5Qrcode, Html5QrcodeSupportedFormats } = await import('html5-qrcode');
+      const scanner = new Html5Qrcode(scannerId, {
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.QR_CODE,
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.UPC_A,
+        ],
+        verbose: false,
+      });
+
+      scannerRef.current = scanner;
+
+      const decodedText = await scanner.scanFile(file, true);
+      const orderId = parseOrderIdFromValue(decodedText);
+
+      if (!orderId) {
+        setScannerError('QR image scanned, but no valid Order ID was found. Please try another image.');
+        return;
+      }
+
+      await onDetectedRef.current?.(orderId);
+      onCloseRef.current?.();
+    } catch {
+      setScannerError('Unable to read a QR code from this image. Try a clearer image or scan live with camera.');
+    } finally {
+      if (uploadInputRef.current) {
+        uploadInputRef.current.value = '';
+      }
+
+      if (scannerRef.current) {
+        try {
+          await scannerRef.current.clear();
+        } catch {
+          // ignore clear errors for upload mode
+        }
+        scannerRef.current = null;
+      }
+
+      setLoadingCamera(false);
+    }
+  }, [scannerId]);
 
   // Enumerate cameras once on mount so we can prefer the rear camera
   useEffect(() => {
@@ -262,6 +320,24 @@ const OrderScanner = ({
       {scannerError && (
         <p className="fs-scanner-error" role="alert">{scannerError}</p>
       )}
+
+      <div className="fs-scanner-upload-bar">
+        <input
+          ref={uploadInputRef}
+          type="file"
+          accept="image/*"
+          className="fs-scanner-upload-input"
+          onChange={handleImageUpload}
+        />
+        <button
+          type="button"
+          className="fs-scanner-upload-btn"
+          onClick={() => uploadInputRef.current?.click()}
+        >
+          <span className="material-icons" aria-hidden="true">photo_library</span>
+          <span>Upload QR Image</span>
+        </button>
+      </div>
 
       <div id={scannerId} ref={scannerHostRef} className="fs-scanner-view" />
       <div className="fs-scanner-guide" aria-hidden="true">
