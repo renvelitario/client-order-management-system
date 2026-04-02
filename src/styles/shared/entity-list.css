@@ -416,7 +416,7 @@ tbody tr:hover {
     border-radius: 10px;
     width: min(760px, 100%);
     max-height: min(760px, calc(100dvh - 40px));
-    overflow-y: auto;
+    overflow: hidden;
     padding: 22px;
     box-shadow: 0 22px 44px rgba(15, 23, 42, 0.24);
 }
@@ -429,8 +429,10 @@ tbody tr:hover {
 .order-items-grid {
     border: 1px solid var(--border-color);
     border-radius: 10px;
-    padding: 8px;
+    padding: 0 10px 8px 8px;
     background: #f9fbfd;
+    max-height: min(420px, 44vh);
+    overflow-y: auto;
 }
 
 .order-items-grid-head {
@@ -438,6 +440,11 @@ tbody tr:hover {
     grid-template-columns: 80px 90px minmax(180px, 1fr) 130px 44px;
     gap: 8px;
     padding: 4px 2px 8px;
+    position: sticky;
+    top: 0;
+    background: #f9fbfd;
+    z-index: 2;
+    box-shadow: 0 1px 0 rgba(148, 163, 184, 0.25);
     color: var(--text-muted);
     font-size: 12px;
     font-weight: 700;
@@ -469,61 +476,22 @@ tbody tr:hover {
     padding: 10px;
 }
 
-.order-product-combobox {
-    position: relative;
+.order-product-select-wrap {
+    min-width: 0;
+}
+
+.order-product-select__input-container input,
+.order-product-select__input {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
 }
 
 .order-item-grid-row input[readonly] {
     background: #eef3f8;
     color: #4b5563;
-}
-
-.order-item-product-input::placeholder {
-    color: #9ca3af;
-}
-
-.order-item-product-input.is-empty {
-    color: #9ca3af;
-}
-
-.order-product-dropdown {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    max-height: 220px;
-    overflow-y: auto;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: #ffffff;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
-    z-index: 8;
-}
-
-.order-product-option {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #eef2f7;
-    background: #fff;
-    padding: 9px 10px;
-    text-align: left;
-    font-size: 13px;
-    color: var(--text-main);
-    cursor: pointer;
-}
-
-.order-product-option:last-child {
-    border-bottom: none;
-}
-
-.order-product-option:hover {
-    background: #f5f9ff;
-}
-
-.order-product-empty {
-    padding: 9px 10px;
-    font-size: 13px;
-    color: #6b7280;
 }
 
 .order-item-row-remove {

@@ -1,5 +1,6 @@
 import type { ChangeEvent, FormEvent } from 'react';
-import { useState } from 'react';
+import { useMemo } from 'react';
+import Select from 'react-select';
 import { formatPeso } from '../../utils/formatters';
 import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
@@ -51,86 +52,13 @@ const OrderFormModal = ({
   onSubmit,
   onRequestClose,
 }: OrderFormModalProps) => {
-  const [openProductMenuIndex, setOpenProductMenuIndex] = useState<number | null>(null);
-  const [productQueriesByRow, setProductQueriesByRow] = useState<Record<number, string>>({});
-
-  const resolveProductIdFromInput = (inputValue: string) => {
-    const normalized = inputValue.trim();
-    if (!normalized) {
-      return '';
-    }
-
-    const exactOption = products.find(
-      (product) => `${product.product_id} - ${product.product_name}`.toLowerCase() === normalized.toLowerCase(),
-    );
-    if (exactOption) {
-      return String(exactOption.product_id);
-    }
-
-    const numericId = Number(normalized);
-    if (Number.isInteger(numericId)) {
-      const matchById = products.find((product) => product.product_id === numericId);
-      if (matchById) {
-        return String(matchById.product_id);
-      }
-    }
-
-    return '';
-  };
-
-  const handleProductInputChange = (index: number, inputValue: string) => {
-    setProductQueriesByRow((previous) => ({
-      ...previous,
-      [index]: inputValue,
-    }));
-
-    onItemChange(index, 'product_id', resolveProductIdFromInput(inputValue));
-  };
-
-  const handleProductInputFocus = (index: number) => {
-    setOpenProductMenuIndex(index);
-  };
-
-  const handleProductInputBlur = () => {
-    window.setTimeout(() => setOpenProductMenuIndex(null), 120);
-  };
-
-  const getRowProductQuery = (index: number, productId: string) => {
-    const fromTyping = productQueriesByRow[index];
-    if (typeof fromTyping === 'string') {
-      return fromTyping;
-    }
-
-    return getSelectedProductLabel(productId);
-  };
-
-  const getFilteredProducts = (index: number, productId: string) => {
-    const query = getRowProductQuery(index, productId).trim().toLowerCase();
-    if (!query) {
-      return products;
-    }
-
-    return products.filter((product) => {
-      const label = `${product.product_id} - ${product.product_name}`.toLowerCase();
-      return label.includes(query);
-    });
-  };
-
-  const handleProductOptionSelect = (index: number, product: Product) => {
-    const label = `${product.product_id} - ${product.product_name}`;
-    setProductQueriesByRow((previous) => ({
-      ...previous,
-      [index]: label,
-    }));
-
-    onItemChange(index, 'product_id', String(product.product_id));
-    setOpenProductMenuIndex(null);
-  };
-
-  const getSelectedProductLabel = (productId: string) => {
-    const selected = products.find((product) => String(product.product_id) === String(productId));
-    return selected ? `${selected.product_id} - ${selected.product_name}` : '';
-  };
+  const productOptions = useMemo(
+    () => products.map((product) => ({
+      value: String(product.product_id),
+      label: `${product.product_id} - ${product.product_name}`,
+    })),
+    [products],
+  );
 
   const getSelectedProductPrice = (productId: string) => {
     const selected = products.find((product) => String(product.product_id) === String(productId));
@@ -202,41 +130,34 @@ const OrderFormModal = ({
                   aria-label="Unit"
                 />
 
-                <div className="order-product-combobox">
-                  <input
-                    type="text"
-                    className={`order-item-product-input${item.product_id ? '' : ' is-empty'}`}
-                    value={getRowProductQuery(index, item.product_id)}
-                    onChange={(event) => handleProductInputChange(index, event.target.value)}
-                    onFocus={() => handleProductInputFocus(index)}
-                    onBlur={handleProductInputBlur}
+                <div className="order-product-select-wrap">
+                  <Select
+                    classNamePrefix="order-product-select"
+                    options={productOptions}
+                    value={productOptions.find((option) => option.value === String(item.product_id)) || null}
+                    onChange={(selectedOption) => onItemChange(index, 'product_id', selectedOption?.value || '')}
                     placeholder="Product"
-                    required
-                    aria-label="Product"
-                    autoComplete="off"
+                    isSearchable
+                    isClearable
+                    menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
+                    menuPosition="fixed"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        minHeight: 40,
+                        borderColor: state.isFocused ? 'var(--primary)' : 'var(--border-color)',
+                        boxShadow: state.isFocused ? '0 0 0 3px var(--border-focus)' : 'none',
+                      }),
+                      placeholder: (base) => ({
+                        ...base,
+                        color: '#9ca3af',
+                      }),
+                      menuPortal: (base) => ({
+                        ...base,
+                        zIndex: 2000,
+                      }),
+                    }}
                   />
-
-                  {openProductMenuIndex === index && (
-                    <div className="order-product-dropdown" role="listbox" aria-label="Product options">
-                      {getFilteredProducts(index, item.product_id).slice(0, 40).map((product) => (
-                        <button
-                          key={product.product_id}
-                          type="button"
-                          className="order-product-option"
-                          onMouseDown={(event) => {
-                            event.preventDefault();
-                            handleProductOptionSelect(index, product);
-                          }}
-                        >
-                          {product.product_id} - {product.product_name}
-                        </button>
-                      ))}
-
-                      {getFilteredProducts(index, item.product_id).length === 0 && (
-                        <div className="order-product-empty">No matching products.</div>
-                      )}
-                    </div>
-                  )}
                 </div>
 
                 <input
