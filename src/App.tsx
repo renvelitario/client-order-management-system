@@ -24,6 +24,9 @@ const CustomersUpdate = lazy(() => import('./pages/customers/CustomerUpdate'));
 const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
 
+const STARTUP_OVERLAY_FADE_DELAY_MS = 900;
+const STARTUP_OVERLAY_HIDE_DELAY_MS = 1200;
+
 const RouteLoader = () => (
   <div className="app-loader" role="status" aria-live="polite" aria-label="Loading application">
     <img src="/logo.png" className="app-loader-logo" alt="Order Management System" />
@@ -53,11 +56,11 @@ function App() {
 
     const fadeTimeoutId = window.setTimeout(() => {
       setHideStartupOverlay(true);
-    }, 0);
+    }, STARTUP_OVERLAY_FADE_DELAY_MS);
 
     const timeoutId = window.setTimeout(() => {
       setShowStartupOverlay(false);
-    }, 280);
+    }, STARTUP_OVERLAY_HIDE_DELAY_MS);
 
     return () => {
       window.clearTimeout(fadeTimeoutId);
