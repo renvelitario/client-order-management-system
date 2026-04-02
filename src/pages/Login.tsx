@@ -18,8 +18,10 @@ const Login = () => {
 
   useEffect(() => {
     document.body.classList.add('login-page');
+    document.documentElement.classList.add('login-page');
     return () => {
       document.body.classList.remove('login-page');
+      document.documentElement.classList.remove('login-page');
     };
   }, []);
 
