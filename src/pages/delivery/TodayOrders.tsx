@@ -100,7 +100,7 @@ const TodayOrders = () => {
   };
 
   if (loading) {
-    return <PageLoader message="Loading delivery orders..." />;
+    return <PageLoader message="Loading..." />;
   }
 
   return (

@@ -191,7 +191,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="dashboard-page">
-        <div className="dashboard-loading">Loading dashboard...</div>
+        <div className="dashboard-loading">Loading...</div>
       </div>
     );
   }
