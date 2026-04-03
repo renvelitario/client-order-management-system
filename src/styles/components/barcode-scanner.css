@@ -16,8 +16,10 @@
   justify-content: center;
 }
 
-.sku-scan-button .material-icons {
-  font-size: 20px;
+.sku-scan-button .material-icons,
+.sku-scan-button .material-symbols-outlined {
+  font-size: 22px;
+  line-height: 1;
 }
 
 .barcode-scanner-overlay {

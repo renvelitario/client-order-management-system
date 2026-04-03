@@ -85,7 +85,7 @@ const ProductFormModal = ({
                 aria-label="Scan barcode"
                 title="Scan barcode"
               >
-                <span className="material-icons" aria-hidden="true">barcode_scanner</span>
+                <span className="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
               </button>
             )}
           </div>
