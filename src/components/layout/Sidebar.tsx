@@ -16,6 +16,7 @@ const adminLinks: NavItem[] = [
   { to: '/customers', label: 'Customers', icon: 'customers' },
   { to: '/products', label: 'Products', icon: 'products' },
   { to: '/orders', label: 'Orders', icon: 'orders' },
+  { to: '/delivery', label: 'Delivery', icon: 'delivery' },
 ];
 
 const deliveryLinks: NavItem[] = [

@@ -2,7 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import api from '../utils/api';
 import { getListData } from '../utils/listResponse';
 
-export const usePaginatedList = <T,>({ endpoint, initialSort = 'desc' }: { endpoint: string; initialSort?: 'asc' | 'desc' }) => {
+export const usePaginatedList = <T,>({
+  endpoint,
+  initialSort = 'desc',
+  params,
+}: {
+  endpoint: string;
+  initialSort?: 'asc' | 'desc';
+  params?: Record<string, string | number | boolean | undefined | null>;
+}) => {
   const [rows, setRows] = useState<T[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
@@ -16,6 +24,7 @@ export const usePaginatedList = <T,>({ endpoint, initialSort = 'desc' }: { endpo
     try {
       const { data } = await api.get(endpoint, {
         params: {
+          ...(params || {}),
           page: currentPage,
           limit: pageSize,
           search: searchInput.trim() || undefined,
@@ -29,7 +38,7 @@ export const usePaginatedList = <T,>({ endpoint, initialSort = 'desc' }: { endpo
     } finally {
       setLoading(false);
     }
-  }, [endpoint, currentPage, pageSize, searchInput, initialSort]);
+  }, [endpoint, currentPage, pageSize, searchInput, initialSort, params]);
 
   useEffect(() => {
     fetchRows();

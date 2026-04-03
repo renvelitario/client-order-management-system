@@ -1,4 +1,4 @@
-import type { ChangeEvent, FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import { useMemo } from 'react';
 import Select from 'react-select';
 import { formatPeso } from '../../utils/formatters';
@@ -14,6 +14,7 @@ type OrderItemForm = {
 
 type OrderForm = {
   customer_id: string;
+  order_date: string;
   delivery_date: string;
   items_data: OrderItemForm[];
 };
@@ -29,7 +30,8 @@ type OrderFormModalProps = {
   customers: Customer[];
   products: Product[];
   onCustomerChange: (value: string) => void;
-  onDeliveryDateChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onOrderDateChange: (value: string) => void;
+  onDeliveryDateChange: (value: string) => void;
   onItemChange: (index: number, field: keyof OrderItemForm, value: string) => void;
   onRemoveItem: (index: number) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -47,6 +49,7 @@ const OrderFormModal = ({
   customers,
   products,
   onCustomerChange,
+  onOrderDateChange,
   onDeliveryDateChange,
   onItemChange,
   onRemoveItem,
@@ -144,15 +147,30 @@ const OrderFormModal = ({
             />
           </div>
 
-          <div className="entity-modal-field">
-            <label htmlFor="order-delivery-date">Delivery Date</label>
-            <input
-              id="order-delivery-date"
-              type="date"
-              value={formData.delivery_date}
-              onChange={onDeliveryDateChange}
-              required
-            />
+          <div className="entity-modal-field-group">
+            <div className="entity-modal-field">
+              <label htmlFor="order-order-date">Order Date</label>
+              <input
+                id="order-order-date"
+                type="date"
+                value={formData.order_date}
+                onChange={(event) => onOrderDateChange(event.target.value)}
+                max={new Date().toISOString().split('T')[0]}
+                required
+              />
+            </div>
+
+            <div className="entity-modal-field">
+              <label htmlFor="order-delivery-date">Delivery Date</label>
+              <input
+                id="order-delivery-date"
+                type="date"
+                value={formData.delivery_date}
+                onChange={(event) => onDeliveryDateChange(event.target.value)}
+                min={new Date().toISOString().split('T')[0]}
+                required
+              />
+            </div>
           </div>
 
           <div className="entity-modal-field">

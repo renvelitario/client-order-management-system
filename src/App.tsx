@@ -12,6 +12,7 @@ const Login = lazy(() => import('./pages/Login'));
 const ProductsList = lazy(() => import('./pages/products/ProductList'));
 const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
+const AdminDelivery = lazy(() => import('./pages/delivery/AdminDelivery'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
 const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
@@ -92,6 +93,7 @@ function App() {
                     <Routes>
                       <Route path="/" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                       <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
+                      <Route path="/delivery" element={<AdminRoute><AdminDelivery /></AdminRoute>} />
                       <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
                       <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
                       <Route path="/products/new" element={<Navigate to="/products" replace />} />

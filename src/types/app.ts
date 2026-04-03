@@ -60,11 +60,24 @@ export interface Order {
   address?: string;
   contact_no?: string;
   order_date: string;
-  delivery_date: string;
+  delivery_date: string | null;
   delivery_status: string;
+  delivery_user_id?: number | null;
+  delivery_user_name?: string | null;
   delivered_at?: string | null;
+  delivered_by?: number | null;
   total_amount: number;
+  items_count?: number;
   items?: OrderItem[];
+}
+
+export interface UserSummary {
+  user_id: number;
+  email?: string;
+  username: string;
+  acc_type: string;
+  status: string;
+  inactivity_timeout_minutes?: number;
 }
 
 export interface LocalUser {

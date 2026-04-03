@@ -9,7 +9,7 @@ import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import '../../styles/shared/entity-list.css';
 import '../../styles/pages/delivery/today-orders.css';
-import { DELIVERY_STATUS_LABELS, DELIVERY_STATUS_OPTIONS } from '../../types/delivery';
+import { DELIVERY_STATUS_LABELS, DELIVERY_USER_STATUS_OPTIONS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';
 import type { Order } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
@@ -177,7 +177,7 @@ const TodayOrders = () => {
                 }
                 aria-label="Change delivery status"
               >
-                {DELIVERY_STATUS_OPTIONS.map((s) => (
+                {DELIVERY_USER_STATUS_OPTIONS.map((s) => (
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>

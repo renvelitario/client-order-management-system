@@ -1,5 +1,5 @@
 import api from '../../utils/api';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 import '../../styles/shared/entity-list.css';
@@ -27,6 +27,7 @@ type OrderItemForm = {
 
 type OrderForm = {
   customer_id: string;
+  order_date: string;
   delivery_date: string;
   items_data: OrderItemForm[];
 };
@@ -42,19 +43,12 @@ const ensureMinimumOrderRows = (items: OrderItemForm[]) => {
   return nextItems;
 };
 
-const toLocalDateInputValue = (value?: string | Date | null) => {
-  const date = value ? new Date(value) : new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
 const isActiveProduct = (product: Product) => String(product.status).toLowerCase() === 'active';
 
 const emptyOrderForm = (): OrderForm => ({
   customer_id: '',
-  delivery_date: toLocalDateInputValue(),
+  order_date: new Date().toISOString().split('T')[0],
+  delivery_date: new Date().toISOString().split('T')[0],
   items_data: ensureMinimumOrderRows([emptyOrderItem()]),
 });
 
@@ -221,7 +215,8 @@ const OrdersList = () => {
 
       setFormData({
         customer_id: String(data.customer_id || ''),
-        delivery_date: toLocalDateInputValue(data.delivery_date),
+        order_date: data.order_date ? data.order_date.toString().split('T')[0] : new Date().toISOString().split('T')[0],
+        delivery_date: data.delivery_date ? data.delivery_date.toString().split('T')[0] : new Date().toISOString().split('T')[0],
         items_data: ensureMinimumOrderRows(items.length ? [...items, emptyOrderItem()] : [emptyOrderItem()]),
       });
     } catch (err) {
@@ -238,10 +233,17 @@ const OrdersList = () => {
     }));
   };
 
-  const handleDeliveryDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleOrderDateChange = (value: string) => {
     setFormData((previous) => ({
       ...previous,
-      delivery_date: event.target.value,
+      order_date: value,
+    }));
+  };
+
+  const handleDeliveryDateChange = (value: string) => {
+    setFormData((previous) => ({
+      ...previous,
+      delivery_date: value,
     }));
   };
 
@@ -398,6 +400,7 @@ const OrdersList = () => {
       customers={customers}
       products={products}
       onCustomerChange={handleCustomerChange}
+      onOrderDateChange={handleOrderDateChange}
       onDeliveryDateChange={handleDeliveryDateChange}
       onItemChange={handleItemChange}
       onRemoveItem={removeItem}
