@@ -252,7 +252,7 @@ const TodayOrders = () => {
               })
             ) : (
               <tr>
-                <td colSpan={5}>No delivery orders scheduled for today.</td>
+                <td colSpan={5}>No delivery orders pending for today.</td>
               </tr>
             )}
           </tbody>

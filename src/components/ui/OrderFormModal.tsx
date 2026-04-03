@@ -177,6 +177,7 @@ const OrderFormModal = ({
                 value={formData.order_date}
                 onChange={(event) => onOrderDateChange(event.target.value)}
                 max={new Date().toISOString().split('T')[0]}
+                disabled={mode === 'update'}
                 required
               />
             </div>
@@ -189,6 +190,7 @@ const OrderFormModal = ({
                 value={formData.delivery_date}
                 onChange={(event) => onDeliveryDateChange(event.target.value)}
                 min={new Date().toISOString().split('T')[0]}
+                disabled={mode === 'update'}
                 required
               />
             </div>

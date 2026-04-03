@@ -1,9 +1,8 @@
 import type { FormEvent } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
-import { useListOptions } from '../../hooks/useListOptions';
 import { formatDateOnly, formatDateTime, formatPeso } from '../../utils/formatters';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
@@ -15,14 +14,11 @@ import '../../styles/pages/delivery/admin-delivery.css';
 import { ADMIN_DELIVERY_FILTERS, DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';
 import { resolveApiErrorMessage } from '../../types/app';
-import type { NotificationState, Order, UserSummary } from '../../types/app';
+import type { NotificationState, Order } from '../../types/app';
 
 type DeliveryAssignmentForm = {
   delivery_date: string;
-  delivery_user_id: string;
 };
-
-const DEFAULT_FILTER: DeliveryStatusKey = 'unassigned';
 
 const toLocalDateInputValue = (value?: string | Date | null) => {
   const date = value ? new Date(value) : new Date();
@@ -32,13 +28,8 @@ const toLocalDateInputValue = (value?: string | Date | null) => {
   return `${year}-${month}-${day}`;
 };
 
-const isActiveDeliveryUser = (user: UserSummary) => (
-  String(user.acc_type).toLowerCase() !== 'admin'
-  && String(user.status).toLowerCase() === 'active'
-);
-
 const AdminDelivery = () => {
-  const [activeFilter, setActiveFilter] = useState<DeliveryStatusKey>('scheduled');
+  const [activeFilter, setActiveFilter] = useState<DeliveryStatusKey>('pending');
   const [notification, setNotification] = useState<NotificationState>({ message: '', type: '' });
   const [assignmentError, setAssignmentError] = useState('');
   const [isAssignmentSubmitting, setIsAssignmentSubmitting] = useState(false);
@@ -48,9 +39,7 @@ const AdminDelivery = () => {
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
   const [assignmentForm, setAssignmentForm] = useState<DeliveryAssignmentForm>({
     delivery_date: toLocalDateInputValue(),
-    delivery_user_id: '',
   });
-  const deliveryUsers = useListOptions<UserSummary>({ endpoint: '/users', filter: isActiveDeliveryUser });
   const listParams = useMemo(() => ({ delivery_status: activeFilter }), [activeFilter]);
   const {
     rows: orders,
@@ -66,17 +55,6 @@ const AdminDelivery = () => {
     refetch,
   } = usePaginatedList<Order>({ endpoint: '/orders/delivery/admin', initialSort: 'desc', params: listParams });
 
-  useEffect(() => {
-    if (!isAssignmentModalOpen || assignmentForm.delivery_user_id || !deliveryUsers.length) {
-      return;
-    }
-
-    setAssignmentForm((previous) => ({
-      ...previous,
-      delivery_user_id: String(deliveryUsers[0].user_id),
-    }));
-  }, [assignmentForm.delivery_user_id, deliveryUsers, isAssignmentModalOpen]);
-
   const changeFilter = (nextFilter: DeliveryStatusKey) => {
     setActiveFilter(nextFilter);
     setCurrentPage(1);
@@ -88,7 +66,6 @@ const AdminDelivery = () => {
     setAssignmentError('');
     setAssignmentForm({
       delivery_date: order.delivery_date ? toLocalDateInputValue(order.delivery_date) : toLocalDateInputValue(),
-      delivery_user_id: order.delivery_user_id ? String(order.delivery_user_id) : (deliveryUsers[0] ? String(deliveryUsers[0].user_id) : ''),
     });
     setIsAssignmentModalOpen(true);
   };
@@ -127,13 +104,12 @@ const AdminDelivery = () => {
     try {
       await api.patch(`/orders/${selectedOrder.order_id}/delivery-assignment`, {
         delivery_date: assignmentForm.delivery_date,
-        delivery_user_id: Number(assignmentForm.delivery_user_id),
       });
 
       await refetch();
       setNotification({
         type: 'success',
-        message: `Order #${selectedOrder.order_id} ${assignmentMode === 'assign' ? 'assigned' : 'reassigned'} successfully.`,
+        message: `Order #${selectedOrder.order_id} ${assignmentMode === 'assign' ? 'set to pending' : 'rescheduled as pending'} successfully.`,
       });
       setIsAssignmentModalOpen(false);
       setSelectedOrder(null);
@@ -172,17 +148,17 @@ const AdminDelivery = () => {
       return (
         <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'assign')}>
           <span className="material-icons">calendar_month</span>
-          <span className="edit-text">Assign</span>
+          <span className="edit-text">Schedule</span>
         </button>
       );
     }
 
-    if (order.delivery_status === 'scheduled') {
+    if (order.delivery_status === 'pending') {
       return (
         <div className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'reassign')}>
             <span className="material-icons">edit_calendar</span>
-            <span className="edit-text">Reassign</span>
+            <span className="edit-text">Reschedule</span>
           </button>
           <button
             type="button"
@@ -228,7 +204,7 @@ const AdminDelivery = () => {
         <div className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'reassign')}>
             <span className="material-icons">restart_alt</span>
-            <span className="edit-text">Reassign</span>
+            <span className="edit-text">Reschedule</span>
           </button>
           <button type="button" className="delete-button" onClick={() => setCancelTarget(order)}>
             <span className="material-icons">cancel</span>
@@ -260,7 +236,6 @@ const AdminDelivery = () => {
         mode={assignmentMode}
         order={selectedOrder}
         formData={assignmentForm}
-        deliveryUsers={deliveryUsers}
         error={assignmentError}
         isSubmitting={isAssignmentSubmitting}
         onFieldChange={handleAssignmentFieldChange}
@@ -303,7 +278,6 @@ const AdminDelivery = () => {
               <th scope="col">Order</th>
               <th scope="col">Customer</th>
               <th scope="col">Delivery Date</th>
-              <th scope="col">Delivery User</th>
               <th scope="col">Items</th>
               <th scope="col">Amount</th>
               <th scope="col">Status</th>
@@ -328,7 +302,6 @@ const AdminDelivery = () => {
                     </div>
                   </td>
                   <td>{formatDateOnly(order.delivery_date)}</td>
-                  <td>{order.delivery_user_name || 'Unassigned'}</td>
                   <td>{order.items_count || 0}</td>
                   <td>{formatPeso(order.total_amount || 0)}</td>
                   <td>
@@ -346,7 +319,7 @@ const AdminDelivery = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={8}>No orders found for the selected delivery status.</td>
+                <td colSpan={7}>No orders found for the selected delivery status.</td>
               </tr>
             )}
           </tbody>
