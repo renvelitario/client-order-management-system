@@ -1,6 +1,7 @@
 import type { FormEvent } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Select from 'react-select';
+import BarcodeScanner from '../features/BarcodeScanner';
 import { formatPeso } from '../../utils/formatters';
 import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
@@ -32,6 +33,7 @@ type OrderFormModalProps = {
   onCustomerChange: (value: string) => void;
   onOrderDateChange: (value: string) => void;
   onDeliveryDateChange: (value: string) => void;
+  onScanProduct: (sku: string) => Promise<void> | void;
   onItemChange: (index: number, field: keyof OrderItemForm, value: string) => void;
   onRemoveItem: (index: number) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
@@ -51,11 +53,21 @@ const OrderFormModal = ({
   onCustomerChange,
   onOrderDateChange,
   onDeliveryDateChange,
+  onScanProduct,
   onItemChange,
   onRemoveItem,
   onSubmit,
   onRequestClose,
 }: OrderFormModalProps) => {
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const scanButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!scannerOpen && scanButtonRef.current) {
+      scanButtonRef.current.focus();
+    }
+  }, [scannerOpen]);
+
   const customerOptions = useMemo(
     () => customers.map((customer) => ({
       value: String(customer.customer_id),
@@ -98,6 +110,15 @@ const OrderFormModal = ({
       onRequestClose={onRequestClose}
     >
       <Notification message={error} type="error" />
+
+      <BarcodeScanner
+        isOpen={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onDetected={async (sku) => {
+          await onScanProduct(sku);
+          setScannerOpen(false);
+        }}
+      />
 
       {isLoading ? (
         <p className="order-modal-loading">Loading order data...</p>
@@ -174,7 +195,20 @@ const OrderFormModal = ({
           </div>
 
           <div className="entity-modal-field">
-            <p className="order-items-section-label">Order Items</p>
+            <div className="order-items-section-header">
+              <p className="order-items-section-label">Order Items</p>
+              <button
+                ref={scanButtonRef}
+                type="button"
+                className="create-button order-scan-button"
+                onClick={() => setScannerOpen(true)}
+                aria-label="Scan product barcode"
+                title="Scan product barcode"
+              >
+                <span className="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
+                Scan Product
+              </button>
+            </div>
             <div className="order-items-grid" role="group" aria-label="Order items table">
               <div className="order-items-grid-head" aria-hidden="true">
                 <span>Qty</span>

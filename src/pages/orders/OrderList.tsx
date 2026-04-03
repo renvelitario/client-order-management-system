@@ -11,6 +11,7 @@ import { useListOptions } from '../../hooks/useListOptions';
 import { useAuth } from '../../hooks/useAuth';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import OrderFormModal from '../../components/ui/OrderFormModal';
+import OrderItemsViewModal from '../../components/ui/OrderItemsViewModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
@@ -45,6 +46,10 @@ const ensureMinimumOrderRows = (items: OrderItemForm[]) => {
 
 const isActiveProduct = (product: Product) => String(product.status).toLowerCase() === 'active';
 
+const findFirstEmptyOrderItemIndex = (items: OrderItemForm[]) => items.findIndex(
+  (item) => !String(item.product_id).trim() && !String(item.quantity).trim() && !String(item.price).trim(),
+);
+
 const emptyOrderForm = (): OrderForm => ({
   customer_id: '',
   order_date: new Date().toISOString().split('T')[0],
@@ -65,6 +70,8 @@ const OrdersList = () => {
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
+  const [isOrderItemsModalOpen, setIsOrderItemsModalOpen] = useState(false);
+  const [selectedOrderForItems, setSelectedOrderForItems] = useState<Order | null>(null);
   const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
     rows: orders,
@@ -107,11 +114,8 @@ const OrdersList = () => {
   }, [customers, isModalOpen, modalMode]);
 
   const handleViewOrderItems = (order: Order) => {
-    alert(
-      order.items && order.items.length > 0
-        ? `Order Items:\n${order.items.map((item) => `Product #${item.product_id}: ${item.quantity} x ${formatPeso(item.price || 0)}`).join('\n')}`
-        : 'No items in this order',
-    );
+    setSelectedOrderForItems(order);
+    setIsOrderItemsModalOpen(true);
   };
 
   const handlePrintReceipt = async (order: Order) => {
@@ -245,6 +249,67 @@ const OrdersList = () => {
       ...previous,
       delivery_date: value,
     }));
+  };
+
+  const handleScanProduct = (sku: string) => {
+    const normalizedSku = String(sku).trim().toUpperCase();
+    const matchedProduct = products.find((product) => String(product.sku || '').trim().toUpperCase() === normalizedSku);
+
+    if (!matchedProduct) {
+      setModalError(`No active product found for SKU ${normalizedSku}.`);
+      return;
+    }
+
+    const duplicateIndex = formData.items_data.findIndex(
+      (item) => String(item.product_id) === String(matchedProduct.product_id),
+    );
+
+    if (duplicateIndex !== -1) {
+      if (highlightTimerRef.current) {
+        clearTimeout(highlightTimerRef.current);
+      }
+
+      setHighlightedIndex(duplicateIndex);
+      setModalError(`${matchedProduct.product_name} is already in this order.`);
+
+      const existingBlock = document.getElementById(`item-block-${duplicateIndex}`);
+      if (existingBlock) {
+        existingBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      highlightTimerRef.current = setTimeout(() => {
+        setHighlightedIndex(null);
+      }, 1500);
+      return;
+    }
+
+    setFormData((previous) => {
+      const nextItems = [...previous.items_data];
+      const nextItem = {
+        product_id: String(matchedProduct.product_id),
+        quantity: '1',
+        price: String(matchedProduct.price),
+      };
+      const emptyRowIndex = findFirstEmptyOrderItemIndex(nextItems);
+
+      if (emptyRowIndex !== -1) {
+        nextItems[emptyRowIndex] = nextItem;
+      } else {
+        nextItems.push(nextItem, emptyOrderItem());
+      }
+
+      const hasDraftRow = nextItems.some((item) => !String(item.product_id).trim());
+      if (!hasDraftRow) {
+        nextItems.push(emptyOrderItem());
+      }
+
+      return {
+        ...previous,
+        items_data: nextItems,
+      };
+    });
+
+    setModalError('');
   };
 
   const handleItemChange = (index: number, field: keyof OrderItemForm, value: string) => {
@@ -402,6 +467,7 @@ const OrdersList = () => {
       onCustomerChange={handleCustomerChange}
       onOrderDateChange={handleOrderDateChange}
       onDeliveryDateChange={handleDeliveryDateChange}
+      onScanProduct={handleScanProduct}
       onItemChange={handleItemChange}
       onRemoveItem={removeItem}
       onSubmit={handleModalSubmit}
@@ -419,6 +485,12 @@ const OrdersList = () => {
         message="Are you sure you want to delete this record? This action cannot be undone."
         onCancel={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
+      />
+
+      <OrderItemsViewModal
+        open={isOrderItemsModalOpen}
+        order={selectedOrderForItems}
+        onClose={() => setIsOrderItemsModalOpen(false)}
       />
 
       <ListPageHeader

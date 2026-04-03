@@ -332,6 +332,99 @@ tbody tr:hover {
     background: #c62828;
 }
 
+/* ORDER ITEMS VIEW MODAL */
+.order-items-modal {
+    max-width: 650px;
+    width: 90%;
+}
+
+.order-items-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.order-items-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--text-main);
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+    color: var(--text-main);
+}
+
+.order-items-list {
+    margin-bottom: 24px;
+    overflow-x: auto;
+}
+
+.order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-items-table th {
+    background: var(--surface-alt);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.order-items-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 14px;
+}
+
+.order-items-table tbody tr:hover {
+    background: var(--surface-alt);
+}
+
+.order-items-total {
+    font-weight: 600;
+    background: var(--surface-alt);
+}
+
+.order-items-total .total-label {
+    text-align: right;
+    color: var(--text-muted);
+}
+
+.order-items-total .total-amount {
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.order-items-empty {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin: 0;
+}
+
 /* ===============================================================
    SHARED ENTITY FORM MODAL
    =============================================================== */
@@ -607,6 +700,31 @@ tbody tr:hover {
     margin-bottom: 8px;
 }
 
+.order-items-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.order-items-section-header .order-items-section-label {
+    margin-bottom: 0;
+}
+
+.order-scan-button {
+    min-width: 0;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+.order-scan-button .material-icons,
+.order-scan-button .material-symbols-outlined {
+    font-size: 20px;
+    line-height: 1;
+}
+
 .order-items-grid {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
@@ -764,6 +882,16 @@ tbody tr:hover {
     .entity-modal-body {
         padding-left: 16px;
         padding-right: 16px;
+    }
+
+    .order-items-section-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .order-scan-button {
+        width: 100%;
+        justify-content: center;
     }
 
     .order-items-grid-head,
