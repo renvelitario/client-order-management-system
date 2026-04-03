@@ -33,7 +33,7 @@ const ProductsList = () => {
   const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'update'>('create');
-  const [activeSku, setActiveSku] = useState<string | null>(null);
+  const [activeProductId, setActiveProductId] = useState<number | null>(null);
   const [formData, setFormData] = useState<ProductFormData>(emptyProductForm);
   const [modalError, setModalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +57,7 @@ const ProductsList = () => {
     handleDeleteClick,
     handleDeleteCancel,
     handleDeleteConfirm: confirmDelete,
-  } = useDeleteDialog<string>((err: ApiError) => {
+  } = useDeleteDialog<number>((err: ApiError) => {
     if (err.response?.status === 409) {
       return 'This record cannot be deleted because it is used in other records.';
     }
@@ -66,7 +66,7 @@ const ProductsList = () => {
 
   const handleDeleteConfirm = async () => {
     await confirmDelete(
-      (id) => api.delete(`/products/${id}`),
+      (id) => api.delete(`/products/id/${id}`),
       () => refetch(),
     );
   };
@@ -74,7 +74,7 @@ const ProductsList = () => {
   const resetProductModalState = useCallback(() => {
     setIsModalOpen(false);
     setModalError('');
-    setActiveSku(null);
+    setActiveProductId(null);
     setFormData(emptyProductForm);
   }, []);
 
@@ -89,7 +89,7 @@ const ProductsList = () => {
   const openCreateModal = () => {
     setPageNotification({ message: '', type: 'success' });
     setModalMode('create');
-    setActiveSku(null);
+    setActiveProductId(null);
     setFormData(emptyProductForm);
     setModalError('');
     setIsModalOpen(true);
@@ -98,7 +98,7 @@ const ProductsList = () => {
   const openUpdateModal = (product: Product) => {
     setPageNotification({ message: '', type: 'success' });
     setModalMode('update');
-    setActiveSku(product.sku);
+    setActiveProductId(product.product_id);
     setFormData({
       sku: product.sku || '',
       product_name: product.product_name || '',
@@ -126,11 +126,11 @@ const ProductsList = () => {
         await api.post('/products', formData);
         setPageNotification({ message: 'Product created successfully.', type: 'success' });
       } else {
-        if (!activeSku) {
-          throw new Error('Missing product SKU for update.');
+        if (!activeProductId) {
+          throw new Error('Missing product ID for update.');
         }
 
-        await api.put(`/products/${activeSku}`, formData);
+        await api.put(`/products/id/${activeProductId}`, formData);
         setPageNotification({ message: 'Product updated successfully.', type: 'success' });
       }
 
@@ -188,6 +188,7 @@ const ProductsList = () => {
       <table id="products-table">
         <thead>
           <tr>
+            <th>ID</th>
             <th>SKU</th>
             <th>Product Name</th>
             <th>Price</th>
@@ -199,10 +200,11 @@ const ProductsList = () => {
           {products.length > 0 ? (
             products.map((p) => (
               <tr
-                key={p.sku}
+                key={p.product_id}
                 className={p.status === "inactive" ? "inactive-row" : ""}
               >
-                <td>{p.sku}</td>
+                <td>{p.product_id}</td>
+                <td>{p.sku || '-'}</td>
                 <td>{p.product_name}</td>
                 <td>{formatPeso(p.price)}</td>
                 <td>{p.status}</td>
@@ -216,7 +218,7 @@ const ProductsList = () => {
                   </button>
                   <button
                     className="delete-button"
-                    onClick={() => handleDeleteClick(p.sku)}
+                    onClick={() => handleDeleteClick(p.product_id)}
                   >
                     <span className="material-icons">delete</span>
                     <span className="delete-text">Delete</span>
@@ -226,7 +228,7 @@ const ProductsList = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={5}>No products found.</td>
+              <td colSpan={6}>No products found.</td>
             </tr>
           )}
         </tbody>

@@ -50,7 +50,7 @@ const ProductFormModal = ({
             name="sku"
             value={formData.sku}
             onChange={onChange}
-            placeholder="Auto-generated if left blank"
+            placeholder="Leave blank if not assigned"
             maxLength={32}
           />
         </div>

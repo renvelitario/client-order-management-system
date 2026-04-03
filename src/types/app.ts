@@ -32,7 +32,7 @@ export interface PaginatedResponse<T> {
 
 export interface Product {
   product_id: number;
-  sku: string;
+  sku: string | null;
   product_name: string;
   price: number;
   status: string;
