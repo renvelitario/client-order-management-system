@@ -4,10 +4,20 @@
   gap: 16px;
 }
 
+.delivery-filter-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .delivery-filter-tabs {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  flex: 1 1 560px;
+  align-items: center;
 }
 
 .delivery-filter-tab {
@@ -33,6 +43,59 @@
   background: var(--primary);
   border-color: var(--primary);
   color: var(--text-inverse);
+}
+
+.delivery-date-range-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 164px;
+}
+
+.delivery-date-range-filter--mobile {
+  display: none;
+}
+
+.delivery-filter-selects {
+  display: none;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.delivery-status-filter,
+.delivery-date-range-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.delivery-status-filter label,
+.delivery-date-range-filter label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.delivery-status-filter select,
+.delivery-date-range-filter select {
+  min-height: 36px;
+  padding: 7px 11px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.delivery-status-filter select:focus,
+.delivery-date-range-filter select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--border-focus);
 }
 
 .delivery-admin-table-wrap {
@@ -65,20 +128,28 @@
 }
 
 @media (max-width: 768px) {
-  .delivery-filter-tabs {
-    gap: 8px;
+  .delivery-filter-bar {
+    align-items: stretch;
   }
 
-  .delivery-filter-tab {
-    flex: 1 1 calc(50% - 8px);
-    justify-content: center;
-    text-align: center;
+  .delivery-filter-tabs,
+  .delivery-date-range-filter--desktop {
+    display: none;
+  }
+
+  .delivery-filter-selects {
+    display: grid;
+  }
+
+  .delivery-status-filter,
+  .delivery-date-range-filter--mobile {
+    min-width: 0;
   }
 }
 
 @media (max-width: 480px) {
-  .delivery-filter-tab {
-    flex-basis: 100%;
+  .delivery-filter-selects {
+    gap: 10px;
   }
 
   .delivery-admin-actions {

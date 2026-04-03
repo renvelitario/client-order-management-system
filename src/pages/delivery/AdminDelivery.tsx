@@ -20,6 +20,17 @@ type DeliveryAssignmentForm = {
   delivery_date: string;
 };
 
+type DeliveryDateRangeFilter = 'weekly' | 'monthly' | 'yearly' | 'all_time';
+
+const DELIVERY_DATE_RANGE_OPTIONS: Array<{ value: DeliveryDateRangeFilter; label: string }> = [
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'yearly', label: 'Yearly' },
+  { value: 'all_time', label: 'All Time' },
+];
+
+const STATUS_FILTER_OPTIONS = ADMIN_DELIVERY_FILTERS.filter((filter) => filter.value !== 'unassigned');
+
 const toLocalDateInputValue = (value?: string | Date | null) => {
   const date = value ? new Date(value) : new Date();
   const year = date.getFullYear();
@@ -30,6 +41,7 @@ const toLocalDateInputValue = (value?: string | Date | null) => {
 
 const AdminDelivery = () => {
   const [activeFilter, setActiveFilter] = useState<DeliveryStatusKey>('pending');
+  const [dateRangeFilter, setDateRangeFilter] = useState<DeliveryDateRangeFilter>('all_time');
   const [notification, setNotification] = useState<NotificationState>({ message: '', type: '' });
   const [assignmentError, setAssignmentError] = useState('');
   const [isAssignmentSubmitting, setIsAssignmentSubmitting] = useState(false);
@@ -40,7 +52,10 @@ const AdminDelivery = () => {
   const [assignmentForm, setAssignmentForm] = useState<DeliveryAssignmentForm>({
     delivery_date: toLocalDateInputValue(),
   });
-  const listParams = useMemo(() => ({ delivery_status: activeFilter }), [activeFilter]);
+  const listParams = useMemo(() => ({
+    delivery_status: activeFilter,
+    date_range: dateRangeFilter,
+  }), [activeFilter, dateRangeFilter]);
   const {
     rows: orders,
     searchInput,
@@ -57,6 +72,11 @@ const AdminDelivery = () => {
 
   const changeFilter = (nextFilter: DeliveryStatusKey) => {
     setActiveFilter(nextFilter);
+    setCurrentPage(1);
+  };
+
+  const changeDateRangeFilter = (nextRange: DeliveryDateRangeFilter) => {
+    setDateRangeFilter(nextRange);
     setCurrentPage(1);
   };
 
@@ -250,23 +270,72 @@ const AdminDelivery = () => {
         searchAriaLabel="Search delivery orders"
       />
 
-      <div className="delivery-filter-tabs" role="tablist" aria-label="Filter delivery orders by status">
-        {ADMIN_DELIVERY_FILTERS.filter((f) => f.value !== 'unassigned').map((filter) => {
-          const isActive = filter.value === activeFilter;
+      <div className="delivery-filter-bar">
+        <div className="delivery-filter-tabs" role="tablist" aria-label="Filter delivery orders by status">
+          {STATUS_FILTER_OPTIONS.map((filter) => {
+            const isActive = filter.value === activeFilter;
 
-          return (
-            <button
-              key={filter.value}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              className={`delivery-filter-tab${isActive ? ' is-active' : ''}`}
-              onClick={() => changeFilter(filter.value)}
+            return (
+              <button
+                key={filter.value}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`delivery-filter-tab${isActive ? ' is-active' : ''}`}
+                onClick={() => changeFilter(filter.value)}
+              >
+                {filter.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="delivery-filter-selects" aria-label="Mobile delivery filters">
+          <div className="delivery-status-filter">
+            <label htmlFor="delivery-status-filter-mobile">Status</label>
+            <select
+              id="delivery-status-filter-mobile"
+              value={activeFilter}
+              onChange={(event) => changeFilter(event.target.value as DeliveryStatusKey)}
             >
-              {filter.label}
-            </button>
-          );
-        })}
+              {STATUS_FILTER_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="delivery-date-range-filter delivery-date-range-filter--mobile">
+            <label htmlFor="delivery-date-range-mobile">Date Range</label>
+            <select
+              id="delivery-date-range-mobile"
+              value={dateRangeFilter}
+              onChange={(event) => changeDateRangeFilter(event.target.value as DeliveryDateRangeFilter)}
+            >
+              {DELIVERY_DATE_RANGE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="delivery-date-range-filter delivery-date-range-filter--desktop">
+          <label htmlFor="delivery-date-range">Date Range</label>
+          <select
+            id="delivery-date-range"
+            value={dateRangeFilter}
+            onChange={(event) => changeDateRangeFilter(event.target.value as DeliveryDateRangeFilter)}
+          >
+            {DELIVERY_DATE_RANGE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <Notification message={notification.message} type={notification.type} />
