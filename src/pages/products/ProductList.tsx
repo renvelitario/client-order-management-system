@@ -116,6 +116,17 @@ const ProductsList = () => {
     }));
   };
 
+  const handleSkuDetected = (sku: string) => {
+    setFormData((previous) => ({
+      ...previous,
+      sku,
+    }));
+
+    if (modalError) {
+      setModalError('');
+    }
+  };
+
   const handleModalSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setModalError('');
@@ -151,6 +162,7 @@ const ProductsList = () => {
       formData={formData}
       error={modalError}
       isSubmitting={isSubmitting}
+      onScanSku={handleSkuDetected}
       onChange={handleFormChange}
       onSubmit={handleModalSubmit}
       onRequestClose={closeProductModal}

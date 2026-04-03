@@ -1,4 +1,6 @@
 import type { ChangeEvent, FormEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import BarcodeScanner from '../features/BarcodeScanner';
 import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
 
@@ -15,6 +17,7 @@ type ProductFormModalProps = {
   formData: ProductFormData;
   error: string;
   isSubmitting: boolean;
+  onScanSku: (sku: string) => void;
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   onRequestClose: () => void;
@@ -26,10 +29,20 @@ const ProductFormModal = ({
   formData,
   error,
   isSubmitting,
+  onScanSku,
   onChange,
   onSubmit,
   onRequestClose,
 }: ProductFormModalProps) => {
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const scanButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!scannerOpen && scanButtonRef.current) {
+      scanButtonRef.current.focus();
+    }
+  }, [scannerOpen]);
+
   return (
     <EntityModalShell
       open={open}
@@ -41,18 +54,41 @@ const ProductFormModal = ({
     >
       <Notification message={error} type="error" />
 
+      <BarcodeScanner
+        isOpen={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onDetected={(sku) => {
+          onScanSku(sku);
+          setScannerOpen(false);
+        }}
+      />
+
       <form className="entity-modal-form" onSubmit={onSubmit}>
         <div className="entity-modal-field">
           <label htmlFor="product-sku">SKU <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '11px' }}>(optional)</span></label>
-          <input
-            id="product-sku"
-            type="text"
-            name="sku"
-            value={formData.sku}
-            onChange={onChange}
-            placeholder="Leave blank if not assigned"
-            maxLength={32}
-          />
+          <div className="sku-input-row">
+            <input
+              id="product-sku"
+              type="text"
+              name="sku"
+              value={formData.sku}
+              onChange={onChange}
+              placeholder="Leave blank if not assigned"
+              maxLength={32}
+            />
+            {mode === 'create' && (
+              <button
+                ref={scanButtonRef}
+                type="button"
+                className="create-button sku-scan-button"
+                onClick={() => setScannerOpen(true)}
+                aria-label="Scan barcode"
+                title="Scan barcode"
+              >
+                <span className="material-icons" aria-hidden="true">barcode_scanner</span>
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="entity-modal-field">
