@@ -15,7 +15,7 @@ import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
-import { resolveApiErrorMessage } from '../../types/app';
+import { resolveApiErrorMessage, resolveEntityMutationErrorMessage } from '../../types/app';
 import type { DeliveryStatusKey } from '../../types/delivery';
 import type { ApiError, Customer, Order, Product } from '../../types/app';
 
@@ -379,8 +379,7 @@ const OrdersList = () => {
       await refetch();
       resetOrderModalState();
     } catch (err) {
-      const fallbackMessage = modalMode === 'create' ? 'Failed to add order.' : 'Failed to update order.';
-      setModalError(resolveApiErrorMessage(err, fallbackMessage));
+      setModalError(resolveEntityMutationErrorMessage(err, modalMode, 'order'));
       setPageNotification({ message: '', type: 'success' });
     } finally {
       setIsSubmitting(false);

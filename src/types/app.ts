@@ -91,3 +91,15 @@ export const resolveApiErrorMessage = (error: unknown, fallback: string): string
   const typedError = error as ApiError;
   return typedError?.response?.data?.error || typedError?.message || fallback;
 };
+
+export const resolveEntityMutationErrorMessage = (
+  error: unknown,
+  mode: 'create' | 'update',
+  entityName: string,
+): string => {
+  const fallback = mode === 'create'
+    ? `Failed to add ${entityName}.`
+    : `Failed to update ${entityName}.`;
+
+  return resolveApiErrorMessage(error, fallback);
+};

@@ -11,7 +11,7 @@ import CustomerFormModal from '../../components/ui/CustomerFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
-import { resolveApiErrorMessage } from '../../types/app';
+import { resolveEntityMutationErrorMessage } from '../../types/app';
 import type { ApiError, Customer } from '../../types/app';
 
 type CustomerFormData = {
@@ -131,8 +131,7 @@ const CustomersList = () => {
       await refetch();
       resetCustomerModalState();
     } catch (err) {
-      const fallbackMessage = modalMode === 'create' ? 'Failed to add customer.' : 'Failed to update customer.';
-      setModalError(resolveApiErrorMessage(err, fallbackMessage));
+      setModalError(resolveEntityMutationErrorMessage(err, modalMode, 'customer'));
       setPageNotification({ message: '', type: 'success' });
     } finally {
       setIsSubmitting(false);

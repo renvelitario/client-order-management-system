@@ -12,7 +12,7 @@ import ProductFormModal from '../../components/ui/ProductFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
-import { resolveApiErrorMessage } from '../../types/app';
+import { resolveEntityMutationErrorMessage } from '../../types/app';
 import type { ApiError, Product } from '../../types/app';
 
 type ProductFormData = {
@@ -89,7 +89,7 @@ const ProductsList = () => {
   const openCreateModal = () => {
     setPageNotification({ message: '', type: 'success' });
     setModalMode('create');
-    setActiveProductId(null);
+    setActiveSku(null);
     setFormData(emptyProductForm);
     setModalError('');
     setIsModalOpen(true);
@@ -137,8 +137,7 @@ const ProductsList = () => {
       await refetch();
       resetProductModalState();
     } catch (err) {
-      const fallbackMessage = modalMode === 'create' ? 'Failed to add product.' : 'Failed to update product.';
-      setModalError(resolveApiErrorMessage(err, fallbackMessage));
+      setModalError(resolveEntityMutationErrorMessage(err, modalMode, 'product'));
       setPageNotification({ message: '', type: 'success' });
     } finally {
       setIsSubmitting(false);
