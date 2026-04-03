@@ -33,7 +33,7 @@ const ProductsList = () => {
   const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'update'>('create');
-  const [activeProductId, setActiveProductId] = useState<number | null>(null);
+  const [activeSku, setActiveSku] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProductFormData>(emptyProductForm);
   const [modalError, setModalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +57,7 @@ const ProductsList = () => {
     handleDeleteClick,
     handleDeleteCancel,
     handleDeleteConfirm: confirmDelete,
-  } = useDeleteDialog<number>((err: ApiError) => {
+  } = useDeleteDialog<string>((err: ApiError) => {
     if (err.response?.status === 409) {
       return 'This record cannot be deleted because it is used in other records.';
     }
@@ -74,7 +74,7 @@ const ProductsList = () => {
   const resetProductModalState = useCallback(() => {
     setIsModalOpen(false);
     setModalError('');
-    setActiveProductId(null);
+    setActiveSku(null);
     setFormData(emptyProductForm);
   }, []);
 
@@ -98,7 +98,7 @@ const ProductsList = () => {
   const openUpdateModal = (product: Product) => {
     setPageNotification({ message: '', type: 'success' });
     setModalMode('update');
-    setActiveProductId(product.product_id);
+    setActiveSku(product.sku);
     setFormData({
       sku: product.sku || '',
       product_name: product.product_name || '',
@@ -126,11 +126,11 @@ const ProductsList = () => {
         await api.post('/products', formData);
         setPageNotification({ message: 'Product created successfully.', type: 'success' });
       } else {
-        if (!activeProductId) {
-          throw new Error('Missing product id for update.');
+        if (!activeSku) {
+          throw new Error('Missing product SKU for update.');
         }
 
-        await api.put(`/products/${activeProductId}`, formData);
+        await api.put(`/products/${activeSku}`, formData);
         setPageNotification({ message: 'Product updated successfully.', type: 'success' });
       }
 
@@ -200,7 +200,7 @@ const ProductsList = () => {
           {products.length > 0 ? (
             products.map((p) => (
               <tr
-                key={p.product_id}
+                key={p.sku}
                 className={p.status === "inactive" ? "inactive-row" : ""}
               >
                 <td>{p.sku}</td>
@@ -217,7 +217,7 @@ const ProductsList = () => {
                   </button>
                   <button
                     className="delete-button"
-                    onClick={() => handleDeleteClick(p.product_id)}
+                    onClick={() => handleDeleteClick(p.sku)}
                   >
                     <span className="material-icons">delete</span>
                     <span className="delete-text">Delete</span>

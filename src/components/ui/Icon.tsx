@@ -2,7 +2,6 @@ export type IconName =
   | 'dashboard'
   | 'products'
   | 'customers'
-  | 'purchases'
   | 'orders'
   | 'delivery'
   | 'users'
@@ -35,13 +34,6 @@ const Icon = ({ name }: { name: IconName }) => {
         <path d="M5 19a4 4 0 0 1 8 0" />
         <path d="M16 10a2.5 2.5 0 1 0 0-5" />
         <path d="M15 19a4 4 0 0 1 4-3.5" />
-      </>
-    ),
-    purchases: (
-      <>
-        <path d="M4 6h15l-1.2 8.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.7L4.8 4.8A1 1 0 0 0 3.8 4H2" />
-        <path d="M9 20a1 1 0 1 0 0 .01" />
-        <path d="M17 20a1 1 0 1 0 0 .01" />
       </>
     ),
     orders: (

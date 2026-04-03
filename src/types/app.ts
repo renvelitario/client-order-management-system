@@ -34,7 +34,6 @@ export interface Product {
   product_id: number;
   sku: string;
   product_name: string;
-  quantity: number;
   price: number;
   status: string;
 }
@@ -46,15 +45,9 @@ export interface Customer {
   contact_no: string;
 }
 
-export interface Purchase {
-  purchase_id: number;
-  product_id: number;
-  quantity: number;
-  purchase_date: string;
-}
-
 export interface OrderItem {
   product_id: number;
+  sku?: string;
   quantity: number;
   price?: number;
   product_name?: string;

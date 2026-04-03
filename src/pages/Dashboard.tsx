@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import api from '../utils/api';
 import {
   ResponsiveContainer,
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -25,10 +23,7 @@ type RangeKey = 'this_month' | 'previous_month' | 'this_year' | 'all_time';
 
 type DashboardStats = {
   totalProducts: number;
-  lowStockProducts: number;
-  outOfStockProducts: number;
   totalCustomers: number;
-  totalPurchases: number;
   totalOrders: number;
 };
 
@@ -98,14 +93,10 @@ const Dashboard = () => {
   const [username, setUsername] = useState('User');
   const [stats, setStats] = useState<DashboardStats>({
     totalProducts: 0,
-    lowStockProducts: 0,
-    outOfStockProducts: 0,
     totalCustomers: 0,
-    totalPurchases: 0,
     totalOrders: 0
   });
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
-  const [barData, setBarData] = useState({ low: 0, out: 0, healthy: 0 });
   const [lineData, setLineData] = useState<Array<{ label: string; value: number }>>([]);
   const [topProducts, setTopProducts] = useState<TopProductEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,20 +130,10 @@ const Dashboard = () => {
           api.get('/dashboard/recent-orders', { params: rangeParams }),
         ]);
 
-        const inventorySummary = summaryRes.data?.summary?.inventorySummary || {};
         setStats({
-          totalProducts: Number(inventorySummary.totalProducts || 0),
-          lowStockProducts: Number(inventorySummary.lowStockProducts || 0),
-          outOfStockProducts: Number(inventorySummary.outOfStockProducts || 0),
+          totalProducts: Number(summaryRes.data?.summary?.totalProducts || 0),
           totalCustomers: Number(summaryRes.data?.summary?.totalCustomers || 0),
-          totalPurchases: Number(summaryRes.data?.summary?.totalPurchases || 0),
           totalOrders: Number(summaryRes.data?.summary?.totalOrders || 0),
-        });
-
-        setBarData({
-          low: Number(inventorySummary.lowStockProducts || 0),
-          out: Number(inventorySummary.outOfStockProducts || 0),
-          healthy: Number(inventorySummary.healthyStockProducts || 0),
         });
 
         const monthly = (summaryRes.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
@@ -169,7 +150,7 @@ const Dashboard = () => {
           return {
           ...order,
           product_name: items.length
-            ? items.map((item) => item.product_name || `Product #${item.product_id}`).join(', ')
+            ? items.map((item) => item.product_name || item.sku).join(', ')
             : 'N/A',
           item_count: items.length,
           total_amount: Number(order.total_amount || 0),
@@ -196,11 +177,6 @@ const Dashboard = () => {
     );
   }
 
-  const stockChartData = [
-    { name: 'Low', value: barData.low },
-    { name: 'Out', value: barData.out },
-    { name: 'Healthy', value: barData.healthy },
-  ];
   const topProductsChartData = topProducts.map((entry) => ({
     name: entry.product,
     value: entry.quantity,
@@ -236,14 +212,6 @@ const Dashboard = () => {
           <h4>Total Products</h4>
           <p>{stats.totalProducts}</p>
         </article>
-        <article className="kpi-card kpi-warn">
-          <h4>Low Stock Products</h4>
-          <p>{stats.lowStockProducts}</p>
-        </article>
-        <article className="kpi-card kpi-warn">
-          <h4>Out of Stock Products</h4>
-          <p>{stats.outOfStockProducts}</p>
-        </article>
         <article className="kpi-card kpi-good">
           <h4>Total Customers</h4>
           <p>{stats.totalCustomers}</p>
@@ -252,32 +220,9 @@ const Dashboard = () => {
           <h4>Total Orders</h4>
           <p>{stats.totalOrders}</p>
         </article>
-        <article className="kpi-card kpi-good">
-          <h4>Total Purchases</h4>
-          <p>{stats.totalPurchases}</p>
-        </article>
       </section>
 
       <section className="chart-grid">
-        <article className="chart-card">
-          <h3>Product Stock Levels</h3>
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stockChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                  <Cell fill="#ef5350" />
-                  <Cell fill="#c62828" />
-                  <Cell fill="#2e7d32" />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </article>
-
         <article className="chart-card">
           <h3>Orders Over Time</h3>
           {lineData.length ? (

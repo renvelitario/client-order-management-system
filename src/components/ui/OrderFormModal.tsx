@@ -64,13 +64,13 @@ const OrderFormModal = ({
   const productOptions = useMemo(
     () => products.map((product) => ({
       value: String(product.product_id),
-      label: `${product.product_id} - ${product.product_name}`,
+      label: `${product.sku} - ${product.product_name}`,
     })),
     [products],
   );
 
   const getSelectedProductBasePrice = (productId: string) => {
-    const selected = products.find((product) => String(product.product_id) === String(productId));
+    const selected = products.find((product) => String(product.product_id) === productId);
     return selected ? String(selected.price) : '';
   };
 
@@ -193,7 +193,7 @@ const OrderFormModal = ({
                     <Select
                       classNamePrefix="order-product-select"
                       options={productOptions}
-                      value={productOptions.find((option) => option.value === String(item.product_id)) || null}
+                      value={productOptions.find((option) => option.value === item.product_id) || null}
                       onChange={(selectedOption) => {
                         const nextProductId = selectedOption?.value || '';
                         onItemChange(index, 'product_id', nextProductId);

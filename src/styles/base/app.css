@@ -69,7 +69,6 @@
 .app-content > .product-container,
 .app-content > .add-customer,
 .app-content > .order-container,
-.app-content > .purchase-container,
 .app-content > .update-product,
 .app-content > .update-customer-container {
 	background: rgba(255, 255, 255, 0.86);
@@ -85,7 +84,6 @@
 .app-content > .product-container,
 .app-content > .add-customer,
 .app-content > .order-container,
-.app-content > .purchase-container,
 .app-content > .update-product,
 .app-content > .update-customer-container {
 	padding: 28px;
@@ -97,7 +95,6 @@
 .app-content > .product-container,
 .app-content > .add-customer,
 .app-content > .order-container,
-.app-content > .purchase-container,
 .app-content > .update-product,
 .app-content > .update-customer-container {
 	max-width: 520px;
@@ -216,7 +213,6 @@
 	.app-content > .product-container,
 	.app-content > .add-customer,
 	.app-content > .order-container,
-	.app-content > .purchase-container,
 	.app-content > .update-product,
 	.app-content > .update-customer-container,
 	.app-content > .dashboard-page {
@@ -235,7 +231,6 @@
 	.app-content > .product-container,
 	.app-content > .add-customer,
 	.app-content > .order-container,
-	.app-content > .purchase-container,
 	.app-content > .update-product,
 	.app-content > .update-customer-container,
 	.app-content > .dashboard-page {

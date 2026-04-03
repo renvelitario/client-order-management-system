@@ -13,7 +13,6 @@ const ProductsList = lazy(() => import('./pages/products/ProductList'));
 const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
-// Purchases pages are archived under src/archive/purchases and intentionally not routable.
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
 const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
@@ -103,7 +102,6 @@ function App() {
                       <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
                       <Route path="/orders/new" element={<Navigate to="/orders" replace />} />
                       <Route path="/orders/edit" element={<Navigate to="/orders" replace />} />
-                      {/* Archived: Purchases routes intentionally disabled. */}
                       <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
                       <Route path="/account/settings" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
                       <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />
@@ -116,7 +114,6 @@ function App() {
                       <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
                       <Route path="/orders_add" element={<Navigate to="/orders" replace />} />
                       <Route path="/orders_update" element={<Navigate to="/orders" replace />} />
-                      {/* Archived legacy redirects intentionally disabled with Purchases UI. */}
                       <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                     </Routes>
                   </Suspense>

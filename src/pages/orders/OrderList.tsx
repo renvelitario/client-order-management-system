@@ -214,7 +214,7 @@ const OrdersList = () => {
     try {
       const { data } = await api.get<Order>(`/orders/${orderId}`);
       const items = (data.items || []).map((item) => ({
-        product_id: String(item.product_id),
+        product_id: String(item.product_id || ''),
         quantity: String(item.quantity),
         price: item.price != null ? String(item.price) : '',
       }));
