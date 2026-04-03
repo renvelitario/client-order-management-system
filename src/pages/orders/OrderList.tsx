@@ -22,6 +22,7 @@ import type { ApiError, Customer, Order, Product } from '../../types/app';
 type OrderItemForm = {
   product_id: string;
   quantity: string;
+  price: string;
 };
 
 type OrderForm = {
@@ -30,7 +31,7 @@ type OrderForm = {
   items_data: OrderItemForm[];
 };
 
-const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '' });
+const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '', price: '' });
 const MIN_ORDER_ROWS = 2;
 
 const ensureMinimumOrderRows = (items: OrderItemForm[]) => {
@@ -215,6 +216,7 @@ const OrdersList = () => {
       const items = (data.items || []).map((item) => ({
         product_id: String(item.product_id),
         quantity: String(item.quantity),
+        price: item.price != null ? String(item.price) : '',
       }));
 
       setFormData({
@@ -229,10 +231,10 @@ const OrdersList = () => {
     }
   };
 
-  const handleCustomerChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleCustomerChange = (value: string) => {
     setFormData((previous) => ({
       ...previous,
-      customer_id: event.target.value,
+      customer_id: value,
     }));
   };
 
@@ -312,12 +314,38 @@ const OrdersList = () => {
     setModalError('');
     setIsSubmitting(true);
 
+    const hasIncompleteItem = formData.items_data.some((item) => {
+      const hasAnyValue = String(item.product_id).trim() || String(item.quantity).trim() || String(item.price).trim();
+      const hasAllValues = String(item.product_id).trim() && String(item.quantity).trim() && String(item.price).trim();
+      return Boolean(hasAnyValue && !hasAllValues);
+    });
+
+    if (hasIncompleteItem) {
+      setModalError('Complete or clear any partially filled order item rows before submitting.');
+      setIsSubmitting(false);
+      return;
+    }
+
     const sanitizedItems = formData.items_data.filter(
-      (item) => String(item.product_id).trim() && String(item.quantity).trim(),
+      (item) => String(item.product_id).trim() && String(item.quantity).trim() && String(item.price).trim(),
     );
 
     if (!sanitizedItems.length) {
       setModalError('Add at least one order item before submitting.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    const hasInvalidPrice = sanitizedItems.some((item) => !Number.isFinite(Number(item.price)) || Number(item.price) < 0);
+    if (hasInvalidPrice) {
+      setModalError('Each order item must have a valid unit price.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    const hasInvalidQuantity = sanitizedItems.some((item) => !Number.isFinite(Number(item.quantity)) || Number(item.quantity) <= 0);
+    if (hasInvalidQuantity) {
+      setModalError('Each order item must have a valid quantity greater than 0.');
       setIsSubmitting(false);
       return;
     }
@@ -410,13 +438,13 @@ const OrdersList = () => {
       <table id="orders-table">
         <thead>
           <tr>
-            <th>Order ID</th>
-            <th>Customer ID</th>
+            <th>ID</th>
+            <th>Customer</th>
             <th>Items</th>
-            <th>Total Amount</th>
+            <th>Amount</th>
             <th>Order Date</th>
             <th>Delivery Date</th>
-            <th>Delivery Status</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -440,7 +468,7 @@ const OrdersList = () => {
                 <td>
                   <span className="delivery-order-id-chip">#{o.order_id}</span>
                 </td>
-                <td>{o.customer_id}</td>
+                <td>{o.customer_name || `Customer #${o.customer_id}`}</td>
                 <td>
                   {o.items && o.items.length > 0
                     ? `${o.items.length} item(s)`

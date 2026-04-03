@@ -42,50 +42,60 @@ const ProductFormModal = ({
       <Notification message={error} type="error" />
 
       <form className="entity-modal-form" onSubmit={onSubmit}>
-        <label htmlFor="product-sku">SKU (Optional):</label>
-        <input
-          id="product-sku"
-          type="text"
-          name="sku"
-          value={formData.sku}
-          onChange={onChange}
-          placeholder="Auto-generated if left blank"
-          maxLength={32}
-        />
+        <div className="entity-modal-field">
+          <label htmlFor="product-sku">SKU <span style={{ fontWeight: 400, textTransform: 'none', fontSize: '11px' }}>(optional)</span></label>
+          <input
+            id="product-sku"
+            type="text"
+            name="sku"
+            value={formData.sku}
+            onChange={onChange}
+            placeholder="Auto-generated if left blank"
+            maxLength={32}
+          />
+        </div>
 
-        <label htmlFor="product-name">Product Name:</label>
-        <input
-          id="product-name"
-          type="text"
-          name="product_name"
-          value={formData.product_name}
-          onChange={onChange}
-          required
-        />
+        <div className="entity-modal-field">
+          <label htmlFor="product-name">Product Name</label>
+          <input
+            id="product-name"
+            type="text"
+            name="product_name"
+            value={formData.product_name}
+            onChange={onChange}
+            placeholder="Enter product name"
+            required
+          />
+        </div>
 
-        <label htmlFor="product-price">Price (PHP):</label>
-        <input
-          id="product-price"
-          type="number"
-          min="0"
-          step="0.01"
-          name="price"
-          value={formData.price}
-          onChange={onChange}
-          required
-        />
+        <div className="entity-modal-field">
+          <label htmlFor="product-price">Price (PHP)</label>
+          <input
+            id="product-price"
+            type="number"
+            min="0"
+            step="0.01"
+            name="price"
+            value={formData.price}
+            onChange={onChange}
+            placeholder="0.00"
+            required
+          />
+        </div>
 
-        <label htmlFor="product-status">Status:</label>
-        <select
-          id="product-status"
-          name="status"
-          value={formData.status}
-          onChange={onChange}
-          required
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
+        <div className="entity-modal-field">
+          <label htmlFor="product-status">Status</label>
+          <select
+            id="product-status"
+            name="status"
+            value={formData.status}
+            onChange={onChange}
+            required
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
 
         <div className="entity-modal-actions">
           <button type="button" className="modal-cancel" onClick={onRequestClose} disabled={isSubmitting}>Cancel</button>

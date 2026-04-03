@@ -41,34 +41,43 @@ const CustomerFormModal = ({
       <Notification message={error} type="error" />
 
       <form className="entity-modal-form" onSubmit={onSubmit}>
-        <label htmlFor="customer-name">Name:</label>
-        <input
-          id="customer-name"
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={onChange}
-          required
-        />
+        <div className="entity-modal-field">
+          <label htmlFor="customer-name">Name</label>
+          <input
+            id="customer-name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={onChange}
+            placeholder="Full name"
+            required
+          />
+        </div>
 
-        <label htmlFor="customer-address">Address:</label>
-        <textarea
-          id="customer-address"
-          name="address"
-          value={formData.address}
-          onChange={onChange}
-          required
-        />
+        <div className="entity-modal-field">
+          <label htmlFor="customer-address">Address</label>
+          <textarea
+            id="customer-address"
+            name="address"
+            value={formData.address}
+            onChange={onChange}
+            placeholder="Street, city, province"
+            required
+          />
+        </div>
 
-        <label htmlFor="customer-contact-no">Contact No:</label>
-        <input
-          id="customer-contact-no"
-          type="text"
-          name="contact_no"
-          value={formData.contact_no}
-          onChange={onChange}
-          required
-        />
+        <div className="entity-modal-field">
+          <label htmlFor="customer-contact-no">Contact No.</label>
+          <input
+            id="customer-contact-no"
+            type="text"
+            name="contact_no"
+            value={formData.contact_no}
+            onChange={onChange}
+            placeholder="e.g. 09171234567"
+            required
+          />
+        </div>
 
         <div className="entity-modal-actions">
           <button type="button" className="modal-cancel" onClick={onRequestClose} disabled={isSubmitting}>Cancel</button>

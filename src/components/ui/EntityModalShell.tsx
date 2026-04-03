@@ -48,7 +48,7 @@ const EntityModalShell = ({
   }
 
   return createPortal(
-    <div className="modal-overlay" role="presentation" onClick={onRequestClose}>
+    <div className="modal-overlay" role="presentation">
       <div
         className={className}
         role="dialog"
@@ -62,8 +62,11 @@ const EntityModalShell = ({
             <span className="material-icons">close</span>
           </button>
         </div>
+        <div className="entity-modal-divider" aria-hidden="true" />
 
-        {children}
+        <div className="entity-modal-body">
+          {children}
+        </div>
       </div>
     </div>,
     document.body,

@@ -328,62 +328,114 @@ tbody tr:hover {
     background: #c62828;
 }
 
-/* SHARED ENTITY FORM MODAL */
-.entity-form-modal {
-    background: #fff;
-    border-radius: 10px;
-    width: min(540px, 100%);
-    max-height: min(700px, calc(100dvh - 48px));
-    overflow-y: auto;
-    padding: 22px;
-    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.24);
+/* ===============================================================
+   SHARED ENTITY FORM MODAL
+   =============================================================== */
+
+.entity-form-modal,
+.order-form-modal {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
+/* Simple modal (Customer / Product) */
+.entity-form-modal {
+    width: min(520px, 100%);
+    max-height: min(680px, calc(100dvh - 48px));
+}
+
+/* Wide modal (Order) */
+.order-form-modal {
+    width: min(780px, 100%);
+    max-height: min(800px, calc(100dvh - 40px));
+}
+
+/* ---- Header ---- */
 .entity-modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 12px;
+    padding: 20px 24px 18px;
+    flex-shrink: 0;
 }
 
 .entity-modal-header h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 17px;
+    font-weight: 700;
     color: var(--text-main);
+    letter-spacing: -0.01em;
 }
 
+.entity-modal-divider {
+    height: 1px;
+    background: var(--border-color);
+    flex-shrink: 0;
+}
+
+/* ---- Close button ---- */
 .entity-modal-close {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     border: none;
-    border-radius: 8px;
-    background: #eef2f7;
-    color: #405166;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: var(--transition-fast);
+    transition: background var(--transition-fast), color var(--transition-fast);
+    flex-shrink: 0;
 }
 
 .entity-modal-close:hover {
-    background: #dde6f2;
+    background: var(--danger-light);
+    color: var(--danger);
 }
 
 .entity-modal-close .material-icons {
     font-size: 20px;
 }
 
+/* ---- Body (scrollable) ---- */
+.entity-modal-body {
+    padding: 20px 24px 24px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* ---- Form layout ---- */
 .entity-modal-form {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 0;
+}
+
+/* Field group: label + input stacked with consistent vertical rhythm */
+.entity-modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 16px;
+}
+
+.entity-modal-field:last-of-type {
+    margin-bottom: 0;
 }
 
 .entity-modal-form label {
+    font-size: 12px;
     font-weight: 600;
-    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
 }
 
 .entity-modal-form input[type="text"],
@@ -391,14 +443,17 @@ tbody tr:hover {
 .entity-modal-form input[type="date"],
 .entity-modal-form select,
 .entity-modal-form textarea {
-    padding: 12px;
+    padding: 10px 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     width: 100%;
     box-sizing: border-box;
     font-family: 'Montserrat', Arial, sans-serif;
     font-size: 14px;
-    transition: var(--transition-fast);
+    color: var(--text-main);
+    background: var(--surface);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    line-height: 1.4;
 }
 
 .entity-modal-form input[type="text"]:focus,
@@ -411,54 +466,155 @@ tbody tr:hover {
     box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.order-form-modal {
-    background: #fff;
-    border-radius: 10px;
-    width: min(760px, 100%);
-    max-height: min(760px, calc(100dvh - 40px));
-    overflow: hidden;
-    padding: 22px;
-    box-shadow: 0 22px 44px rgba(15, 23, 42, 0.24);
+.entity-modal-form input::placeholder,
+.entity-modal-form textarea::placeholder {
+    color: #b0bac6;
 }
 
-.order-modal-loading {
-    margin: 10px 0 0;
+.entity-modal-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+.entity-modal-form textarea {
+    resize: vertical;
+    max-height: 200px;
+    min-height: 88px;
+    overflow-y: auto;
+}
+
+/* Hint text below a field */
+.entity-modal-field-hint {
+    font-size: 11px;
     color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* ---- Notification inside modal ---- */
+.entity-modal-body .notification {
+    margin-top: 0;
+    margin-bottom: 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+/* ---- Actions footer ---- */
+.entity-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding-top: 10px;
+    margin-top: 8px;
+}
+
+.entity-modal-actions .create-button {
+    border: none;
+}
+
+.entity-modal-actions .modal-cancel {
+    min-width: 100px;
+    height: 40px;
+    padding: 0 18px;
+    background: var(--surface-alt);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.entity-modal-actions .modal-cancel:hover {
+    background: #e8ecf2;
+    border-color: #c3ccd8;
+}
+
+.entity-modal-actions .create-button {
+    min-width: 130px;
+    height: 40px;
+    padding: 0 18px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.entity-modal-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ===============================================================
+   ORDER MODAL — items grid
+   =============================================================== */
+
+.order-modal-loading {
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 12px 0;
+}
+
+.order-items-section-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
 }
 
 .order-items-grid {
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 0 10px 8px 8px;
-    background: #f9fbfd;
-    max-height: min(420px, 44vh);
+    border-radius: var(--radius-sm);
+    background: var(--surface-alt);
+    max-height: min(380px, 40vh);
     overflow-y: auto;
 }
 
 .order-items-grid-head {
     display: grid;
-    grid-template-columns: 80px 90px minmax(180px, 1fr) 130px 44px;
+    grid-template-columns: 76px 76px minmax(160px, 1fr) 120px 120px 40px;
     gap: 8px;
-    padding: 4px 2px 8px;
+    padding: 8px 12px;
     position: sticky;
     top: 0;
-    background: #f9fbfd;
+    background: var(--surface-alt);
     z-index: 2;
-    box-shadow: 0 1px 0 rgba(148, 163, 184, 0.25);
+    border-bottom: 1px solid var(--border-color);
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
 }
 
 .order-item-grid-row {
     display: grid;
-    grid-template-columns: 80px 90px minmax(180px, 1fr) 130px 44px;
+    grid-template-columns: 76px 76px minmax(160px, 1fr) 120px 120px 40px;
     gap: 8px;
     align-items: center;
-    padding: 6px 2px;
-    border-top: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 6px 12px;
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    transition: background var(--transition-fast);
+}
+
+.order-item-grid-row:hover {
+    background: rgba(0, 0, 0, 0.015);
 }
 
 .order-item-grid-row:first-of-type {
@@ -466,14 +622,13 @@ tbody tr:hover {
 }
 
 .order-item-grid-row-highlight {
-    border-radius: 8px;
-    background: rgba(239, 68, 68, 0.08);
+    background: rgba(229, 57, 53, 0.06) !important;
 }
 
 .order-item-grid-row input,
 .order-item-grid-row select {
     margin: 0;
-    padding: 10px;
+    padding: 8px 10px;
 }
 
 .order-product-select-wrap {
@@ -489,65 +644,45 @@ tbody tr:hover {
     min-height: 0 !important;
 }
 
+.order-customer-select__input-container input,
+.order-customer-select__input {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    width: auto !important;
+}
+
 .order-item-grid-row input[readonly] {
-    background: #eef3f8;
-    color: #4b5563;
+    background: #eef1f5;
+    color: var(--text-muted);
+    cursor: default;
 }
 
 .order-item-row-remove {
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid #fecaca;
-    background: #fff1f2;
-    color: #b91c1c;
-    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 15px;
     line-height: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.order-item-row-remove:hover {
+    background: var(--danger-light);
+    color: var(--danger);
 }
 
 .order-item-row-remove:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.entity-modal-form textarea {
-    resize: vertical;
-    max-height: 220px;
-    min-height: 96px;
-    overflow-y: auto;
-}
-
-.entity-modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.entity-modal-actions .create-button {
-    border: none;
-}
-
-.entity-modal-actions .modal-cancel,
-.entity-modal-actions .create-button {
-    min-width: 148px;
-    height: 42px;
-    padding: 0 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    line-height: 1;
-    box-sizing: border-box;
-}
-
-.entity-modal-actions button:disabled {
-    opacity: 0.7;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
@@ -596,9 +731,15 @@ tbody tr:hover {
         white-space: nowrap;
     }
 
+    .entity-modal-header,
+    .entity-modal-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
     .order-items-grid-head,
     .order-item-grid-row {
-        grid-template-columns: 70px 80px minmax(140px, 1fr) 110px 40px;
+        grid-template-columns: 64px 64px minmax(130px, 1fr) 100px 100px 36px;
     }
 }
 
