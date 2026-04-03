@@ -64,7 +64,7 @@ const OrderFormModal = ({
   const productOptions = useMemo(
     () => products.map((product) => ({
       value: String(product.product_id),
-      label: `${product.sku || `ID ${product.product_id}`} - ${product.product_name}`,
+      label: `${product.product_name} - ${product.sku ? `SKU ${product.sku}` : `ID ${product.product_id}`}`,
     })),
     [products],
   );
