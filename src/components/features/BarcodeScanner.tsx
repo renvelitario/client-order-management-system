@@ -263,8 +263,8 @@ const BarcodeScanner = ({
               {
                 fps: 10,
                 qrbox: (w, h) => {
-                  const width = Math.floor(Math.min(w * 0.84, 560));
-                  const height = Math.floor(Math.min(h * 0.22, 140));
+                  const width = Math.floor(Math.min(w * 0.72, 480));
+                  const height = Math.floor(Math.min(h * 0.2, 120));
                   return { width, height };
                 },
               },

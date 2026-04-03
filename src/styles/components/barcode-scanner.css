@@ -60,8 +60,8 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(86vw, 560px);
-  aspect-ratio: 3.2 / 1;
+  width: min(74vw, 480px);
+  aspect-ratio: 2.9 / 1;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.42);
   pointer-events: none;
   z-index: 9998;
@@ -252,6 +252,6 @@
   }
 
   .barcode-scanner-guide {
-    width: min(92vw, 520px);
+    width: min(84vw, 420px);
   }
 }
