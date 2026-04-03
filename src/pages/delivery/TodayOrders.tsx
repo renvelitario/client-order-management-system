@@ -79,12 +79,21 @@ const TodayOrders = () => {
     }
   };
 
-  const handleScanDetected = async (orderId: number) => {
+  const handleScanDetected = async (orderId: string) => {
+    handleSearchChange(orderId);
     setScannerOpen(false);
+
+    const parsedOrderId = Number(orderId);
+    if (!Number.isInteger(parsedOrderId) || parsedOrderId < 1) {
+      setSelectedOrder(null);
+      setNotification({ type: 'error', message: 'Scanned QR code did not contain a valid order ID.' });
+      return;
+    }
+
     try {
-      const { data } = await api.get(`/orders/${orderId}`);
+      const { data } = await api.get(`/orders/${parsedOrderId}`);
       selectOrder(data);
-      setNotification({ type: 'success', message: `Order #${orderId} loaded.` });
+      setNotification({ type: 'success', message: `Order #${parsedOrderId} loaded.` });
     } catch (err) {
       setSelectedOrder(null);
       setNotification({
@@ -107,19 +116,21 @@ const TodayOrders = () => {
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search delivery orders"
-        action={
-          <button
-            ref={scanButtonRef}
-            type="button"
-            className="create-button scan-qr-button"
-            onClick={() => setScannerOpen(true)}
-            aria-label="Open QR scanner"
-            title="Scan QR code"
-          >
-            <span className="material-icons" aria-hidden="true">qr_code_scanner</span>
-            <span>Scan QR</span>
-          </button>
-        }
+        searchTrailingAction={(
+          <>
+            <span className="search-input-divider" aria-hidden="true" />
+            <button
+              ref={scanButtonRef}
+              type="button"
+              className="search-input-action"
+              onClick={() => setScannerOpen(true)}
+              aria-label="Scan QR code to search today's delivery orders"
+              title="Scan QR code"
+            >
+              <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+            </button>
+          </>
+        )}
       />
 
       {/* Fullscreen scanner overlay — renders via portal over everything */}

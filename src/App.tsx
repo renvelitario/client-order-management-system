@@ -23,6 +23,24 @@ const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
 const STARTUP_OVERLAY_FADE_DELAY_MS = 900;
 const STARTUP_OVERLAY_HIDE_DELAY_MS = 1200;
 
+const LEGACY_ROUTE_REDIRECTS = [
+  { from: '/products/new', to: '/products' },
+  { from: '/products/edit', to: '/products' },
+  { from: '/customers/new', to: '/customers' },
+  { from: '/customers/edit', to: '/customers' },
+  { from: '/orders/new', to: '/orders' },
+  { from: '/orders/edit', to: '/orders' },
+  { from: '/products_list', to: '/products' },
+  { from: '/products_add', to: '/products' },
+  { from: '/products_update', to: '/products' },
+  { from: '/cust_list', to: '/customers' },
+  { from: '/cust_add', to: '/customers' },
+  { from: '/cust_update', to: '/customers' },
+  { from: '/orders_list', to: '/orders' },
+  { from: '/orders_add', to: '/orders' },
+  { from: '/orders_update', to: '/orders' },
+] as const;
+
 const RouteLoader = () => (
   <div className="app-loader" role="status" aria-live="polite" aria-label="Loading application">
     <img src="/logo.png" className="app-loader-logo" alt="Order Management System" />
@@ -98,28 +116,16 @@ function App() {
                       <Route path="/delivery" element={<AdminRoute><AdminDelivery /></AdminRoute>} />
                       <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
                       <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
-                      <Route path="/products/new" element={<Navigate to="/products" replace />} />
-                      <Route path="/products/edit" element={<Navigate to="/products" replace />} />
                       <Route path="/customers" element={<ProtectedRoute><CustomersList /></ProtectedRoute>} />
-                      <Route path="/customers/new" element={<Navigate to="/customers" replace />} />
-                      <Route path="/customers/edit" element={<Navigate to="/customers" replace />} />
                       <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
                       <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
                       <Route path="/analytics" element={<AdminRoute><Analytics /></AdminRoute>} />
-                      <Route path="/orders/new" element={<Navigate to="/orders" replace />} />
-                      <Route path="/orders/edit" element={<Navigate to="/orders" replace />} />
                       <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
                       <Route path="/account/settings" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
                       <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />
-                      <Route path="/products_list" element={<Navigate to="/products" replace />} />
-                      <Route path="/products_add" element={<Navigate to="/products" replace />} />
-                      <Route path="/products_update" element={<Navigate to="/products" replace />} />
-                      <Route path="/cust_list" element={<Navigate to="/customers" replace />} />
-                      <Route path="/cust_add" element={<Navigate to="/customers" replace />} />
-                      <Route path="/cust_update" element={<Navigate to="/customers" replace />} />
-                      <Route path="/orders_list" element={<Navigate to="/orders" replace />} />
-                      <Route path="/orders_add" element={<Navigate to="/orders" replace />} />
-                      <Route path="/orders_update" element={<Navigate to="/orders" replace />} />
+                      {LEGACY_ROUTE_REDIRECTS.map(({ from, to }) => (
+                        <Route key={from} path={from} element={<Navigate to={to} replace />} />
+                      ))}
                       <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
                     </Routes>
                   </Suspense>

@@ -43,6 +43,49 @@
     outline: none;
     width: 100%;
     font-size: 14px;
+    min-width: 0;
+}
+
+.search-input-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-color);
+    margin-left: 8px;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.search-input-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #666;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.search-input-action:hover {
+    color: var(--primary);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.search-input-action:focus-visible {
+    outline: none;
+    color: var(--primary);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.search-input-action .material-symbols-outlined,
+.search-input-action .material-icons {
+    font-size: 20px;
+    line-height: 1;
 }
 
 /* CREATE BUTTON */

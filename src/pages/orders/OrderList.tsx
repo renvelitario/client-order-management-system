@@ -6,6 +6,7 @@ import '../../styles/shared/entity-list.css';
 import { formatPeso, formatDateOnly } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
+import OrderScanner from '../../components/features/OrderScanner';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useListOptions } from '../../hooks/useListOptions';
 import { useAuth } from '../../hooks/useAuth';
@@ -69,10 +70,12 @@ const OrdersList = () => {
   const [modalError, setModalError] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSearchScannerOpen, setIsSearchScannerOpen] = useState(false);
   const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
   const [isOrderItemsModalOpen, setIsOrderItemsModalOpen] = useState(false);
   const [selectedOrderForItems, setSelectedOrderForItems] = useState<Order | null>(null);
   const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const searchScanButtonRef = useRef<HTMLButtonElement | null>(null);
   const {
     rows: orders,
     searchInput,
@@ -93,6 +96,12 @@ const OrdersList = () => {
     handleDeleteCancel,
     handleDeleteConfirm: confirmDelete,
   } = useDeleteDialog<number>((err: ApiError) => err.response?.data?.error || 'Failed to delete order.');
+
+  useEffect(() => {
+    if (!isSearchScannerOpen && searchScanButtonRef.current) {
+      searchScanButtonRef.current.focus();
+    }
+  }, [isSearchScannerOpen]);
 
   useEffect(() => {
     if (!customers.length || !isModalOpen) {
@@ -156,6 +165,11 @@ const OrdersList = () => {
       </html>
     `);
     popup.document.close();
+  };
+
+  const handleSearchScanDetected = (orderId: string) => {
+    handleSearchChange(orderId);
+    setIsSearchScannerOpen(false);
   };
 
   const handleDeleteConfirm = async () => {
@@ -493,10 +507,32 @@ const OrdersList = () => {
         onClose={() => setIsOrderItemsModalOpen(false)}
       />
 
+      <OrderScanner
+        isOpen={isSearchScannerOpen}
+        onClose={() => setIsSearchScannerOpen(false)}
+        onDetected={handleSearchScanDetected}
+      />
+
       <ListPageHeader
         title="Orders"
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
+        searchAriaLabel="Search orders"
+        searchTrailingAction={(
+          <>
+            <span className="search-input-divider" aria-hidden="true" />
+            <button
+              ref={searchScanButtonRef}
+              type="button"
+              className="search-input-action"
+              onClick={() => setIsSearchScannerOpen(true)}
+              aria-label="Scan QR code to search orders"
+              title="Scan QR code"
+            >
+              <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+            </button>
+          </>
+        )}
         action={isAdmin && (
           <button type="button" className="create-button" onClick={openCreateModal}>
             <span className="material-icons">add</span>

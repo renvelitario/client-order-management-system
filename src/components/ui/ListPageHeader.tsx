@@ -5,6 +5,7 @@ type ListPageHeaderProps = {
   searchInput: string;
   onSearchChange: (value: string) => void;
   searchAriaLabel?: string;
+  searchTrailingAction?: ReactNode;
   action?: ReactNode;
 };
 
@@ -13,6 +14,7 @@ const ListPageHeader = ({
   searchInput,
   onSearchChange,
   searchAriaLabel,
+  searchTrailingAction,
   action,
 }: ListPageHeaderProps) => (
   <div className="header-row">
@@ -27,6 +29,7 @@ const ListPageHeader = ({
           onChange={(e) => onSearchChange(e.target.value)}
           aria-label={searchAriaLabel}
         />
+        {searchTrailingAction}
       </div>
       {action}
     </div>

@@ -1,7 +1,8 @@
 import type { FormEvent } from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
+import OrderScanner from '../../components/features/OrderScanner';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { formatDateOnly, formatDateTime, formatPeso } from '../../utils/formatters';
 import ListPageHeader from '../../components/ui/ListPageHeader';
@@ -49,9 +50,11 @@ const AdminDelivery = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
+  const [isSearchScannerOpen, setIsSearchScannerOpen] = useState(false);
   const [assignmentForm, setAssignmentForm] = useState<DeliveryAssignmentForm>({
     delivery_date: toLocalDateInputValue(),
   });
+  const searchScanButtonRef = useRef<HTMLButtonElement | null>(null);
   const listParams = useMemo(() => ({
     delivery_status: activeFilter,
     date_range: dateRangeFilter,
@@ -69,6 +72,12 @@ const AdminDelivery = () => {
     handlePageSizeChange,
     refetch,
   } = usePaginatedList<Order>({ endpoint: '/orders/delivery/admin', initialSort: 'desc', params: listParams });
+
+  useEffect(() => {
+    if (!isSearchScannerOpen && searchScanButtonRef.current) {
+      searchScanButtonRef.current.focus();
+    }
+  }, [isSearchScannerOpen]);
 
   const changeFilter = (nextFilter: DeliveryStatusKey) => {
     setActiveFilter(nextFilter);
@@ -161,6 +170,11 @@ const AdminDelivery = () => {
 
     await updateStatus(cancelTarget, 'cancelled', `Order #${cancelTarget.order_id} cancelled.`);
     setCancelTarget(null);
+  };
+
+  const handleSearchScanDetected = (orderId: string) => {
+    handleSearchChange(orderId);
+    setIsSearchScannerOpen(false);
   };
 
   const renderActions = (order: Order) => {
@@ -263,11 +277,32 @@ const AdminDelivery = () => {
         onRequestClose={closeAssignmentModal}
       />
 
+      <OrderScanner
+        isOpen={isSearchScannerOpen}
+        onClose={() => setIsSearchScannerOpen(false)}
+        onDetected={handleSearchScanDetected}
+      />
+
       <ListPageHeader
         title="Delivery Management"
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search delivery orders"
+        searchTrailingAction={(
+          <>
+            <span className="search-input-divider" aria-hidden="true" />
+            <button
+              ref={searchScanButtonRef}
+              type="button"
+              className="search-input-action"
+              onClick={() => setIsSearchScannerOpen(true)}
+              aria-label="Scan QR code to search delivery orders"
+              title="Scan QR code"
+            >
+              <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+            </button>
+          </>
+        )}
       />
 
       <div className="delivery-filter-bar">

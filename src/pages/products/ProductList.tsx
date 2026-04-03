@@ -1,12 +1,13 @@
 import api from "../../utils/api";
 import type { ChangeEvent, FormEvent } from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import "../../styles/shared/entity-list.css";
 import { formatPeso } from "../../utils/formatters";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
+import BarcodeScanner from '../../components/features/BarcodeScanner';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import ProductFormModal from '../../components/ui/ProductFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
@@ -37,7 +38,9 @@ const ProductsList = () => {
   const [formData, setFormData] = useState<ProductFormData>(emptyProductForm);
   const [modalError, setModalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSearchScannerOpen, setIsSearchScannerOpen] = useState(false);
   const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
+  const searchScanButtonRef = useRef<HTMLButtonElement | null>(null);
   const {
     rows: products,
     searchInput,
@@ -64,9 +67,15 @@ const ProductsList = () => {
     return err.response?.data?.error || 'Failed to delete record.';
   });
 
+  useEffect(() => {
+    if (!isSearchScannerOpen && searchScanButtonRef.current) {
+      searchScanButtonRef.current.focus();
+    }
+  }, [isSearchScannerOpen]);
+
   const handleDeleteConfirm = async () => {
     await confirmDelete(
-      (id) => api.delete(`/products/id/${id}`),
+      (id) => api.delete(`/products/${id}`),
       () => refetch(),
     );
   };
@@ -127,6 +136,11 @@ const ProductsList = () => {
     }
   };
 
+  const handleSearchSkuDetected = (sku: string) => {
+    handleSearchChange(sku);
+    setIsSearchScannerOpen(false);
+  };
+
   const handleModalSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setModalError('');
@@ -141,7 +155,7 @@ const ProductsList = () => {
           throw new Error('Missing product ID for update.');
         }
 
-        await api.put(`/products/id/${activeProductId}`, formData);
+        await api.put(`/products/${activeProductId}`, formData);
         setPageNotification({ message: 'Product updated successfully.', type: 'success' });
       }
 
@@ -181,10 +195,32 @@ const ProductsList = () => {
         onConfirm={handleDeleteConfirm}
       />
 
+      <BarcodeScanner
+        isOpen={isSearchScannerOpen}
+        onClose={() => setIsSearchScannerOpen(false)}
+        onDetected={handleSearchSkuDetected}
+      />
+
       <ListPageHeader
         title="Products"
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
+        searchAriaLabel="Search products"
+        searchTrailingAction={(
+          <>
+            <span className="search-input-divider" aria-hidden="true" />
+            <button
+              ref={searchScanButtonRef}
+              type="button"
+              className="search-input-action"
+              onClick={() => setIsSearchScannerOpen(true)}
+              aria-label="Scan barcode to search products"
+              title="Scan barcode"
+            >
+              <span className="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
+            </button>
+          </>
+        )}
         action={isAdmin && (
           <button type="button" className="create-button" onClick={openCreateModal}>
             <span className="material-icons">add</span>
