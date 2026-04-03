@@ -557,38 +557,40 @@ const OrdersList = () => {
                   </span>
                 </td>
                 <td>
-                  <button
-                    className="edit-button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      void openUpdateModal(o.order_id);
-                    }}
-                  >
-                    <span className="material-icons">edit</span>
-                    <span className="edit-text">Edit</span>
-                  </button>
-                  <button
-                    className="view-button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handlePrintReceipt(o);
-                    }}
-                  >
-                    <span className="material-icons">qr_code_2</span>
-                    <span className="view-text">Receipt</span>
-                  </button>
-                  {isAdmin && (
+                  <div className="table-row-actions">
                     <button
-                      className="delete-button"
+                      className="edit-button"
                       onClick={(event) => {
                         event.stopPropagation();
-                        handleDeleteClick(o.order_id);
+                        void openUpdateModal(o.order_id);
                       }}
                     >
-                      <span className="material-icons">delete</span>
-                      <span className="delete-text">Delete</span>
+                      <span className="material-icons">edit</span>
+                      <span className="edit-text">Edit</span>
                     </button>
-                  )}
+                    <button
+                      className="view-button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handlePrintReceipt(o);
+                      }}
+                    >
+                      <span className="material-icons">qr_code_2</span>
+                      <span className="view-text">Receipt</span>
+                    </button>
+                    {isAdmin && (
+                      <button
+                        className="delete-button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDeleteClick(o.order_id);
+                        }}
+                      >
+                        <span className="material-icons">delete</span>
+                        <span className="delete-text">Delete</span>
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))

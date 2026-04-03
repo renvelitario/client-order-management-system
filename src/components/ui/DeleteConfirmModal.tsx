@@ -7,6 +7,8 @@ type DeleteConfirmModalProps = {
   message: string;
   onCancel: () => void;
   onConfirm: () => void;
+  cancelLabel?: string;
+  confirmLabel?: string;
 };
 
 const DeleteConfirmModal = ({
@@ -15,6 +17,8 @@ const DeleteConfirmModal = ({
   message,
   onCancel,
   onConfirm,
+  cancelLabel = 'No, keep it.',
+  confirmLabel = 'Yes, delete!',
 }: DeleteConfirmModalProps) => {
   useEffect(() => {
     if (!open) {
@@ -57,8 +61,8 @@ const DeleteConfirmModal = ({
         <h3 id="delete-confirm-title">{title}</h3>
         <p className="modal-message">{message}</p>
         <div className="modal-actions">
-          <button className="modal-cancel" onClick={onCancel}>No, keep it.</button>
-          <button className="modal-confirm-delete" onClick={onConfirm}>Yes, delete!</button>
+          <button className="modal-cancel" onClick={onCancel}>{cancelLabel}</button>
+          <button className="modal-confirm-delete" onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </div>
     </div>,

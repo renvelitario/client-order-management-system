@@ -1,5 +1,6 @@
 export type IconName =
   | 'dashboard'
+  | 'analytics'
   | 'products'
   | 'customers'
   | 'orders'
@@ -19,6 +20,14 @@ const Icon = ({ name }: { name: IconName }) => {
         <path d="M13 4h7v4h-7z" />
         <path d="M13 10h7v10h-7z" />
         <path d="M4 13h7v7H4z" />
+      </>
+    ),
+    analytics: (
+      <>
+        <path d="M4 19h16" />
+        <path d="M7 16V9" />
+        <path d="M12 16V6" />
+        <path d="M17 16v-4" />
       </>
     ),
     products: (

@@ -1,0 +1,41 @@
+.analytics-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.analytics-header {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-radius: 14px;
+  color: #f8fafc;
+  padding: 1.5rem;
+}
+
+.analytics-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.analytics-header p {
+  margin: 0.5rem 0 0;
+  color: #cbd5e1;
+}
+
+.analytics-placeholder {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.analytics-placeholder h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.analytics-placeholder p {
+  margin: 0;
+  color: #475569;
+}

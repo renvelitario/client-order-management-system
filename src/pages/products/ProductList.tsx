@@ -50,7 +50,7 @@ const ProductsList = () => {
     handleSearchChange,
     handlePageSizeChange,
     refetch,
-  } = usePaginatedList<Product>({ endpoint: '/products', initialSort: 'desc' });
+  } = usePaginatedList<Product>({ endpoint: '/products', initialSort: 'asc' });
   const {
     deleteDialog,
     notification,

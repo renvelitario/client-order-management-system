@@ -17,6 +17,8 @@ const adminLinks: NavItem[] = [
   { to: '/products', label: 'Products', icon: 'products' },
   { to: '/orders', label: 'Orders', icon: 'orders' },
   { to: '/delivery', label: 'Delivery', icon: 'delivery' },
+  { to: '/users', label: 'User Management', icon: 'users' },
+  { to: '/analytics', label: 'Analytics', icon: 'analytics' },
 ];
 
 const deliveryLinks: NavItem[] = [
@@ -34,7 +36,7 @@ const Sidebar = ({
 }) => {
   const { isAdmin } = useAuth();
   const navLinks = isAdmin ? adminLinks : deliveryLinks;
-  const shouldRenderDividerAfter = (index: number) => isAdmin && (index === 0 || index === 2);
+  const shouldRenderDividerAfter = (index: number) => isAdmin && (index === 0 || index === 2 || index === 4);
 
   return (
     <aside ref={sidebarRef} className={`dashboard-sidebar${isSidebarOpen ? ' is-open' : ''}`}>

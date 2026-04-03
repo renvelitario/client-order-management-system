@@ -218,7 +218,6 @@ tbody tr:hover {
     font-size: 13px;
     cursor: pointer;
     transition: var(--transition-fast);
-    margin-left: 6px;
 }
 
 .delete-button:hover {
@@ -227,6 +226,13 @@ tbody tr:hover {
 
 .delete-button .material-icons {
     font-size: 16px;
+}
+
+.table-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
 }
 
 /* NOTIFICATION MESSAGES */
@@ -549,6 +555,8 @@ tbody tr:hover {
 }
 
 .entity-modal-form input[type="text"],
+.entity-modal-form input[type="email"],
+.entity-modal-form input[type="password"],
 .entity-modal-form input[type="number"],
 .entity-modal-form input[type="date"],
 .entity-modal-form select,
@@ -580,6 +588,8 @@ tbody tr:hover {
 }
 
 .entity-modal-form input[type="text"]:focus,
+.entity-modal-form input[type="email"]:focus,
+.entity-modal-form input[type="password"]:focus,
 .entity-modal-form input[type="number"]:focus,
 .entity-modal-form input[type="date"]:focus,
 .entity-modal-form select:focus,
@@ -953,10 +963,6 @@ tbody tr:hover {
     }
 
     /* VIEW BUTTON ICON ONLY ON MOBILE */
-    .view-button {
-        margin-right: 4px;
-    }
-
     .view-button .view-text {
         display: none;
     }
@@ -966,10 +972,6 @@ tbody tr:hover {
     }
 
     /* DELETE BUTTON ICON ONLY ON MOBILE */
-    .delete-button {
-        margin-left: 4px;
-    }
-
     .delete-button .delete-text {
         display: none;
     }

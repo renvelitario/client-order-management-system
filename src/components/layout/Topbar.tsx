@@ -134,18 +134,6 @@ const Topbar = ({
             <Icon name="security" />
             <span>Security</span>
           </NavLink>
-          {isAdmin && (
-            <NavLink
-              to="/account/users/new"
-              className={({ isActive }) => `top-account-item${isActive ? ' is-active' : ''}`}
-              role="menuitem"
-              onClick={() => setIsAccountMenuOpen(false)}
-            >
-              <Icon name="users" />
-              <span>Add User</span>
-            </NavLink>
-          )}
-
           <div className="top-account-divider" role="separator" />
 
           <button type="button" className="top-account-item top-account-logout" role="menuitem" onClick={handleLogout}>

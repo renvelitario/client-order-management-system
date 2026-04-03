@@ -14,6 +14,8 @@ const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
 const AdminDelivery = lazy(() => import('./pages/delivery/AdminDelivery'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
+const UserManagement = lazy(() => import('./pages/users/UserManagement'));
+const Analytics = lazy(() => import('./pages/Analytics'));
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
 const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
@@ -102,6 +104,8 @@ function App() {
                       <Route path="/customers/new" element={<Navigate to="/customers" replace />} />
                       <Route path="/customers/edit" element={<Navigate to="/customers" replace />} />
                       <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
+                      <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
+                      <Route path="/analytics" element={<AdminRoute><Analytics /></AdminRoute>} />
                       <Route path="/orders/new" element={<Navigate to="/orders" replace />} />
                       <Route path="/orders/edit" element={<Navigate to="/orders" replace />} />
                       <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import api from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import Notification from '../components/ui/Notification';
 
@@ -38,6 +39,18 @@ const Login = () => {
       });
 
       if (error) throw error;
+
+      // Verify the account is active before navigating
+      try {
+        await api.get('/auth/me');
+      } catch (statusErr) {
+        const httpStatus = (statusErr as { response?: { status?: number } })?.response?.status;
+        if (httpStatus === 403) {
+          await supabase.auth.signOut();
+          setError('Your account has been disabled. Please contact your organization admin to activate your account.');
+          return;
+        }
+      }
 
       navigate('/');
     } catch (err) {
