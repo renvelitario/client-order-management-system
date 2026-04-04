@@ -49,7 +49,8 @@
 
 .delivery-order-modal {
   text-align: left;
-  width: min(780px, 100%);
+  width: 90%;
+  max-width: 650px;
   padding: 22px 24px 20px;
 }
 
@@ -87,6 +88,8 @@
   }
 
   .delivery-order-modal {
+    width: 90%;
+    max-width: 650px;
     padding: 16px;
   }
 }
