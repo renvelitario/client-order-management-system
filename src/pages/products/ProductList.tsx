@@ -47,6 +47,15 @@ const PRODUCT_STATUS_OPTIONS: Array<{ value: ProductStatusFilter; label: string 
   { value: 'inactive', label: 'Inactive' },
 ];
 
+const normalizeProductStatus = (value: string | null | undefined): ProductStatusFilter | 'all' => {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (normalized === 'active' || normalized === 'inactive') {
+    return normalized;
+  }
+
+  return 'all';
+};
+
 const ProductsList = () => {
   const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,6 +176,14 @@ const ProductsList = () => {
     setStatusFilter(nextFilter);
     setCurrentPage(1);
   };
+
+  const filteredProducts = useMemo(() => {
+    if (statusFilter === 'all') {
+      return products;
+    }
+
+    return products.filter((product) => normalizeProductStatus(product.status) === statusFilter);
+  }, [products, statusFilter]);
 
   const handleModalSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -289,11 +306,18 @@ const ProductsList = () => {
           </tr>
         </thead>
         <tbody>
-          {products.length > 0 ? (
-            products.map((p) => (
+          {loading ? (
+            <tr className="products-table-loading-row">
+              <td colSpan={6}>
+                <span className="products-table-loading-indicator" aria-hidden="true" />
+                Loading products...
+              </td>
+            </tr>
+          ) : filteredProducts.length > 0 ? (
+            filteredProducts.map((p) => (
               <tr
                 key={p.product_id}
-                className={p.status === "inactive" ? "inactive-row" : ""}
+                className={normalizeProductStatus(p.status) === 'inactive' ? "inactive-row" : ""}
               >
                 <td>
                   <span className="delivery-order-id-chip">#{p.product_id}</span>
@@ -302,8 +326,8 @@ const ProductsList = () => {
                 <td>{p.product_name}</td>
                 <td className="table-col-number">{formatPeso(p.price)}</td>
                 <td>
-                  <span className={`delivery-status-pill status-${p.status}`}>
-                    {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
+                  <span className={`delivery-status-pill status-${normalizeProductStatus(p.status)}`}>
+                    {normalizeProductStatus(p.status) === 'inactive' ? 'Inactive' : 'Active'}
                   </span>
                 </td>
                 <td className="table-col-actions">

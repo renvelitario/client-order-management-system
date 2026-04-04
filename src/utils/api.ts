@@ -3,8 +3,20 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
 
 const localApiFallback = 'http://localhost:5000/api';
-const configuredApiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
-const apiBaseUrl = configuredApiBaseUrl || (import.meta.env.DEV ? localApiFallback : '');
+const configuredApiBaseUrl = (
+  import.meta.env.VITE_API_BASE_URL
+  || import.meta.env.VITE_BACKEND_URL
+  || ''
+).trim();
+const normalizeApiBaseUrl = (value: string): string => {
+  if (!value) {
+    return '';
+  }
+
+  return /\/api\/?$/i.test(value) ? value.replace(/\/$/, '') : `${value.replace(/\/$/, '')}/api`;
+};
+
+const apiBaseUrl = normalizeApiBaseUrl(configuredApiBaseUrl) || (import.meta.env.DEV ? localApiFallback : '');
 
 if (!apiBaseUrl) {
   console.error('[API_CONFIG] Missing VITE_API_BASE_URL in production environment.');

@@ -318,7 +318,7 @@ const UserManagement = () => {
       <DataTable id="users-table">
         <thead>
           <tr>
-            <th className="table-col-number">ID</th>
+            <th>ID</th>
             <th>Username</th>
             <th>Full Name</th>
             <th>Email</th>
@@ -331,7 +331,9 @@ const UserManagement = () => {
           {users.length > 0 ? (
             users.map((user) => (
               <tr key={user.user_id}>
-                <td className="table-col-number">{user.user_id}</td>
+                <td>
+                  <span className="delivery-order-id-chip">#{user.user_id}</span>
+                </td>
                 <td>{user.username}</td>
                 <td>{user.name || 'N/A'}</td>
                 <td>{user.email || 'N/A'}</td>

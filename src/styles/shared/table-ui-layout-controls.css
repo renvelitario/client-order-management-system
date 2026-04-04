@@ -20,7 +20,8 @@
     background: var(--surface);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    padding: 8px 12px;
+    min-height: 40px;
+    padding: 0 12px;
     width: 280px;
     transition: var(--transition-fast);
     flex-direction: row;
@@ -93,7 +94,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 16px;
+    min-height: 40px;
+    padding: 0 16px;
     background-color: var(--primary);
     color: var(--text-inverse);
     border: none;
@@ -101,6 +103,8 @@
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
     transition: var(--transition-fast);
     box-shadow: var(--shadow-sm);
 }
