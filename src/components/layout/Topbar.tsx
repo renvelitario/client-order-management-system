@@ -9,10 +9,12 @@ const Topbar = ({
   isSidebarOpen,
   setIsSidebarOpen,
   sidebarToggleRef,
+  showSidebarToggle,
 }: {
   isSidebarOpen: boolean;
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
   sidebarToggleRef: RefObject<HTMLButtonElement>;
+  showSidebarToggle: boolean;
 }) => {
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [fallbackAccount, setFallbackAccount] = useState({ name: 'Account', email: '' });
@@ -20,7 +22,7 @@ const Topbar = ({
   const navigate = useNavigate();
   const { localUser, isAdmin } = useAuth();
 
-  const homePath = isAdmin ? '/dashboard' : '/delivery/orders';
+  const homePath = isAdmin ? '/dashboard' : '/delivery/home';
   const accountName = localUser
     ? ((localUser.username || localUser.email || 'Account').trim() || 'Account')
     : fallbackAccount.name;
@@ -73,15 +75,17 @@ const Topbar = ({
 
   return (
     <header className="mobile-shell-bar">
-      <button
-        ref={sidebarToggleRef}
-        type="button"
-        className="sidebar-toggle"
-        onClick={() => setIsSidebarOpen((current) => !current)}
-        aria-label={isSidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
-      >
-        <Icon name={isSidebarOpen ? 'close' : 'menu'} />
-      </button>
+      {showSidebarToggle && (
+        <button
+          ref={sidebarToggleRef}
+          type="button"
+          className="sidebar-toggle"
+          onClick={() => setIsSidebarOpen((current) => !current)}
+          aria-label={isSidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        >
+          <Icon name={isSidebarOpen ? 'close' : 'menu'} />
+        </button>
+      )}
 
       <Link to={homePath} className="mobile-shell-brand">
         <img src="/logo.png" className="logo-image" alt="Logo" />

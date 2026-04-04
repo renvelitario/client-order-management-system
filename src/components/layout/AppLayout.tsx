@@ -2,15 +2,18 @@ import { useState, useEffect, useRef } from 'react';
 import type { Dispatch, ReactNode, RefObject, SetStateAction } from 'react';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
+import DeliveryNav from './DeliveryNav';
+import { useAuth } from '../../hooks/useAuth';
 import '../../styles/components/header.css';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
+  const { isAdmin } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement | null>(null);
   const sidebarToggleRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (!isSidebarOpen) {
+    if (!isAdmin || !isSidebarOpen) {
       return undefined;
     }
 
@@ -50,29 +53,36 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       document.removeEventListener('touchstart', handlePointerDownOutside, true);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isSidebarOpen]);
+  }, [isAdmin, isSidebarOpen]);
 
   return (
     <>
-      <div
-        className={`sidebar-backdrop${isSidebarOpen ? ' is-open' : ''}`}
-        onClick={() => setIsSidebarOpen(false)}
-        aria-hidden={!isSidebarOpen}
-      />
+      {isAdmin && (
+        <div
+          className={`sidebar-backdrop${isSidebarOpen ? ' is-open' : ''}`}
+          onClick={() => setIsSidebarOpen(false)}
+          aria-hidden={!isSidebarOpen}
+        />
+      )}
       
       <div className="app-shell">
         <Topbar
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen as Dispatch<SetStateAction<boolean>>}
           sidebarToggleRef={sidebarToggleRef as RefObject<HTMLButtonElement>}
+          showSidebarToggle={isAdmin}
         />
-        <Sidebar
-          isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen as Dispatch<SetStateAction<boolean>>}
-          sidebarRef={sidebarRef as RefObject<HTMLElement>}
-        />
+        {isAdmin ? (
+          <Sidebar
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen as Dispatch<SetStateAction<boolean>>}
+            sidebarRef={sidebarRef as RefObject<HTMLElement>}
+          />
+        ) : (
+          <DeliveryNav />
+        )}
         
-        <main className="app-main">
+        <main className={`app-main${isAdmin ? '' : ' app-main-delivery'}`}>
           <div className="app-content">
             {children}
           </div>

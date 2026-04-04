@@ -16,6 +16,7 @@ const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
 const AdminDelivery = lazy(() => import('./pages/delivery/AdminDelivery'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
+const DeliveryInbox = lazy(() => import('./pages/delivery/Inbox'));
 const UserManagement = lazy(() => import('./pages/users/UserManagement'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
@@ -84,7 +85,7 @@ function App() {
     };
   }, [isInitializing, showStartupOverlay]);
 
-  const defaultAuthenticatedRoute = isAdmin ? '/dashboard' : '/delivery/orders';
+  const defaultAuthenticatedRoute = isAdmin ? '/dashboard' : '/delivery/home';
 
   return (
     <Router>
@@ -119,7 +120,9 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
                       <Route path="/delivery" element={<AdminRoute><AdminDelivery /></AdminRoute>} />
+                      <Route path="/delivery/home" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
                       <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
+                      <Route path="/delivery/inbox" element={<ProtectedRoute><DeliveryInbox /></ProtectedRoute>} />
                       <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
                       <Route path="/customers" element={<ProtectedRoute><CustomersList /></ProtectedRoute>} />
                       <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />

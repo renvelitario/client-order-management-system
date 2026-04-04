@@ -32,7 +32,7 @@ export const AdminRoute = ({ children }: { children: ReactNode }) => {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/delivery/orders" replace />;
+    return <Navigate to="/delivery/home" replace />;
   }
 
   return children;
