@@ -54,7 +54,7 @@ const OrderScanner = ({
       parseDetectedValue={parseOrderIdFromValue}
       supportedFormats={ORDER_SUPPORTED_FORMATS}
       qrbox={(width, height) => {
-        const size = Math.floor(Math.min(Math.min(width, height) * 0.68, 420));
+        const size = Math.floor(Math.min(Math.min(width, height) * 0.52, 300));
         return { width: size, height: size };
       }}
     />

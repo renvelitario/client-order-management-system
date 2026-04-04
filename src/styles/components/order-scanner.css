@@ -34,9 +34,9 @@
 .order-scanner-guide {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 44%;
   transform: translate(-50%, -50%);
-  width: min(74vw, 420px);
+  width: min(60vw, 300px);
   aspect-ratio: 1 / 1;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.42);
   pointer-events: none;
@@ -157,7 +157,8 @@
 }
 
 .order-scanner-guidance {
-  bottom: max(62px, calc(env(safe-area-inset-bottom, 0px) + 50px));
+  top: calc(44% + (min(60vw, 300px) / 2) + 14px);
+  bottom: auto;
   background: rgba(0, 0, 0, 0.5);
   color: var(--text-inverse);
 }
@@ -219,7 +220,25 @@
 
 @media (max-width: 640px) {
   .order-scanner-guide {
-    width: min(84vw, 420px);
+    top: 43%;
+    width: min(72vw, 280px);
+  }
+
+  .order-scanner-hint,
+  .order-scanner-error,
+  .order-scanner-guidance {
+    max-width: min(92vw, 420px);
+    font-size: 13px;
+  }
+
+  .order-scanner-hint,
+  .order-scanner-error {
+    bottom: max(96px, calc(env(safe-area-inset-bottom, 0px) + 82px));
+  }
+
+  .order-scanner-guidance {
+    top: calc(43% + (min(72vw, 280px) / 2) + 12px);
+    bottom: auto;
   }
 
   .order-scanner-upload-btn {
