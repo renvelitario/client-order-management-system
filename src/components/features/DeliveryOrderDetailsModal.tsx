@@ -196,19 +196,21 @@ const DeliveryOrderDetailsModal = ({
             <div className="entity-modal-actions">
               <button
                 type="button"
-                className="modal-cancel"
+                className="modal-cancel delivery-action-danger"
                 onClick={() => void handleStatusChange('failed')}
                 disabled={loading || saving || !order}
               >
-                Mark as Failed
+                <span className="material-symbols-outlined" aria-hidden="true">dangerous</span>
+                <span>Mark as Failed</span>
               </button>
               <button
                 type="button"
-                className="create-button"
+                className="create-button delivery-action-success"
                 onClick={() => void handleStatusChange('delivered')}
                 disabled={loading || saving || !order}
               >
-                Mark as Delivered
+                <span className="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                <span>Mark as Delivered</span>
               </button>
             </div>
           </>

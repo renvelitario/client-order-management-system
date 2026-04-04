@@ -34,15 +34,15 @@ const DeliveryOrderCard = ({ order, onClick }: DeliveryOrderCardProps) => {
       </header>
 
       <div className="delivery-order-summary-grid">
-        <div>
+        <div className="delivery-order-field delivery-order-field-customer">
           <span>Customer</span>
           <strong>{order.customer_name || 'N/A'}</strong>
         </div>
-        <div>
+        <div className="delivery-order-field delivery-order-field-address">
           <span>Address</span>
           <strong>{order.address || 'N/A'}</strong>
         </div>
-        <div>
+        <div className="delivery-order-field delivery-order-field-contact">
           <span>Contact</span>
           <strong>{order.contact_no || 'N/A'}</strong>
         </div>

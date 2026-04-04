@@ -69,6 +69,21 @@
 
 @media (max-width: 640px) {
   .delivery-order-summary-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "customer contact"
+      "address address";
+  }
+
+  .delivery-order-field-customer {
+    grid-area: customer;
+  }
+
+  .delivery-order-field-contact {
+    grid-area: contact;
+  }
+
+  .delivery-order-field-address {
+    grid-area: address;
   }
 }

@@ -270,6 +270,26 @@
     cursor: not-allowed;
 }
 
+@media (max-width: 640px) {
+    .entity-modal-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .entity-modal-actions .modal-cancel,
+    .entity-modal-actions .create-button {
+        width: 100%;
+    }
+
+    .entity-modal-actions .create-button {
+        order: 1;
+    }
+
+    .entity-modal-actions .modal-cancel {
+        order: 2;
+    }
+}
+
 /* ===============================================================
    ORDER MODAL — items grid
    =============================================================== */

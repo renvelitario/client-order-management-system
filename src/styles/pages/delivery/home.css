@@ -71,6 +71,31 @@
   white-space: nowrap;
 }
 
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-danger,
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-success {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-danger:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-danger .material-symbols-outlined,
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-success .material-symbols-outlined {
+  font-size: 18px;
+  line-height: 1;
+}
+
 @media (max-width: 640px) {
   .delivery-home-card-grid {
     grid-template-columns: 1fr;
