@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const message = resolveApiErrorMessage(err, 'Failed to load user profile after login.');
 
         console.error('[AUTH_CONTEXT] Failed to load authenticated user profile.', err);
-        await supabase.auth.signOut();
+        await supabase.auth.signOut({ scope: 'local' });
         if (mounted) {
           setSession(null);
           setLocalUser(null);

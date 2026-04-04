@@ -68,7 +68,7 @@ const Topbar = ({
     e.preventDefault();
     setIsAccountMenuOpen(false);
     if (window.confirm('Are you sure you want to log out?')) {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut({ scope: 'local' });
       navigate('/login');
     }
   };

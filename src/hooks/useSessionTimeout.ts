@@ -92,7 +92,7 @@ export const useSessionTimeout = (isAuthenticated: boolean) => {
         logoutInProgress = true;
         closeWarning();
         localStorage.removeItem(LAST_ACTIVITY_STORAGE_KEY);
-        await supabase.auth.signOut();
+        await supabase.auth.signOut({ scope: 'local' });
       }, remainingTime);
     };
 
@@ -183,7 +183,7 @@ export const useSessionTimeout = (isAuthenticated: boolean) => {
   const handleLogoutNow = async () => {
     localStorage.removeItem(LAST_ACTIVITY_STORAGE_KEY);
     setWarningState({ isOpen: false, secondsRemaining: 0 });
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
   };
 
   const minutesRemaining = Math.ceil(warningState.secondsRemaining / 60);
