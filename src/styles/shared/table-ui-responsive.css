@@ -80,15 +80,16 @@
     }
 
     /* Keep all action buttons identical in mobile tables */
-    .edit-button,
-    .view-button,
-    .delete-button {
+    .data-table .edit-button,
+    .data-table .view-button,
+    .data-table .delete-button {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0;
         width: 40px;
         height: 40px;
+        min-height: 40px;
         min-width: 40px;
         padding: 0;
         box-sizing: border-box;

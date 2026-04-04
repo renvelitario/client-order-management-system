@@ -1,6 +1,6 @@
 import api from "../../utils/api";
 import type { ChangeEvent, FormEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/shared/table-ui-actions.css';
@@ -9,6 +9,7 @@ import '../../styles/shared/modal-ui-base.css';
 import '../../styles/shared/form-ui-entity-modal.css';
 import '../../styles/shared/table-ui-pagination.css';
 import '../../styles/shared/table-ui-responsive.css';
+import '../../styles/pages/products/product-list.css';
 import { formatPeso } from "../../utils/formatters";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
@@ -38,6 +39,14 @@ const emptyProductForm: ProductFormData = {
   status: 'active',
 };
 
+type ProductStatusFilter = 'all' | 'active' | 'inactive';
+
+const PRODUCT_STATUS_OPTIONS: Array<{ value: ProductStatusFilter; label: string }> = [
+  { value: 'all', label: 'Show All' },
+  { value: 'active', label: 'Active' },
+  { value: 'inactive', label: 'Inactive' },
+];
+
 const ProductsList = () => {
   const { isAdmin } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +57,11 @@ const ProductsList = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSearchScannerOpen, setIsSearchScannerOpen] = useState(false);
   const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
+  const [statusFilter, setStatusFilter] = useState<ProductStatusFilter>('all');
   const searchScanButtonRef = useRef<HTMLButtonElement | null>(null);
+  const listParams = useMemo(() => ({
+    status: statusFilter === 'all' ? undefined : statusFilter,
+  }), [statusFilter]);
   const {
     rows: products,
     searchInput,
@@ -62,7 +75,7 @@ const ProductsList = () => {
     handleSearchChange,
     handlePageSizeChange,
     refetch,
-  } = usePaginatedList<Product>({ endpoint: '/products', initialSort: 'asc' });
+  } = usePaginatedList<Product>({ endpoint: '/products', initialSort: 'asc', params: listParams });
   const {
     deleteDialog,
     notification,
@@ -148,6 +161,11 @@ const ProductsList = () => {
   const handleSearchSkuDetected = (sku: string) => {
     handleSearchChange(sku);
     setIsSearchScannerOpen(false);
+  };
+
+  const handleStatusFilterChange = (nextFilter: ProductStatusFilter) => {
+    setStatusFilter(nextFilter);
+    setCurrentPage(1);
   };
 
   const handleModalSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -238,6 +256,23 @@ const ProductsList = () => {
         )}
       />
 
+      <div className="product-filter-bar">
+        <div className="product-status-filter">
+          <label htmlFor="products-status-filter">Status</label>
+          <select
+            id="products-status-filter"
+            value={statusFilter}
+            onChange={(event) => handleStatusFilterChange(event.target.value as ProductStatusFilter)}
+          >
+            {PRODUCT_STATUS_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <Notification message={pageNotification.message} type={pageNotification.type} />
       <Notification message={notification.message} type={notification.type} />
       {productModal}
@@ -245,7 +280,7 @@ const ProductsList = () => {
       <DataTable id="products-table">
         <thead>
           <tr>
-            <th className="table-col-number">ID</th>
+            <th>ID</th>
             <th>SKU</th>
             <th>Product Name</th>
             <th className="table-col-number">Price</th>
@@ -260,13 +295,15 @@ const ProductsList = () => {
                 key={p.product_id}
                 className={p.status === "inactive" ? "inactive-row" : ""}
               >
-                <td className="table-col-number">{p.product_id}</td>
+                <td>
+                  <span className="delivery-order-id-chip">#{p.product_id}</span>
+                </td>
                 <td>{p.sku || '-'}</td>
                 <td>{p.product_name}</td>
                 <td className="table-col-number">{formatPeso(p.price)}</td>
                 <td>
                   <span className={`delivery-status-pill status-${p.status}`}>
-                    {p.status}
+                    {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                   </span>
                 </td>
                 <td className="table-col-actions">

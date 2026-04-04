@@ -191,7 +191,7 @@ const CustomersList = () => {
       <DataTable id="customers-table">
         <thead>
           <tr>
-            <th className="table-col-number">ID</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Address</th>
             <th>Contact No</th>
@@ -202,7 +202,9 @@ const CustomersList = () => {
           {customers.length > 0 ? (
             customers.map((c) => (
               <tr key={c.customer_id}>
-                <td className="table-col-number">{c.customer_id}</td>
+                <td>
+                  <span className="delivery-order-id-chip">#{c.customer_id}</span>
+                </td>
                 <td>{c.name}</td>
                 <td>{c.address}</td>
                 <td>{c.contact_no}</td>
