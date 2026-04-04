@@ -14,14 +14,18 @@ import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/pages/delivery/home.css';
 
+const HOME_REFRESH_INTERVAL_MS = 10000;
+
 const Home = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<NotificationState>({ type: '', message: '' });
   const [activeOrderId, setActiveOrderId] = useState<number | null>(null);
 
-  const fetchTodayOrders = useCallback(async () => {
-    setLoading(true);
+  const fetchTodayOrders = useCallback(async (showLoader = false) => {
+    if (showLoader) {
+      setLoading(true);
+    }
 
     try {
       const { data } = await api.get('/orders/delivery/today', {
@@ -36,18 +40,38 @@ const Home = () => {
       setOrders(listResult.data);
       setNotification({ type: '', message: '' });
     } catch (error) {
-      setOrders([]);
-      setNotification({
-        type: 'error',
-        message: resolveApiErrorMessage(error, 'Unable to load your delivery home orders.'),
-      });
+      if (showLoader) {
+        setOrders([]);
+        setNotification({
+          type: 'error',
+          message: resolveApiErrorMessage(error, 'Unable to load your delivery home orders.'),
+        });
+      }
     } finally {
-      setLoading(false);
+      if (showLoader) {
+        setLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    void fetchTodayOrders();
+    void fetchTodayOrders(true);
+  }, [fetchTodayOrders]);
+
+  useEffect(() => {
+    const refreshIfVisible = () => {
+      if (document.visibilityState === 'visible') {
+        void fetchTodayOrders(false);
+      }
+    };
+
+    const intervalId = window.setInterval(refreshIfVisible, HOME_REFRESH_INTERVAL_MS);
+    document.addEventListener('visibilitychange', refreshIfVisible);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', refreshIfVisible);
+    };
   }, [fetchTodayOrders]);
 
   const outForDeliveryOrders = useMemo(
