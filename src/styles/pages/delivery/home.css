@@ -18,7 +18,7 @@
 
 .delivery-home-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 
@@ -41,8 +41,18 @@
   font-size: 14px;
 }
 
+.delivery-modal-title-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 @media (max-width: 640px) {
   .delivery-home-card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .delivery-modal-title-wrap {
+    flex-wrap: wrap;
   }
 }

@@ -6,6 +6,11 @@ import { resolveApiErrorMessage } from '../../types/app';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DeliveryOrderCard from '../../components/features/DeliveryOrderCard';
+import DeliveryOrderDetailsModal from '../../components/features/DeliveryOrderDetailsModal';
+import '../../styles/shared/modal-ui-base.css';
+import '../../styles/shared/modal-ui-order-items.css';
+import '../../styles/shared/form-ui-entity-modal.css';
+import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/pages/delivery/home.css';
 
@@ -13,6 +18,7 @@ const Home = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<NotificationState>({ type: '', message: '' });
+  const [activeOrderId, setActiveOrderId] = useState<number | null>(null);
 
   const fetchTodayOrders = useCallback(async () => {
     setLoading(true);
@@ -44,9 +50,18 @@ const Home = () => {
     void fetchTodayOrders();
   }, [fetchTodayOrders]);
 
-  const assignedOrders = useMemo(
+  const outForDeliveryOrders = useMemo(
     () => orders.filter((order) => order.delivery_status === 'out_for_delivery'),
     [orders],
+  );
+
+  const handleOrderStatusUpdated = useCallback(
+    async (orderId: number, status: 'delivered' | 'failed') => {
+      await fetchTodayOrders();
+      const statusMessage = status === 'delivered' ? 'delivered' : 'marked as failed';
+      setNotification({ type: 'success', message: `Order #${orderId} ${statusMessage}.` });
+    },
+    [fetchTodayOrders],
   );
 
   if (loading) {
@@ -57,23 +72,30 @@ const Home = () => {
     <section className="container delivery-home-page" aria-labelledby="delivery-home-title">
       <header className="delivery-home-header">
         <h1 id="delivery-home-title">Delivery Home</h1>
-        <p>Orders currently assigned and out for delivery.</p>
+        <p>Orders currently marked as out for delivery.</p>
       </header>
 
       <Notification message={notification.message} type={notification.type} />
 
-      {assignedOrders.length > 0 ? (
+      {outForDeliveryOrders.length > 0 ? (
         <div className="delivery-home-card-grid">
-          {assignedOrders.map((order) => (
-            <DeliveryOrderCard key={order.order_id} order={order} />
+          {outForDeliveryOrders.map((order) => (
+            <DeliveryOrderCard key={order.order_id} order={order} onClick={() => setActiveOrderId(order.order_id)} />
           ))}
         </div>
       ) : (
         <div className="delivery-home-empty">
           <h2>No active out-for-delivery orders</h2>
-          <p>Once an order is assigned and marked as out for delivery, it will appear here.</p>
+          <p>Once an order is marked as out for delivery, it will appear here.</p>
         </div>
       )}
+
+      <DeliveryOrderDetailsModal
+        isOpen={activeOrderId !== null}
+        orderId={activeOrderId}
+        onClose={() => setActiveOrderId(null)}
+        onStatusUpdated={handleOrderStatusUpdated}
+      />
     </section>
   );
 };
