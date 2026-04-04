@@ -97,6 +97,17 @@ const Topbar = ({
 
       <div className="topbar-spacer" />
 
+      {!isAdmin && (
+        <NavLink
+          to="/delivery/inbox"
+          className={({ isActive }) => `top-inbox-link${isActive ? ' is-active' : ''}`}
+          aria-label="Open inbox"
+          title="Inbox"
+        >
+          <span className="material-symbols-outlined" aria-hidden="true">inbox</span>
+        </NavLink>
+      )}
+
       <div className="top-account-menu" ref={accountMenuRef}>
         <button
           type="button"

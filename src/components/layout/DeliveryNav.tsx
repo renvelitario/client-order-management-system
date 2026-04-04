@@ -1,25 +1,33 @@
 import { NavLink } from 'react-router-dom';
 
-const deliveryLinks = [
-  { to: '/delivery/home', label: 'Home', icon: 'home' },
-  { to: '/delivery/orders', label: 'Deliveries', icon: 'local_shipping' },
-  { to: '/delivery/inbox', label: 'Inbox', icon: 'inbox' },
-] as const;
-
 const DeliveryNav = () => {
   return (
     <nav className="delivery-nav" aria-label="Delivery navigation">
       <div className="delivery-nav-inner">
-        {deliveryLinks.map(({ to, label, icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) => `delivery-nav-link${isActive ? ' is-active' : ''}`}
-          >
-            <span className="material-symbols-outlined delivery-nav-icon" aria-hidden="true">{icon}</span>
-            <span>{label}</span>
-          </NavLink>
-        ))}
+        <NavLink
+          to="/delivery/home"
+          className={({ isActive }) => `delivery-nav-link${isActive ? ' is-active' : ''}`}
+        >
+          <span className="material-symbols-outlined delivery-nav-icon" aria-hidden="true">home</span>
+          <span>Home</span>
+        </NavLink>
+
+        <NavLink
+          to="/delivery/orders"
+          className="delivery-nav-scan-link"
+          aria-label="Open QR scanner"
+          title="QR Scanner"
+        >
+          <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+        </NavLink>
+
+        <NavLink
+          to="/delivery/orders"
+          className={({ isActive }) => `delivery-nav-link${isActive ? ' is-active' : ''}`}
+        >
+          <span className="material-symbols-outlined delivery-nav-icon" aria-hidden="true">local_shipping</span>
+          <span>Deliveries</span>
+        </NavLink>
       </div>
     </nav>
   );
