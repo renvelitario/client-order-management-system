@@ -22,6 +22,7 @@
 .modal-close-btn {
     background: none;
     border: none;
+    font-family: inherit;
     font-size: 24px;
     color: var(--text-muted);
     cursor: pointer;

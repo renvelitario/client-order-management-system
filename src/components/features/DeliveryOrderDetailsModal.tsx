@@ -96,7 +96,7 @@ const DeliveryOrderDetailsModal = ({
   return createPortal(
     <div className="modal-overlay" role="presentation" onClick={onClose}>
       <div
-        className="modal-box order-items-modal delivery-order-modal"
+        className="modal-box order-items-modal delivery-order-modal-compact"
         role="dialog"
         aria-modal="true"
         aria-labelledby="delivery-order-details-title"

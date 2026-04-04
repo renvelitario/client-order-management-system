@@ -47,35 +47,28 @@
   gap: 8px;
 }
 
-.delivery-order-modal {
-  text-align: left;
+/* Keep modal width stable in both loading and loaded states */
+.delivery-order-modal-compact {
   width: 90%;
   max-width: 650px;
-  padding: 22px 24px 20px;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.delivery-order-modal .order-items-modal-header {
-  margin-bottom: 14px;
-  padding-bottom: 10px;
+/* Prevent loaded table content from stretching modal width */
+.delivery-order-modal-compact .order-items-list {
+  min-width: 0;
 }
 
-.delivery-order-modal .order-items-list {
-  margin-bottom: 14px;
+.delivery-order-modal-compact .delivery-order-items-list .order-items-table {
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
 }
 
-.delivery-order-modal .delivery-order-info-list .order-items-table td {
-  padding: 10px 14px;
-}
-
-.delivery-order-modal .entity-modal-actions {
-  margin-top: 4px;
-  padding-top: 8px;
-}
-
-.delivery-order-modal .order-items-empty {
-  padding: 12px 0;
-  margin-bottom: 12px;
-  text-align: left;
+.delivery-order-modal-compact .delivery-order-items-list .order-items-table td,
+.delivery-order-modal-compact .delivery-order-items-list .order-items-table th {
+  white-space: nowrap;
 }
 
 @media (max-width: 640px) {
@@ -87,9 +80,19 @@
     flex-wrap: wrap;
   }
 
-  .delivery-order-modal {
-    width: 90%;
-    max-width: 650px;
-    padding: 16px;
+  .delivery-order-modal-compact {
+    width: min(84vw, 430px);
+    max-width: 430px;
+  }
+
+  .delivery-order-modal-compact {
+    width: min(84vw, 430px) !important;
+    max-width: 430px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .delivery-order-modal-compact {
+    width: calc(100vw - 56px) !important;
   }
 }

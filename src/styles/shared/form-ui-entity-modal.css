@@ -255,8 +255,11 @@
     min-width: 130px;
     height: 40px;
     padding: 0 18px;
+    font-family: inherit;
     font-size: 13px;
     font-weight: 600;
+    text-transform: none;
+    letter-spacing: normal;
     display: inline-flex;
     align-items: center;
     justify-content: center;
