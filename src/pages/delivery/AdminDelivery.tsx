@@ -403,10 +403,7 @@ const AdminDelivery = () => {
               orders.map((order) => (
                 <tr key={order.order_id}>
                   <td>
-                    <div className="delivery-admin-order-cell">
-                      <span className="delivery-order-id-chip">#{order.order_id}</span>
-                      <span className="delivery-admin-order-meta">{formatDateOnly(order.order_date)}</span>
-                    </div>
+                    <span className="delivery-order-id-chip">#{order.order_id}</span>
                   </td>
                   <td>
                     <div className="delivery-admin-customer-cell">

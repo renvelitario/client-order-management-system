@@ -38,6 +38,9 @@
 .order-items-list {
     margin-bottom: 24px;
     overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--surface);
 }
 
 .order-items-table {
@@ -66,6 +69,10 @@
 
 .order-items-table tbody tr:hover {
     background: var(--surface-alt);
+}
+
+.order-items-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .order-items-total {

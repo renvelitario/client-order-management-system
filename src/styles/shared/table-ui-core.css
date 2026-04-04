@@ -10,7 +10,6 @@ table {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     background: var(--surface);
-    box-shadow: var(--shadow-sm);
 }
 
 .data-table {
@@ -28,12 +27,12 @@ td {
 }
 
 .data-table .table-col-number {
-    text-align: right;
+    text-align: left;
     font-variant-numeric: tabular-nums;
 }
 
 .data-table .table-col-actions {
-    text-align: right;
+    text-align: left;
     white-space: nowrap;
     width: 1%;
 }
@@ -52,6 +51,10 @@ th {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* ROW HOVER EFFECT */

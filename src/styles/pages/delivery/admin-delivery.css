@@ -102,14 +102,12 @@
   overflow-x: auto;
 }
 
-.delivery-admin-order-cell,
 .delivery-admin-customer-cell {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.delivery-admin-order-meta,
 .delivery-admin-customer-cell span,
 .delivery-admin-status-meta,
 .delivery-admin-actions-empty {
@@ -119,12 +117,20 @@
 
 .delivery-admin-actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
 }
 
 .delivery-admin-actions .delete-button {
   margin-left: 0;
+}
+
+/* Delivery admin table row hover effects */
+.delivery-admin-table-wrap .data-table tbody tr:hover .delivery-order-id-chip {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 @media (max-width: 768px) {

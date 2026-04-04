@@ -621,8 +621,8 @@ const OrdersList = () => {
                         handlePrintReceipt(o);
                       }}
                     >
-                      <span className="material-icons">qr_code_2</span>
-                      <span className="view-text">Receipt</span>
+                      <span className="material-icons">description</span>
+                      <span className="view-text">Order Slip</span>
                     </button>
                     {isAdmin && (
                       <button
