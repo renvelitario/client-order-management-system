@@ -87,7 +87,7 @@ function App() {
   return (
     <Router>
       <div className="App app-boot-content">
-        {isAuthenticated ? (
+        {loading ? null : isAuthenticated ? (
           <>
             {warningState.isOpen && (
               <div className="session-warning-backdrop" role="presentation">
