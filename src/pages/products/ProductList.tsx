@@ -1,7 +1,14 @@
 import api from "../../utils/api";
 import type { ChangeEvent, FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import "../../styles/shared/entity-list.css";
+import '../../styles/shared/table-ui-layout-controls.css';
+import '../../styles/shared/table-ui-core.css';
+import '../../styles/shared/table-ui-actions.css';
+import '../../styles/shared/feedback-ui-notification.css';
+import '../../styles/shared/modal-ui-base.css';
+import '../../styles/shared/form-ui-entity-modal.css';
+import '../../styles/shared/table-ui-pagination.css';
+import '../../styles/shared/table-ui-responsive.css';
 import { formatPeso } from "../../utils/formatters";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
@@ -13,6 +20,7 @@ import ProductFormModal from '../../components/ui/ProductFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
+import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import { resolveEntityMutationErrorMessage } from '../../types/app';
 import type { ApiError, Product } from '../../types/app';
 
@@ -234,15 +242,15 @@ const ProductsList = () => {
       <Notification message={notification.message} type={notification.type} />
       {productModal}
 
-      <table id="products-table">
+      <DataTable id="products-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th className="table-col-number">ID</th>
             <th>SKU</th>
             <th>Product Name</th>
-            <th>Price</th>
+            <th className="table-col-number">Price</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th className="table-col-actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -252,36 +260,40 @@ const ProductsList = () => {
                 key={p.product_id}
                 className={p.status === "inactive" ? "inactive-row" : ""}
               >
-                <td>{p.product_id}</td>
+                <td className="table-col-number">{p.product_id}</td>
                 <td>{p.sku || '-'}</td>
                 <td>{p.product_name}</td>
-                <td>{formatPeso(p.price)}</td>
-                <td>{p.status}</td>
+                <td className="table-col-number">{formatPeso(p.price)}</td>
                 <td>
-                  <button
-                    className="edit-button"
-                    onClick={() => openUpdateModal(p)}
-                  >
-                    <span className="material-icons">edit</span>
-                    <span className="edit-text">Edit</span>
-                  </button>
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteClick(p.product_id)}
-                  >
-                    <span className="material-icons">delete</span>
-                    <span className="delete-text">Delete</span>
-                  </button>
+                  <span className={`delivery-status-pill status-${p.status}`}>
+                    {p.status}
+                  </span>
+                </td>
+                <td className="table-col-actions">
+                  <DataTableActions>
+                    <button
+                      className="edit-button"
+                      onClick={() => openUpdateModal(p)}
+                    >
+                      <span className="material-icons">edit</span>
+                      <span className="edit-text">Edit</span>
+                    </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => handleDeleteClick(p.product_id)}
+                    >
+                      <span className="material-icons">delete</span>
+                      <span className="delete-text">Delete</span>
+                    </button>
+                  </DataTableActions>
                 </td>
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan={6}>No products found.</td>
-            </tr>
+            <DataTableEmptyState colSpan={6} message="No products found." />
           )}
         </tbody>
-      </table>
+      </DataTable>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -295,3 +307,6 @@ const ProductsList = () => {
 };
 
 export default ProductsList;
+
+
+

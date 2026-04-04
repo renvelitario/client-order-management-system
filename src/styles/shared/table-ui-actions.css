@@ -1,0 +1,88 @@
+/* EDIT BUTTON WITH ICON */
+.edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background-color: var(--primary);
+    color: var(--text-inverse);
+    border-radius: var(--radius-sm);
+    border: none;
+    text-decoration: none;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.edit-button:hover {
+    background-color: var(--primary-hover);
+}
+
+.edit-button .material-icons {
+    font-size: 16px;
+}
+
+/* VIEW BUTTON WITH ICON */
+.view-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background-color: var(--secondary);
+    color: var(--text-inverse);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.view-button:hover {
+    background-color: var(--secondary-hover);
+}
+
+.view-button .material-icons {
+    font-size: 16px;
+}
+
+/* DELETE BUTTON WITH ICON */
+.delete-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background-color: var(--danger);
+    color: var(--text-inverse);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.delete-button:hover {
+    background-color: var(--danger-hover);
+}
+
+.delete-button .material-icons {
+    font-size: 16px;
+}
+
+.table-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.data-table .edit-button,
+.data-table .view-button,
+.data-table .delete-button {
+    min-height: 32px;
+    min-width: 76px;
+    justify-content: center;
+    font-size: 12px;
+    padding: 6px 10px;
+}

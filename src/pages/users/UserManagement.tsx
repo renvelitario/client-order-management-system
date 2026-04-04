@@ -1,7 +1,14 @@
 import api from '../../utils/api';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useCallback, useMemo, useState } from 'react';
-import '../../styles/shared/entity-list.css';
+import '../../styles/shared/table-ui-layout-controls.css';
+import '../../styles/shared/table-ui-core.css';
+import '../../styles/shared/table-ui-actions.css';
+import '../../styles/shared/feedback-ui-notification.css';
+import '../../styles/shared/modal-ui-base.css';
+import '../../styles/shared/form-ui-entity-modal.css';
+import '../../styles/shared/table-ui-pagination.css';
+import '../../styles/shared/table-ui-responsive.css';
 import '../../styles/pages/users/user-management.css';
 import Pagination from '../../components/ui/Pagination';
 import ListPageHeader from '../../components/ui/ListPageHeader';
@@ -9,6 +16,7 @@ import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import UserFormModal from '../../components/ui/UserFormModal';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
+import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import { resolveApiErrorMessage } from '../../types/app';
@@ -307,23 +315,23 @@ const UserManagement = () => {
         onRequestClose={closeModal}
       />
 
-      <table id="users-table">
+      <DataTable id="users-table">
         <thead>
           <tr>
-            <th>ID</th>
+            <th className="table-col-number">ID</th>
             <th>Username</th>
             <th>Full Name</th>
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th className="table-col-actions">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.length > 0 ? (
             users.map((user) => (
               <tr key={user.user_id}>
-                <td>{user.user_id}</td>
+                <td className="table-col-number">{user.user_id}</td>
                 <td>{user.username}</td>
                 <td>{user.name || 'N/A'}</td>
                 <td>{user.email || 'N/A'}</td>
@@ -333,8 +341,8 @@ const UserManagement = () => {
                 <td>
                   <span className={toStatusBadgeClass(user.status)}>{user.status}</span>
                 </td>
-                <td>
-                  <div className="table-row-actions">
+                <td className="table-col-actions">
+                  <DataTableActions>
                     <button
                       type="button"
                       className="edit-button"
@@ -345,17 +353,15 @@ const UserManagement = () => {
                       <span className="material-icons">edit</span>
                       <span className="edit-text">Edit</span>
                     </button>
-                  </div>
+                  </DataTableActions>
                 </td>
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan={7}>No users found.</td>
-            </tr>
+            <DataTableEmptyState colSpan={7} message="No users found." />
           )}
         </tbody>
-      </table>
+      </DataTable>
 
       <Pagination
         currentPage={currentPage}
@@ -370,3 +376,6 @@ const UserManagement = () => {
 };
 
 export default UserManagement;
+
+
+

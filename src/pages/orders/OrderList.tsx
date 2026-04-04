@@ -2,7 +2,15 @@ import api from '../../utils/api';
 import type { FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
-import '../../styles/shared/entity-list.css';
+import '../../styles/shared/table-ui-layout-controls.css';
+import '../../styles/shared/table-ui-core.css';
+import '../../styles/shared/table-ui-actions.css';
+import '../../styles/shared/feedback-ui-notification.css';
+import '../../styles/shared/modal-ui-base.css';
+import '../../styles/shared/modal-ui-order-items.css';
+import '../../styles/shared/form-ui-entity-modal.css';
+import '../../styles/shared/table-ui-pagination.css';
+import '../../styles/shared/table-ui-responsive.css';
 import { formatPeso, formatDateOnly } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
@@ -16,6 +24,7 @@ import OrderItemsViewModal from '../../components/ui/OrderItemsViewModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
+import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import { resolveApiErrorMessage, resolveEntityMutationErrorMessage } from '../../types/app';
 import type { DeliveryStatusKey } from '../../types/delivery';
@@ -546,17 +555,17 @@ const OrdersList = () => {
       <Notification message={notification.message} type={notification.type} />
       {orderModal}
 
-      <table id="orders-table">
+      <DataTable id="orders-table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Customer</th>
-            <th>Items</th>
-            <th>Amount</th>
+            <th className="table-col-number">Items</th>
+            <th className="table-col-number">Amount</th>
             <th>Order Date</th>
             <th>Delivery Date</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th className="table-col-actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -580,12 +589,12 @@ const OrdersList = () => {
                   <span className="delivery-order-id-chip">#{o.order_id}</span>
                 </td>
                 <td>{o.customer_name || `Customer #${o.customer_id}`}</td>
-                <td>
+                <td className="table-col-number">
                   {o.items && o.items.length > 0
                     ? `${o.items.length} item(s)`
                     : 'No items'}
                 </td>
-                <td>{formatPeso(o.total_amount || 0)}</td>
+                <td className="table-col-number">{formatPeso(o.total_amount || 0)}</td>
                 <td>{formatDateOnly(o.order_date)}</td>
                 <td>{formatDateOnly(o.delivery_date)}</td>
                 <td>
@@ -593,8 +602,8 @@ const OrdersList = () => {
                     {DELIVERY_STATUS_LABELS[o.delivery_status as DeliveryStatusKey] || 'Pending'}
                   </span>
                 </td>
-                <td>
-                  <div className="table-row-actions">
+                <td className="table-col-actions">
+                  <DataTableActions>
                     <button
                       className="edit-button"
                       onClick={(event) => {
@@ -627,15 +636,15 @@ const OrdersList = () => {
                         <span className="delete-text">Delete</span>
                       </button>
                     )}
-                  </div>
+                  </DataTableActions>
                 </td>
               </tr>
             ))
           ) : (
-            <tr><td colSpan={8}>No orders found.</td></tr>
+            <DataTableEmptyState colSpan={8} message="No orders found." />
           )}
         </tbody>
-      </table>
+      </DataTable>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -649,3 +658,6 @@ const OrdersList = () => {
 };
 
 export default OrdersList;
+
+
+

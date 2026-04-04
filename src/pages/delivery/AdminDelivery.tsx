@@ -10,7 +10,15 @@ import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import DeliveryAssignmentModal from '../../components/ui/DeliveryAssignmentModal';
-import '../../styles/shared/entity-list.css';
+import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
+import '../../styles/shared/table-ui-layout-controls.css';
+import '../../styles/shared/table-ui-core.css';
+import '../../styles/shared/table-ui-actions.css';
+import '../../styles/shared/feedback-ui-notification.css';
+import '../../styles/shared/modal-ui-base.css';
+import '../../styles/shared/form-ui-entity-modal.css';
+import '../../styles/shared/table-ui-pagination.css';
+import '../../styles/shared/table-ui-responsive.css';
 import '../../styles/pages/delivery/admin-delivery.css';
 import { ADMIN_DELIVERY_FILTERS, DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';
@@ -181,16 +189,18 @@ const AdminDelivery = () => {
   const renderActions = (order: Order) => {
     if (order.delivery_status === 'unassigned') {
       return (
-        <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'assign')}>
-          <span className="material-icons">calendar_month</span>
-          <span className="edit-text">Schedule</span>
-        </button>
+        <DataTableActions className="delivery-admin-actions">
+          <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'assign')}>
+            <span className="material-icons">calendar_month</span>
+            <span className="edit-text">Schedule</span>
+          </button>
+        </DataTableActions>
       );
     }
 
     if (order.delivery_status === 'pending') {
       return (
-        <div className="delivery-admin-actions">
+        <DataTableActions className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'reassign')}>
             <span className="material-icons">edit_calendar</span>
             <span className="edit-text">Reschedule</span>
@@ -207,13 +217,13 @@ const AdminDelivery = () => {
             <span className="material-icons">cancel</span>
             <span className="delete-text">Cancel</span>
           </button>
-        </div>
+        </DataTableActions>
       );
     }
 
     if (order.delivery_status === 'out_for_delivery') {
       return (
-        <div className="delivery-admin-actions">
+        <DataTableActions className="delivery-admin-actions">
           <button
             type="button"
             className="edit-button"
@@ -230,13 +240,13 @@ const AdminDelivery = () => {
             <span className="material-icons">report_problem</span>
             <span className="delete-text">Failed</span>
           </button>
-        </div>
+        </DataTableActions>
       );
     }
 
     if (order.delivery_status === 'failed') {
       return (
-        <div className="delivery-admin-actions">
+        <DataTableActions className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'reassign')}>
             <span className="material-icons">restart_alt</span>
             <span className="edit-text">Reschedule</span>
@@ -245,7 +255,7 @@ const AdminDelivery = () => {
             <span className="material-icons">cancel</span>
             <span className="delete-text">Cancel</span>
           </button>
-        </div>
+        </DataTableActions>
       );
     }
 
@@ -376,17 +386,16 @@ const AdminDelivery = () => {
 
       <Notification message={notification.message} type={notification.type} />
 
-      <div className="delivery-admin-table-wrap">
-        <table aria-label="Delivery management orders">
+      <DataTable wrapperClassName="delivery-admin-table-wrap" ariaLabel="Delivery management orders">
           <thead>
             <tr>
               <th scope="col">Order</th>
               <th scope="col">Customer</th>
               <th scope="col">Delivery Date</th>
-              <th scope="col">Items</th>
-              <th scope="col">Amount</th>
+              <th scope="col" className="table-col-number">Items</th>
+              <th scope="col" className="table-col-number">Amount</th>
               <th scope="col">Status</th>
-              <th scope="col">Actions</th>
+              <th scope="col" className="table-col-actions">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -407,8 +416,8 @@ const AdminDelivery = () => {
                     </div>
                   </td>
                   <td>{formatDateOnly(order.delivery_date)}</td>
-                  <td>{order.items_count || 0}</td>
-                  <td>{formatPeso(order.total_amount || 0)}</td>
+                  <td className="table-col-number">{order.items_count || 0}</td>
+                  <td className="table-col-number">{formatPeso(order.total_amount || 0)}</td>
                   <td>
                     <span className={`delivery-status-pill status-${order.delivery_status}`}>
                       {DELIVERY_STATUS_LABELS[order.delivery_status as DeliveryStatusKey] || order.delivery_status}
@@ -419,17 +428,14 @@ const AdminDelivery = () => {
                       </div>
                     )}
                   </td>
-                  <td>{renderActions(order)}</td>
+                  <td className="table-col-actions">{renderActions(order)}</td>
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan={7}>No orders found for the selected delivery status.</td>
-              </tr>
+              <DataTableEmptyState colSpan={7} message="No orders found for the selected delivery status." />
             )}
           </tbody>
-        </table>
-      </div>
+      </DataTable>
 
       <Pagination
         currentPage={currentPage}
@@ -444,3 +450,5 @@ const AdminDelivery = () => {
 };
 
 export default AdminDelivery;
+
+

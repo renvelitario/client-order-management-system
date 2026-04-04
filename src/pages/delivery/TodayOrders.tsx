@@ -7,7 +7,13 @@ import { formatDateTime } from '../../utils/formatters';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
-import '../../styles/shared/entity-list.css';
+import DataTable, { DataTableEmptyState } from '../../components/ui/DataTable';
+import '../../styles/shared/table-ui-layout-controls.css';
+import '../../styles/shared/table-ui-core.css';
+import '../../styles/shared/table-ui-actions.css';
+import '../../styles/shared/feedback-ui-notification.css';
+import '../../styles/shared/table-ui-pagination.css';
+import '../../styles/shared/table-ui-responsive.css';
 import '../../styles/pages/delivery/today-orders.css';
 import { DELIVERY_STATUS_LABELS, DELIVERY_USER_STATUS_OPTIONS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';
@@ -212,8 +218,7 @@ const TodayOrders = () => {
       )}
 
       {/* ── Orders table ── */}
-      <div className="delivery-table-wrap">
-        <table aria-label="Today's delivery orders">
+      <DataTable wrapperClassName="delivery-table-wrap" ariaLabel="Today's delivery orders">
           <thead>
             <tr>
               <th scope="col">Order ID</th>
@@ -263,13 +268,10 @@ const TodayOrders = () => {
                 );
               })
             ) : (
-              <tr>
-                <td colSpan={5}>No delivery orders pending for today.</td>
-              </tr>
+              <DataTableEmptyState colSpan={5} message="No delivery orders pending for today." />
             )}
           </tbody>
-        </table>
-      </div>
+      </DataTable>
 
       <Pagination
         currentPage={currentPage}
@@ -284,3 +286,6 @@ const TodayOrders = () => {
 };
 
 export default TodayOrders;
+
+
+

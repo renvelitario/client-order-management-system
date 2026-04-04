@@ -1,0 +1,127 @@
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .header-row h2 {
+        margin: 0;
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .create-button {
+        width: 100%;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    /* Horizontal scroll for wide tables */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        font-size: 12px;
+        padding: 8px;
+        white-space: nowrap;
+    }
+
+    .entity-modal-header,
+    .entity-modal-body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .order-items-section-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .order-scan-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .order-items-grid-head,
+    .order-item-grid-row {
+        grid-template-columns: 64px 64px minmax(130px, 1fr) 100px 100px 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-row {
+        gap: 8px;
+    }
+
+    .search-input-wrapper input {
+        font-size: 13px;
+    }
+
+    .create-button {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    /* Keep all action buttons identical in mobile tables */
+    .edit-button,
+    .view-button,
+    .delete-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        padding: 0;
+        box-sizing: border-box;
+        line-height: 1;
+    }
+
+    .edit-button {
+        border: none;
+    }
+
+    .edit-button .edit-text {
+        display: none;
+    }
+
+    .edit-button .material-icons {
+        font-size: 18px;
+    }
+
+    /* VIEW BUTTON ICON ONLY ON MOBILE */
+    .view-button .view-text {
+        display: none;
+    }
+
+    .view-button .material-icons {
+        font-size: 18px;
+    }
+
+    /* DELETE BUTTON ICON ONLY ON MOBILE */
+    .delete-button .delete-text {
+        display: none;
+    }
+
+    .delete-button .material-icons {
+        font-size: 18px;
+    }
+}

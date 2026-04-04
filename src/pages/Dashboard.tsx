@@ -13,9 +13,12 @@ import {
   Cell,
   Legend,
 } from 'recharts';
+import '../styles/shared/table-ui-core.css';
+import '../styles/shared/feedback-ui-notification.css';
 import '../styles/pages/dashboard.css';
 import { formatPeso } from '../utils/formatters';
 import Notification from '../components/ui/Notification';
+import DataTable, { DataTableEmptyState } from '../components/ui/DataTable';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
 
@@ -274,15 +277,14 @@ const Dashboard = () => {
 
       <section className="recent-orders-section">
         <h3>Recent Orders</h3>
-        <div className="recent-orders-table-wrapper">
-          <table className="recent-orders-table">
+        <DataTable wrapperClassName="recent-orders-table-wrapper" tableClassName="recent-orders-table">
             <thead>
               <tr>
-                <th>Order ID</th>
+                <th className="table-col-number">Order ID</th>
                 <th>Product Names</th>
                 <th>Customer Name</th>
-                <th>Number of Items</th>
-                <th>Total Amount</th>
+                <th className="table-col-number">Number of Items</th>
+                <th className="table-col-number">Total Amount</th>
                 <th>Order Date</th>
               </tr>
             </thead>
@@ -290,25 +292,25 @@ const Dashboard = () => {
               {recentOrders.length > 0 ? (
                 recentOrders.map((order) => (
                   <tr key={order.order_id}>
-                    <td>{order.order_id}</td>
+                    <td className="table-col-number">{order.order_id}</td>
                     <td>{order.product_name}</td>
                     <td>{order.customer_name}</td>
-                    <td>{order.item_count}</td>
-                    <td>{formatPeso(order.total_amount || 0)}</td>
+                    <td className="table-col-number">{order.item_count}</td>
+                    <td className="table-col-number">{formatPeso(order.total_amount || 0)}</td>
                     <td>{formatOrderDate(order.order_date)}</td>
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={6}>No recent orders found.</td>
-                </tr>
+                <DataTableEmptyState colSpan={6} message="No recent orders found." />
               )}
             </tbody>
-          </table>
-        </div>
+          </DataTable>
       </section>
     </div>
   );
 };
 
 export default Dashboard;
+
+
+
