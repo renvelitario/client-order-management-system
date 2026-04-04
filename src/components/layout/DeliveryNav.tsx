@@ -8,7 +8,7 @@ const DeliveryNav = () => {
 
   const handleScanDetected = async (orderId: string) => {
     setScannerOpen(false);
-    navigate('/delivery/orders', {
+    navigate('/delivery/home', {
       state: {
         scannedOrderId: orderId,
         scannedAt: Date.now(),

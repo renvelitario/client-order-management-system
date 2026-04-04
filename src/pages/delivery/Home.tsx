@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import { getListData } from '../../utils/listResponse';
 import type { Order, NotificationState } from '../../types/app';
@@ -17,6 +18,8 @@ import '../../styles/pages/delivery/home.css';
 const HOME_REFRESH_INTERVAL_MS = 10000;
 
 const Home = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<NotificationState>({ type: '', message: '' });
@@ -87,6 +90,22 @@ const Home = () => {
     },
     [fetchTodayOrders],
   );
+
+  useEffect(() => {
+    const scannedOrderId = (location.state as { scannedOrderId?: string } | null)?.scannedOrderId;
+    if (!scannedOrderId) {
+      return;
+    }
+
+    const parsedOrderId = Number(scannedOrderId);
+    if (Number.isInteger(parsedOrderId) && parsedOrderId > 0) {
+      setActiveOrderId(parsedOrderId);
+    } else {
+      setNotification({ type: 'error', message: 'Scanned QR code did not contain a valid order ID.' });
+    }
+
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+  }, [location.pathname, location.search, location.state, navigate]);
 
   if (loading) {
     return <PageLoader message="Loading your delivery home..." />;
