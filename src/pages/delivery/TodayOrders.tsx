@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
 import OrderScanner from '../../components/features/OrderScanner';
@@ -21,6 +22,8 @@ import type { Order } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
 
 const TodayOrders = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     rows: orders,
     searchInput,
@@ -109,6 +112,16 @@ const TodayOrders = () => {
       });
     }
   };
+
+  useEffect(() => {
+    const scannedOrderId = (location.state as { scannedOrderId?: string } | null)?.scannedOrderId;
+    if (!scannedOrderId) {
+      return;
+    }
+
+    void handleScanDetected(scannedOrderId);
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+  }, [location.pathname, location.search, location.state, navigate]);
 
   if (initialLoading) {
     return <PageLoader message="Loading..." />;

@@ -436,6 +436,9 @@
 .delivery-nav-scan-link {
   width: 58px;
   height: 58px;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -443,7 +446,7 @@
   color: #ffffff;
   text-decoration: none;
   background: linear-gradient(145deg, #2e9b51, #1f7a3d);
-  border: 2px solid #e8f5e9;
+  outline: 2px solid #e8f5e9;
   box-shadow: 0 10px 24px rgba(31, 122, 61, 0.34), 0 0 0 6px rgba(232, 245, 233, 0.9);
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
