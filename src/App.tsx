@@ -15,6 +15,7 @@ const ProductsList = lazy(() => import('./pages/products/ProductList'));
 const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
 const AdminDelivery = lazy(() => import('./pages/delivery/AdminDelivery'));
+const DeliveryHome = lazy(() => import('./pages/delivery/Home'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
 const DeliveryInbox = lazy(() => import('./pages/delivery/Inbox'));
 const UserManagement = lazy(() => import('./pages/users/UserManagement'));
@@ -120,7 +121,7 @@ function App() {
                       <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
                       <Route path="/delivery" element={<AdminRoute><AdminDelivery /></AdminRoute>} />
-                      <Route path="/delivery/home" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
+                      <Route path="/delivery/home" element={<ProtectedRoute><DeliveryHome /></ProtectedRoute>} />
                       <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
                       <Route path="/delivery/inbox" element={<ProtectedRoute><DeliveryInbox /></ProtectedRoute>} />
                       <Route path="/products" element={<ProtectedRoute><ProductsList /></ProtectedRoute>} />
