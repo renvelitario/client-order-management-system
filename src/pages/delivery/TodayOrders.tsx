@@ -19,6 +19,7 @@ const TodayOrders = () => {
     rows: orders,
     searchInput,
     loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,
@@ -103,7 +104,7 @@ const TodayOrders = () => {
     }
   };
 
-  if (loading) {
+  if (initialLoading) {
     return <PageLoader message="Loading..." />;
   }
 

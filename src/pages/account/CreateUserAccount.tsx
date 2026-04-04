@@ -9,6 +9,8 @@ const CreateUserAccount = () => {
   const [formData, setFormData] = useState({
     email: '',
     username: '',
+    name: '',
+    phone_number: '',
     password: '',
     confirm_password: '',
     acc_type: 'User',
@@ -42,6 +44,8 @@ const CreateUserAccount = () => {
       setFormData({
         email: '',
         username: '',
+        name: '',
+        phone_number: '',
         password: '',
         confirm_password: '',
         acc_type: 'User',
@@ -64,6 +68,16 @@ const CreateUserAccount = () => {
         <div className="form-group">
           <label>Username:</label>
           <input type="text" name="username" value={formData.username} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Full Name:</label>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+        </div>
+
+        <div className="form-group">
+          <label>Phone Number:</label>
+          <input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="+1 (555) 000-0000" />
         </div>
 
         <div className="form-group">

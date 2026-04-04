@@ -5,6 +5,7 @@ import Notification from './Notification';
 type UserFormData = {
   email: string;
   username: string;
+  name: string;
   password: string;
   confirm_password: string;
   acc_type: 'Admin' | 'User';
@@ -69,6 +70,21 @@ const UserFormModal = ({
             value={formData.username}
             onChange={onChange}
             placeholder="Enter username"
+            maxLength={200}
+            disabled={isSubmitting}
+            required
+          />
+        </div>
+
+        <div className="entity-modal-field">
+          <label htmlFor="user-name">Full Name</label>
+          <input
+            id="user-name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={onChange}
+            placeholder="Enter full name"
             maxLength={200}
             disabled={isSubmitting}
             required

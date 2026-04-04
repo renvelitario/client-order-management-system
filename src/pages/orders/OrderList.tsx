@@ -80,6 +80,7 @@ const OrdersList = () => {
     rows: orders,
     searchInput,
     loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,
@@ -489,7 +490,7 @@ const OrdersList = () => {
     />
   );
 
-  if (loading) return <PageLoader />;
+  if (initialLoading) return <PageLoader />;
 
   return (
     <div className="container">

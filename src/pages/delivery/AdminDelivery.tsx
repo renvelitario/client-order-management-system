@@ -63,6 +63,7 @@ const AdminDelivery = () => {
     rows: orders,
     searchInput,
     loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,
@@ -251,7 +252,7 @@ const AdminDelivery = () => {
     return <span className="delivery-admin-actions-empty">No actions</span>;
   };
 
-  if (loading) {
+  if (initialLoading) {
     return <PageLoader />;
   }
 

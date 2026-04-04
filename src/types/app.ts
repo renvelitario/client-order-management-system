@@ -75,6 +75,7 @@ export interface UserSummary {
   user_id: number;
   email?: string;
   username: string;
+  name?: string;
   acc_type: string;
   status: string;
   inactivity_timeout_minutes?: number;
@@ -84,6 +85,7 @@ export interface LocalUser {
   user_id?: number;
   email?: string;
   username?: string;
+  name?: string;
   acc_type?: string;
   status?: string;
   inactivity_timeout_minutes?: number;

@@ -39,6 +39,7 @@ const CustomersList = () => {
     rows: customers,
     searchInput,
     loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,
@@ -151,7 +152,7 @@ const CustomersList = () => {
     />
   );
 
-  if (loading) return <PageLoader />;
+  if (initialLoading) return <PageLoader />;
 
   return (
     <div className="container">

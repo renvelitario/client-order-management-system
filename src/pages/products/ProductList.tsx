@@ -45,6 +45,7 @@ const ProductsList = () => {
     rows: products,
     searchInput,
     loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,
@@ -183,7 +184,7 @@ const ProductsList = () => {
     />
   );
 
-  if (loading) return <PageLoader />;
+  if (initialLoading) return <PageLoader />;
 
   return (
     <div className="container">

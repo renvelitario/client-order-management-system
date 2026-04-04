@@ -41,6 +41,13 @@ const getCachedSession = async (): Promise<Session | null> => {
   return sessionRequestPromise;
 };
 
+// Exported function to invalidate session cache after login
+export const invalidateSessionCache = () => {
+  cachedSession = null;
+  sessionRequestPromise = null;
+  cachedSessionAt = 0;
+};
+
 supabase.auth.onAuthStateChange((_event, session) => {
   cachedSession = session || null;
   cachedSessionAt = Date.now();

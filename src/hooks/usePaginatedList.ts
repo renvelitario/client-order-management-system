@@ -14,6 +14,7 @@ export const usePaginatedList = <T,>({
   const [rows, setRows] = useState<T[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalRows, setTotalRows] = useState(0);
@@ -37,6 +38,7 @@ export const usePaginatedList = <T,>({
       setTotalRows(Number(listResult.pagination.total || 0));
     } finally {
       setLoading(false);
+      setHasLoaded(true);
     }
   }, [endpoint, currentPage, pageSize, searchInput, initialSort, params]);
 
@@ -55,11 +57,13 @@ export const usePaginatedList = <T,>({
   };
 
   const totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
+  const initialLoading = loading && !hasLoaded;
 
   return {
     rows,
     searchInput,
     loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,

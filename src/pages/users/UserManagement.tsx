@@ -21,6 +21,7 @@ type UserModalMode = 'create' | 'update';
 type UserFormData = {
   email: string;
   username: string;
+    name: string;
   password: string;
   confirm_password: string;
   acc_type: 'Admin' | 'User';
@@ -30,6 +31,7 @@ type UserFormData = {
 const emptyUserForm: UserFormData = {
   email: '',
   username: '',
+    name: '',
   password: '',
   confirm_password: '',
   acc_type: 'User',
@@ -62,7 +64,7 @@ const UserManagement = () => {
   const {
     rows: users,
     searchInput,
-    loading,
+    initialLoading,
     currentPage,
     pageSize,
     totalRows,
@@ -117,6 +119,7 @@ const UserManagement = () => {
     setFormData({
       email: user.email || '',
       username: user.username,
+      name: user.name || '',
       password: '',
       confirm_password: '',
       acc_type: (user.acc_type === 'Admin' ? 'Admin' : 'User'),
@@ -152,6 +155,7 @@ const UserManagement = () => {
         await api.post('/auth/register', {
           email: formData.email.trim(),
           username: formData.username.trim(),
+                    name: formData.name.trim(),
           password: formData.password,
           confirm_password: formData.confirm_password,
           acc_type: formData.acc_type,
@@ -183,6 +187,7 @@ const UserManagement = () => {
         }
 
         const payload: Record<string, string> = {
+                    name: formData.name.trim(),
           email: formData.email.trim(),
           username: formData.username.trim(),
           acc_type: formData.acc_type,
@@ -259,7 +264,7 @@ const UserManagement = () => {
     </div>
   );
 
-  if (loading) return <PageLoader />;
+  if (initialLoading) return <PageLoader />;
 
   return (
     <div className="container users-management-container">
@@ -307,6 +312,7 @@ const UserManagement = () => {
           <tr>
             <th>ID</th>
             <th>Username</th>
+            <th>Full Name</th>
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
@@ -319,6 +325,7 @@ const UserManagement = () => {
               <tr key={user.user_id}>
                 <td>{user.user_id}</td>
                 <td>{user.username}</td>
+                <td>{user.name || 'N/A'}</td>
                 <td>{user.email || 'N/A'}</td>
                 <td>
                   <span className={toRoleBadgeClass(user.acc_type)}>{roleLabel(user.acc_type)}</span>
@@ -344,7 +351,7 @@ const UserManagement = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={6}>No users found.</td>
+              <td colSpan={7}>No users found.</td>
             </tr>
           )}
         </tbody>
