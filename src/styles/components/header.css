@@ -477,6 +477,32 @@
     display: none;
   }
 
+  .delivery-nav {
+    height: 56px;
+  }
+
+  .delivery-nav-inner {
+    max-width: 680px;
+    padding: 0 24px;
+    gap: 26px;
+  }
+
+  .delivery-nav-link {
+    min-width: 120px;
+    justify-content: center;
+    padding: 12px 0 10px;
+  }
+
+  .delivery-nav-scan-link {
+    width: 60px;
+    height: 60px;
+    transform: translateY(8px);
+  }
+
+  .delivery-nav-scan-link:hover {
+    transform: translateY(7px) scale(1.03);
+  }
+
   .dashboard-sidebar:not(:hover) .sidebar-link {
     width: 48px;
     height: 48px;
