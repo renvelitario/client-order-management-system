@@ -96,7 +96,7 @@ const DeliveryOrderDetailsModal = ({
   return createPortal(
     <div className="modal-overlay" role="presentation" onClick={onClose}>
       <div
-        className="modal-box order-items-modal"
+        className="modal-box order-items-modal delivery-order-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="delivery-order-details-title"
@@ -126,7 +126,7 @@ const DeliveryOrderDetailsModal = ({
           <>
             {error && <p className="order-items-empty" role="alert">{error}</p>}
 
-            <div className="order-items-list">
+            <div className="order-items-list delivery-order-info-list">
               <table className="order-items-table">
                 <tbody>
                   <tr>
@@ -154,7 +154,7 @@ const DeliveryOrderDetailsModal = ({
             </div>
 
             {Array.isArray(order.items) && order.items.length > 0 ? (
-              <div className="order-items-list">
+              <div className="order-items-list delivery-order-items-list">
                 <table className="order-items-table">
                   <thead>
                     <tr>

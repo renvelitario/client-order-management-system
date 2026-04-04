@@ -47,6 +47,36 @@
   gap: 8px;
 }
 
+.delivery-order-modal {
+  text-align: left;
+  width: min(780px, 100%);
+  padding: 22px 24px 20px;
+}
+
+.delivery-order-modal .order-items-modal-header {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+}
+
+.delivery-order-modal .order-items-list {
+  margin-bottom: 14px;
+}
+
+.delivery-order-modal .delivery-order-info-list .order-items-table td {
+  padding: 10px 14px;
+}
+
+.delivery-order-modal .entity-modal-actions {
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.delivery-order-modal .order-items-empty {
+  padding: 12px 0;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
 @media (max-width: 640px) {
   .delivery-home-card-grid {
     grid-template-columns: 1fr;
@@ -54,5 +84,9 @@
 
   .delivery-modal-title-wrap {
     flex-wrap: wrap;
+  }
+
+  .delivery-order-modal {
+    padding: 16px;
   }
 }
