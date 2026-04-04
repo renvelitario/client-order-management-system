@@ -54,8 +54,8 @@ const BarcodeScanner = ({
       parseDetectedValue={parseSkuFromValue}
       supportedFormats={BARCODE_SUPPORTED_FORMATS}
       qrbox={(width, height) => ({
-        width: Math.floor(Math.min(width * 0.72, 480)),
-        height: Math.floor(Math.min(height * 0.2, 120)),
+        width: Math.floor(Math.min(width * 0.62, 380)),
+        height: Math.floor(Math.min(height * 0.16, 100)),
       })}
     />
   );
