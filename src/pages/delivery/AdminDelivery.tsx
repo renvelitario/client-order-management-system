@@ -59,6 +59,7 @@ const AdminDelivery = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
+  const [revertTarget, setRevertTarget] = useState<Order | null>(null);
   const [isSearchScannerOpen, setIsSearchScannerOpen] = useState(false);
   const [assignmentForm, setAssignmentForm] = useState<DeliveryAssignmentForm>({
     delivery_date: toLocalDateInputValue(),
@@ -182,6 +183,15 @@ const AdminDelivery = () => {
     setCancelTarget(null);
   };
 
+  const confirmRevert = async () => {
+    if (!revertTarget) {
+      return;
+    }
+
+    await updateStatus(revertTarget, 'out_for_delivery', `Order #${revertTarget.order_id} reverted to out for delivery.`);
+    setRevertTarget(null);
+  };
+
   const handleSearchScanDetected = (orderId: string) => {
     handleSearchChange(orderId);
     setIsSearchScannerOpen(false);
@@ -260,6 +270,17 @@ const AdminDelivery = () => {
       );
     }
 
+    if (order.delivery_status === 'delivered') {
+      return (
+        <DataTableActions className="delivery-admin-actions">
+          <button type="button" className="edit-button" onClick={() => setRevertTarget(order)}>
+            <span className="material-icons">undo</span>
+            <span className="edit-text">Revert</span>
+          </button>
+        </DataTableActions>
+      );
+    }
+
     return <span className="delivery-admin-actions-empty">No actions</span>;
   };
 
@@ -273,8 +294,20 @@ const AdminDelivery = () => {
         open={Boolean(cancelTarget)}
         title="Cancel Order"
         message={cancelTarget ? `Are you sure you want to cancel order #${cancelTarget.order_id}?` : ''}
+        cancelLabel="No, keep it."
+        confirmLabel="Yes, cancel order."
         onCancel={() => setCancelTarget(null)}
         onConfirm={() => void confirmCancel()}
+      />
+
+      <DeleteConfirmModal
+        open={Boolean(revertTarget)}
+        title="Revert Delivery Status"
+        message={revertTarget ? `Order #${revertTarget.order_id} was marked delivered by mistake? This will revert it back to out for delivery.` : ''}
+        cancelLabel="No, keep it."
+        confirmLabel="Yes, revert it."
+        onCancel={() => setRevertTarget(null)}
+        onConfirm={() => void confirmRevert()}
       />
 
       <DeliveryAssignmentModal
