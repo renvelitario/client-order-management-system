@@ -482,25 +482,21 @@
   }
 
   .delivery-nav-inner {
-    max-width: 680px;
-    padding: 0 24px;
-    gap: 26px;
+    max-width: 420px;
+    padding: 0 18px;
+    grid-template-columns: repeat(2, max-content);
+    justify-content: center;
+    gap: 14px;
   }
 
   .delivery-nav-link {
-    min-width: 120px;
+    min-width: 0;
     justify-content: center;
-    padding: 12px 0 10px;
+    padding: 12px 10px 10px;
   }
 
   .delivery-nav-scan-link {
-    width: 60px;
-    height: 60px;
-    transform: translateY(8px);
-  }
-
-  .delivery-nav-scan-link:hover {
-    transform: translateY(7px) scale(1.03);
+    display: none;
   }
 
   .dashboard-sidebar:not(:hover) .sidebar-link {
