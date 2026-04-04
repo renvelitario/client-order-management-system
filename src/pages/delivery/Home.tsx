@@ -8,6 +8,7 @@ import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DeliveryOrderCard from '../../components/features/DeliveryOrderCard';
 import DeliveryOrderDetailsModal from '../../components/features/DeliveryOrderDetailsModal';
+import { useAuth } from '../../hooks/useAuth';
 import '../../styles/shared/modal-ui-base.css';
 import '../../styles/shared/modal-ui-order-items.css';
 import '../../styles/shared/form-ui-entity-modal.css';
@@ -20,10 +21,12 @@ const HOME_REFRESH_INTERVAL_MS = 10000;
 const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { localUser } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<NotificationState>({ type: '', message: '' });
   const [activeOrderId, setActiveOrderId] = useState<number | null>(null);
+  const displayName = (localUser?.username || localUser?.name || localUser?.email || 'User').trim() || 'User';
 
   const fetchTodayOrders = useCallback(async (showLoader = false) => {
     if (showLoader) {
@@ -114,7 +117,7 @@ const Home = () => {
   return (
     <section className="container delivery-home-page" aria-labelledby="delivery-home-title">
       <header className="delivery-home-header">
-        <h1 id="delivery-home-title">Delivery Home</h1>
+        <h1 id="delivery-home-title">Welcome, {displayName}</h1>
         <p>Orders currently marked as out for delivery.</p>
       </header>
 
