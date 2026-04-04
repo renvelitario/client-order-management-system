@@ -22,6 +22,7 @@ import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import { resolveEntityMutationErrorMessage } from '../../types/app';
 import type { ApiError, Product } from '../../types/app';
 
@@ -274,19 +275,16 @@ const ProductsList = () => {
       />
 
       <div className="product-filter-bar">
-        <div className="product-status-filter">
-          <label htmlFor="products-status-filter">Status</label>
-          <select
+        <div className="product-status-filter filter-inline-control">
+          <label id="products-status-filter-label" className="filter-inline-label">Status</label>
+          <FilterDropdown
             id="products-status-filter"
+            className="product-status-dropdown filter-inline-dropdown"
+            ariaLabelledBy="products-status-filter-label"
             value={statusFilter}
-            onChange={(event) => handleStatusFilterChange(event.target.value as ProductStatusFilter)}
-          >
-            {PRODUCT_STATUS_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            options={PRODUCT_STATUS_OPTIONS}
+            onChange={handleStatusFilterChange}
+          />
         </div>
       </div>
 

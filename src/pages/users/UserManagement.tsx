@@ -17,6 +17,7 @@ import PageLoader from '../../components/ui/PageLoader';
 import UserFormModal from '../../components/ui/UserFormModal';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import { resolveApiErrorMessage } from '../../types/app';
@@ -49,6 +50,11 @@ const emptyUserForm: UserFormData = {
 const roleLabel = (value: string) => (value === 'User' ? 'Delivery User' : 'Admin');
 const toRoleBadgeClass = (value: string) => `users-role-pill ${value === 'Admin' ? 'users-role-pill--admin' : 'users-role-pill--delivery'}`;
 const toStatusBadgeClass = (value: string) => `delivery-status-pill ${String(value).toLowerCase() === 'active' ? 'status-delivered' : 'status-failed'}`;
+const USER_FILTER_OPTIONS = [
+  { value: 'all', label: 'All Users' },
+  { value: 'Admin', label: 'Admin' },
+  { value: 'User', label: 'Delivery Users' },
+] as const;
 
 const UserManagement = () => {
   const { localUser } = useAuth();
@@ -254,21 +260,18 @@ const UserManagement = () => {
 
   const usersFilterBar = (
     <div className="users-filter-row">
-      <label className="users-filter-control" htmlFor="users-role-filter">
-        <span>Filter</span>
-        <select
-          id="users-role-filter"
+      <div className="users-filter-control filter-inline-control">
+        <span className="filter-inline-label">Filter</span>
+        <FilterDropdown
+          className="users-filter-select filter-inline-dropdown"
           value={filter}
-          onChange={(event) => {
-            setFilter(event.target.value as UserFilter);
+          options={USER_FILTER_OPTIONS}
+          onChange={(nextFilter) => {
+            setFilter(nextFilter);
             setCurrentPage(1);
           }}
-        >
-          <option value="all">All Users</option>
-          <option value="Admin">Admin</option>
-          <option value="User">Delivery Users</option>
-        </select>
-      </label>
+        />
+      </div>
     </div>
   );
 

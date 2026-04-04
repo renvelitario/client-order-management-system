@@ -11,6 +11,7 @@ import PageLoader from '../../components/ui/PageLoader';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import DeliveryAssignmentModal from '../../components/ui/DeliveryAssignmentModal';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/shared/table-ui-actions.css';
@@ -337,50 +338,41 @@ const AdminDelivery = () => {
         </div>
 
         <div className="delivery-filter-selects" aria-label="Mobile delivery filters">
-          <div className="delivery-status-filter">
-            <label htmlFor="delivery-status-filter-mobile">Status</label>
-            <select
+          <div className="delivery-status-filter filter-inline-control">
+            <label id="delivery-status-filter-mobile-label" className="filter-inline-label">Status</label>
+            <FilterDropdown
               id="delivery-status-filter-mobile"
+              className="delivery-status-dropdown filter-inline-dropdown"
+              ariaLabelledBy="delivery-status-filter-mobile-label"
               value={activeFilter}
-              onChange={(event) => changeFilter(event.target.value as DeliveryStatusKey)}
-            >
-              {STATUS_FILTER_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={STATUS_FILTER_OPTIONS}
+              onChange={changeFilter}
+            />
           </div>
 
-          <div className="delivery-date-range-filter delivery-date-range-filter--mobile">
-            <label htmlFor="delivery-date-range-mobile">Date Range</label>
-            <select
+          <div className="delivery-date-range-filter delivery-date-range-filter--mobile filter-inline-control">
+            <label id="delivery-date-range-mobile-label" className="filter-inline-label">Date Range</label>
+            <FilterDropdown
               id="delivery-date-range-mobile"
+              className="delivery-date-range-dropdown filter-inline-dropdown"
+              ariaLabelledBy="delivery-date-range-mobile-label"
               value={dateRangeFilter}
-              onChange={(event) => changeDateRangeFilter(event.target.value as DeliveryDateRangeFilter)}
-            >
-              {DELIVERY_DATE_RANGE_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={DELIVERY_DATE_RANGE_OPTIONS}
+              onChange={changeDateRangeFilter}
+            />
           </div>
         </div>
 
-        <div className="delivery-date-range-filter delivery-date-range-filter--desktop">
-          <label htmlFor="delivery-date-range">Date Range</label>
-          <select
+        <div className="delivery-date-range-filter delivery-date-range-filter--desktop filter-inline-control">
+          <label id="delivery-date-range-label" className="filter-inline-label">Date Range</label>
+          <FilterDropdown
             id="delivery-date-range"
+            className="delivery-date-range-dropdown filter-inline-dropdown"
+            ariaLabelledBy="delivery-date-range-label"
             value={dateRangeFilter}
-            onChange={(event) => changeDateRangeFilter(event.target.value as DeliveryDateRangeFilter)}
-          >
-            {DELIVERY_DATE_RANGE_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+            options={DELIVERY_DATE_RANGE_OPTIONS}
+            onChange={changeDateRangeFilter}
+          />
         </div>
       </div>
 

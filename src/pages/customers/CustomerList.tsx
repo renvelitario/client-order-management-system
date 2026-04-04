@@ -9,6 +9,7 @@ import '../../styles/shared/modal-ui-base.css';
 import '../../styles/shared/form-ui-entity-modal.css';
 import '../../styles/shared/table-ui-pagination.css';
 import '../../styles/shared/table-ui-responsive.css';
+import '../../styles/pages/customers/customer-list.css';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
 import { usePaginatedList } from '../../hooks/usePaginatedList';

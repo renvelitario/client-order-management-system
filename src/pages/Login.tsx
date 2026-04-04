@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import api, { invalidateSessionCache } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
@@ -143,6 +143,10 @@ const Login = () => {
           value={loading ? 'Logging in...' : 'Log In'}
           disabled={loading}
         />
+
+        <div className="auth-links">
+          <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
+        </div>
 
         <p className="demo-note">
           Demo account: <strong>admin@admin.com</strong> / <strong>admin</strong>

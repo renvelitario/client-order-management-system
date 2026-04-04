@@ -16,6 +16,7 @@ import {
 import '../styles/shared/table-ui-core.css';
 import '../styles/shared/feedback-ui-notification.css';
 import '../styles/pages/dashboard.css';
+import FilterDropdown from '../components/ui/FilterDropdown';
 import { formatPeso } from '../utils/formatters';
 import Notification from '../components/ui/Notification';
 import DataTable, { DataTableEmptyState } from '../components/ui/DataTable';
@@ -185,6 +186,7 @@ const Dashboard = () => {
     value: entry.quantity,
   }));
   const pieColors = ['#2e7d32', '#43a047', '#66bb6a', '#a5d6a7', '#c8e6c9'];
+  const rangeFilterLabelId = 'dashboard-range-filter-label';
 
   return (
     <div className="dashboard-page">
@@ -194,17 +196,16 @@ const Dashboard = () => {
           <p className="dashboard-subtitle">Business overview and trend insights</p>
         </div>
 
-        <div className="dashboard-filter-group">
-          <label htmlFor="range-filter">Date Range</label>
-          <select
+        <div className="dashboard-filter-group filter-inline-control">
+          <label id={rangeFilterLabelId} className="filter-inline-label">Date Range</label>
+          <FilterDropdown
             id="range-filter"
+            className="dashboard-range-dropdown filter-inline-dropdown"
+            ariaLabelledBy={rangeFilterLabelId}
             value={range}
-            onChange={(e) => setRange(e.target.value as RangeKey)}
-          >
-            {RANGE_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
+            options={RANGE_OPTIONS}
+            onChange={setRange}
+          />
         </div>
       </div>
 

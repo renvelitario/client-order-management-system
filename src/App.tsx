@@ -9,6 +9,8 @@ import './styles/base/app.css';
 
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const ProductsList = lazy(() => import('./pages/products/ProductList'));
 const CustomersList = lazy(() => import('./pages/customers/CustomerList'));
 const OrdersList = lazy(() => import('./pages/orders/OrderList'));
@@ -112,6 +114,9 @@ function App() {
               <Suspense fallback={<RouteLoader />}>
                     <Routes>
                       <Route path="/" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
+                      <Route path="/login" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
+                      <Route path="/forgot-password" element={<ForgotPassword />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
                       <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
                       <Route path="/delivery" element={<AdminRoute><AdminDelivery /></AdminRoute>} />
                       <Route path="/delivery/orders" element={<ProtectedRoute><DeliveryTodayOrders /></ProtectedRoute>} />
@@ -135,6 +140,8 @@ function App() {
           <Suspense fallback={<RouteLoader />}>
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </Suspense>

@@ -1,0 +1,7 @@
+#customers-table tbody tr:hover .delivery-order-id-chip,
+#customers-table tbody tr:focus-within .delivery-order-id-chip {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
