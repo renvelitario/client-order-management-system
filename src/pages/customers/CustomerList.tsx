@@ -48,6 +48,7 @@ const CustomersList = () => {
   const {
     rows: customers,
     searchInput,
+    loading,
     initialLoading,
     currentPage,
     pageSize,

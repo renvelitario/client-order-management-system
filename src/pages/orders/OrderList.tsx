@@ -46,15 +46,6 @@ type OrderForm = {
   delivery_fee?: string;
 };
 
-type OrderSubmitPayload = {
-  customer_id: string;
-  order_date: string;
-  delivery_date: string;
-  items_data: OrderItemForm[];
-  discount: number;
-  delivery_fee: number;
-};
-
 const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '', price: '' });
 const MIN_ORDER_ROWS = 2;
 
@@ -102,6 +93,7 @@ const OrdersList = () => {
   const {
     rows: orders,
     searchInput,
+    loading,
     initialLoading,
     currentPage,
     pageSize,
@@ -430,7 +422,7 @@ const OrdersList = () => {
       return;
     }
 
-    const payload: OrderSubmitPayload = {
+    const payload: any = {
       ...formData,
       items_data: sanitizedItems,
       discount: formData.discount ? Number(formData.discount) : 0,

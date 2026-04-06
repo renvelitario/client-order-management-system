@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
 import api from '../utils/api';
-import { devError } from '../utils/devLogger';
 import { setStoredInactivityDurationMinutes, setStoredSessionTimeoutEnabled } from '../utils/inactivity';
 import { AuthContext } from './authContextObject';
 import type { LocalUser } from '../types/app';
@@ -45,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (err) {
         const message = resolveApiErrorMessage(err, 'Failed to load user profile after login.');
 
-        devError('[AUTH_CONTEXT] Failed to load authenticated user profile.', err);
+        console.error('[AUTH_CONTEXT] Failed to load authenticated user profile.', err);
         await supabase.auth.signOut({ scope: 'local' });
         if (mounted) {
           setSession(null);

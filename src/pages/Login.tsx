@@ -3,7 +3,6 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import api, { invalidateSessionCache } from '../utils/api';
-import { devError } from '../utils/devLogger';
 import { useAuth } from '../hooks/useAuth';
 import Notification from '../components/ui/Notification';
 import AppIcon from '../components/ui/AppIcon';
@@ -35,43 +34,60 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // Step 1: Login with custom endpoint
+      console.log('Step 1: Attempting login with identifier:', identifier);
       const loginResponse = await api.post('/auth/login', {
         identifier,
         password,
       });
 
       const { session } = loginResponse.data;
+      console.log('Step 1: Login successful, received session');
 
       if (!session?.access_token) {
         throw new Error('No access token in login response');
       }
 
+      // Step 2: Set session in Supabase client
+      console.log('Step 2: Setting session in Supabase...');
+      console.log('Session object keys:', Object.keys(session));
+      console.log('Access token length:', session.access_token?.length);
+      
       const { error: setSessionError } = await supabase.auth.setSession(session);
-
+      
       if (setSessionError) {
+        console.error('Step 2: Error setting session:', setSessionError);
         throw setSessionError;
       }
-
+      
+      // Verify session was actually set
       const { data: sessionData, error: getSessionError } = await supabase.auth.getSession();
-      if (getSessionError) {
-        throw getSessionError;
-      }
-
+      console.log('Step 2: getSession error:', getSessionError);
+      console.log('Step 2: Verified session, token exists:', !!sessionData.session?.access_token);
+      
       if (!sessionData.session?.access_token) {
         throw new Error('Session was not properly set in Supabase client');
       }
+      console.log('Step 2: Session set successfully');
 
+      // Step 3: Invalidate the API client's cached session
+      console.log('Step 3: Invalidating session cache...');
       invalidateSessionCache();
 
+      // Small delay to ensure everything is ready
       await new Promise(resolve => setTimeout(resolve, 150));
 
-      await api.get('/auth/me');
+      // Step 4: Verify the account is active
+      console.log('Step 4: Verifying account status with /auth/me...');
+      const meResponse = await api.get('/auth/me');
+      console.log('Step 4: Account verification successful, user:', meResponse.data?.username);
 
+      console.log('Login flow complete, navigating to dashboard');
       navigate('/');
     } catch (err) {
-      devError('[LOGIN] Unable to complete login flow.', err);
+      console.error('Login error full trace:', err);
       const error = err as { response?: { data?: { message?: string; error?: string } } | { message?: string } };
-      const message = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Login failed.';
+      let message = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Login failed.';
       
       setError(
         message.includes('Invalid credentials') || message.includes('invalid credentials')

@@ -28,8 +28,6 @@ import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
 import { DELIVERY_STATUS_LABELS } from '../types/delivery';
 import type { DeliveryStatusKey } from '../types/delivery';
-import { getPresetRangeQuery } from '../utils/dateRanges';
-import { devError } from '../utils/devLogger';
 
 type RangeKey = 'this_month' | 'previous_month' | 'this_year' | 'all_time';
 
@@ -77,6 +75,39 @@ const RANGE_OPTIONS: Array<{ value: RangeKey; label: string }> = [
   { value: 'all_time', label: 'All Time' },
 ];
 
+const getDateRange = (rangeKey: RangeKey): { start: Date | null; end: Date | null } => {
+  const now = new Date();
+  if (rangeKey === 'all_time') return { start: null, end: null };
+
+  if (rangeKey === 'this_month') {
+    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    return { start, end };
+  }
+
+  if (rangeKey === 'previous_month') {
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+    return { start, end };
+  }
+
+  const start = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
+  const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
+  return { start, end };
+};
+
+const getRangeQuery = (rangeKey: RangeKey): Record<string, string> => {
+  const { start, end } = getDateRange(rangeKey);
+  if (!start || !end) {
+    return {};
+  }
+
+  return {
+    from: start.toISOString(),
+    to: end.toISOString(),
+  };
+};
+
 const Dashboard = () => {
   const [range, setRange] = useState<RangeKey>('this_month');
   const [username, setUsername] = useState('User');
@@ -104,10 +135,8 @@ const Dashboard = () => {
   const [topProducts, setTopProducts] = useState<TopProductEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [summaryAvailable, setSummaryAvailable] = useState(true);
-  const [recentOrdersAvailable, setRecentOrdersAvailable] = useState(true);
 
-  const rangeParams = useMemo(() => getPresetRangeQuery(range), [range]);
+  const rangeParams = useMemo(() => getRangeQuery(range), [range]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -116,7 +145,7 @@ const Dashboard = () => {
         const { data: authMeRes } = await api.get('/auth/me');
         setUsername((authMeRes?.username || authMeRes?.email || 'User').trim());
       } catch (error) {
-        devError('[DASHBOARD] Failed to load user context.', error);
+        console.error("Dashboard fetch error", error);
         setError(resolveApiErrorMessage(error, 'Failed to load dashboard data.'));
       }
     };
@@ -130,50 +159,32 @@ const Dashboard = () => {
       setError('');
 
       try {
-        const [summaryResult, recentOrdersResult] = await Promise.allSettled([
+        const [summaryRes, recentOrdersRes] = await Promise.all([
           api.get('/dashboard/summary', { params: rangeParams }),
           api.get('/dashboard/recent-orders', { params: rangeParams }),
         ]);
 
-        const summaryError = summaryResult.status === 'rejected'
-          ? resolveApiErrorMessage(summaryResult.reason, 'Failed to load dashboard summary.')
-          : '';
-        const recentOrdersError = recentOrdersResult.status === 'rejected'
-          ? resolveApiErrorMessage(recentOrdersResult.reason, 'Failed to load recent orders.')
-          : '';
-
-        setSummaryAvailable(summaryResult.status === 'fulfilled');
-        setRecentOrdersAvailable(recentOrdersResult.status === 'fulfilled');
-
-        if (summaryError || recentOrdersError) {
-          const combinedError = [summaryError, recentOrdersError].filter(Boolean).join(' ');
-          setError(combinedError || 'Failed to load dashboard data.');
-        }
-
-        const summaryRes = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
-        const recentOrdersRes = recentOrdersResult.status === 'fulfilled' ? recentOrdersResult.value : null;
-
         setStats({
-          totalProducts: Number(summaryRes?.data?.summary?.totalProducts || 0),
-          totalCustomers: Number(summaryRes?.data?.summary?.totalCustomers || 0),
-          totalOrders: Number(summaryRes?.data?.summary?.totalOrders || 0),
-          totalSales: Number(summaryRes?.data?.summary?.totalSales || 0),
-          grossSales: Number(summaryRes?.data?.summary?.grossSales || 0),
-          totalDiscounts: Number(summaryRes?.data?.summary?.totalDiscounts || 0),
-          totalDeliveryFees: Number(summaryRes?.data?.summary?.totalDeliveryFees || 0),
-          averageOrderValue: Number(summaryRes?.data?.summary?.averageOrderValue || 0),
-          activeCustomers: Number(summaryRes?.data?.summary?.activeCustomers || 0),
-          unassignedDeliveries: Number(summaryRes?.data?.summary?.unassignedDeliveries || 0),
-          scheduledDeliveries: Number(summaryRes?.data?.summary?.scheduledDeliveries || 0),
-          outForDelivery: Number(summaryRes?.data?.summary?.outForDelivery || 0),
-          pendingDeliveries: Number(summaryRes?.data?.summary?.pendingDeliveries || 0),
-          deliveredOrders: Number(summaryRes?.data?.summary?.deliveredOrders || 0),
-          failedDeliveries: Number(summaryRes?.data?.summary?.failedDeliveries || 0),
-          cancelledOrders: Number(summaryRes?.data?.summary?.cancelledOrders || 0),
-          totalUnitsSold: Number(summaryRes?.data?.summary?.totalUnitsSold || 0),
+          totalProducts: Number(summaryRes.data?.summary?.totalProducts || 0),
+          totalCustomers: Number(summaryRes.data?.summary?.totalCustomers || 0),
+          totalOrders: Number(summaryRes.data?.summary?.totalOrders || 0),
+          totalSales: Number(summaryRes.data?.summary?.totalSales || 0),
+          grossSales: Number(summaryRes.data?.summary?.grossSales || 0),
+          totalDiscounts: Number(summaryRes.data?.summary?.totalDiscounts || 0),
+          totalDeliveryFees: Number(summaryRes.data?.summary?.totalDeliveryFees || 0),
+          averageOrderValue: Number(summaryRes.data?.summary?.averageOrderValue || 0),
+          activeCustomers: Number(summaryRes.data?.summary?.activeCustomers || 0),
+          unassignedDeliveries: Number(summaryRes.data?.summary?.unassignedDeliveries || 0),
+          scheduledDeliveries: Number(summaryRes.data?.summary?.scheduledDeliveries || 0),
+          outForDelivery: Number(summaryRes.data?.summary?.outForDelivery || 0),
+          pendingDeliveries: Number(summaryRes.data?.summary?.pendingDeliveries || 0),
+          deliveredOrders: Number(summaryRes.data?.summary?.deliveredOrders || 0),
+          failedDeliveries: Number(summaryRes.data?.summary?.failedDeliveries || 0),
+          cancelledOrders: Number(summaryRes.data?.summary?.cancelledOrders || 0),
+          totalUnitsSold: Number(summaryRes.data?.summary?.totalUnitsSold || 0),
         });
 
-        const monthlyTrends = (summaryRes?.data?.monthlyTrends || []) as Array<{
+        const monthlyTrends = (summaryRes.data?.monthlyTrends || []) as Array<{
           month?: string;
           revenue?: number | string;
           orders?: number | string;
@@ -186,7 +197,7 @@ const Dashboard = () => {
             orders: Number(entry.orders || 0),
           })));
         } else {
-          const monthlyRevenue = (summaryRes?.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
+          const monthlyRevenue = (summaryRes.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
           setTrendData(monthlyRevenue.map((entry) => ({
             label: String(entry.month || 'N/A'),
             revenue: Number(entry.revenue || 0),
@@ -194,7 +205,7 @@ const Dashboard = () => {
           })));
         }
 
-        const top = (summaryRes?.data?.topProducts || []) as Array<{
+        const top = (summaryRes.data?.topProducts || []) as Array<{
           product_name?: string;
           sold_quantity?: number | string;
           revenue?: number | string;
@@ -205,7 +216,7 @@ const Dashboard = () => {
           revenue: Number(entry.revenue || 0),
         })));
 
-        const latestOrders = ((recentOrdersRes?.data?.data || []) as Order[]).map((order) => {
+        const latestOrders = ((recentOrdersRes.data?.data || []) as Order[]).map((order) => {
           const items = order.items || [];
           return {
           ...order,
@@ -219,7 +230,7 @@ const Dashboard = () => {
 
         setRecentOrders(latestOrders);
       } catch (fetchError) {
-        devError('[DASHBOARD] Failed to load analytics data.', fetchError);
+        console.error('Dashboard fetch error', fetchError);
         setError(resolveApiErrorMessage(fetchError, 'Failed to load dashboard data.'));
       } finally {
         setLoading(false);
@@ -342,9 +353,7 @@ const Dashboard = () => {
       <section className="chart-grid">
         <article className="chart-card">
           <h3>Revenue vs Orders Trend</h3>
-          {!summaryAvailable ? (
-            <p className="chart-empty">Summary analytics are temporarily unavailable. Showing partial dashboard data.</p>
-          ) : trendData.length ? (
+          {trendData.length ? (
             <div className="chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
@@ -376,9 +385,7 @@ const Dashboard = () => {
 
         <article className="chart-card">
           <h3>Top-Selling Products (Units)</h3>
-          {!summaryAvailable ? (
-            <p className="chart-empty">Top-product analytics are temporarily unavailable.</p>
-          ) : topProductsChartData.length ? (
+          {topProductsChartData.length ? (
             <div className="chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
@@ -407,9 +414,7 @@ const Dashboard = () => {
 
         <article className="chart-card">
           <h3>Delivery Outcomes</h3>
-          {!summaryAvailable ? (
-            <p className="chart-empty">Delivery outcome analytics are temporarily unavailable.</p>
-          ) : deliveryStatusData.length ? (
+          {deliveryStatusData.length ? (
             <div className="chart-container pie-chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
@@ -443,9 +448,6 @@ const Dashboard = () => {
 
       <section className="recent-orders-section">
         <h3>Recent Orders</h3>
-        {!recentOrdersAvailable && (
-          <Notification message="Recent orders are temporarily unavailable." type="error" />
-        )}
         <DataTable wrapperClassName="recent-orders-table-wrapper" tableClassName="recent-orders-table">
             <thead>
               <tr>
