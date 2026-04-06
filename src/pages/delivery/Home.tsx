@@ -21,7 +21,7 @@ const HOME_REFRESH_INTERVAL_MS = 10000;
 const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { localUser } = useAuth();
+  const { localUser, isDeliveryUser } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState<NotificationState>({ type: '', message: '' });
@@ -90,6 +90,8 @@ const Home = () => {
       await fetchTodayOrders();
       if (status === 'pending') {
         setNotification({ type: 'success', message: `Order #${orderId} reverted to pending.` });
+      } else if (status === 'out_for_delivery') {
+        setNotification({ type: 'success', message: `Order #${orderId} reverted to out for delivery.` });
       } else {
         const statusMessage = status === 'delivered' ? 'delivered' : 'marked as failed';
         setNotification({ type: 'success', message: `Order #${orderId} ${statusMessage}.` });
@@ -146,6 +148,9 @@ const Home = () => {
         orderId={activeOrderId}
         onClose={() => setActiveOrderId(null)}
         onStatusUpdated={handleOrderStatusUpdated}
+        mode={isDeliveryUser ? 'delivery' : 'home'}
+        revertStatus="out_for_delivery"
+        revertLabel="Undo Changes"
       />
     </section>
   );
