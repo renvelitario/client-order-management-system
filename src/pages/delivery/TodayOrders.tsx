@@ -45,7 +45,7 @@ const TodayOrders = () => {
       setActiveOrderId(null);
       setNotification({
         type: 'error',
-        message: resolveApiErrorMessage(err, 'Scanned order was not found.'),
+        message: resolveApiErrorMessage(err, 'Only orders that are out for delivery today can be opened.'),
       });
     }
   }, []);
@@ -82,7 +82,7 @@ const TodayOrders = () => {
       <ListPageHeader
         kicker="Logistics"
         title="Delivery Orders (Today)"
-        subtitle="Monitor today's active and recently completed delivery workload."
+        subtitle="View only the orders that are out for delivery today."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search delivery orders"
@@ -103,7 +103,7 @@ const TodayOrders = () => {
         ) : (
           <div className="delivery-home-empty">
             <h2>No delivery orders for today</h2>
-            <p>Today's out-for-delivery, delivered, and failed orders will appear here.</p>
+            <p>Only orders that are currently out for delivery today will appear here.</p>
           </div>
         )
       )}
