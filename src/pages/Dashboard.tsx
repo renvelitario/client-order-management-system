@@ -299,53 +299,23 @@ const Dashboard = () => {
       <div className="dashboard-report-canvas" aria-label="Dashboard report content">
 
       <section className="kpi-section">
-        <h3 className="kpi-section-title">Sales Overview</h3>
-        <div className="kpi-grid kpi-grid-sales">
+        <h3 className="kpi-section-title">Quick Overview</h3>
+        <div className="kpi-grid kpi-grid-overview">
           <article className="kpi-card kpi-good">
             <h4>Total Sales</h4>
             <p>{formatPeso(stats.totalSales)}</p>
           </article>
           <article className="kpi-card kpi-good">
-            <h4>Gross Sales</h4>
-            <p>{formatPeso(stats.grossSales)}</p>
+            <h4>Total Orders</h4>
+            <p>{stats.totalOrders}</p>
           </article>
           <article className="kpi-card kpi-good">
             <h4>Average Order Value</h4>
             <p>{formatPeso(stats.averageOrderValue)}</p>
           </article>
-          <article className="kpi-card kpi-muted">
-            <h4>Discounts</h4>
-            <p>{formatPeso(stats.totalDiscounts)}</p>
-          </article>
-          <article className="kpi-card kpi-muted">
-            <h4>Delivery Fees</h4>
-            <p>{formatPeso(stats.totalDeliveryFees)}</p>
-          </article>
-        </div>
-      </section>
-
-      <section className="kpi-section">
-        <h3 className="kpi-section-title">Orders and Catalog</h3>
-        <div className="kpi-grid kpi-grid-ops">
-          <article className="kpi-card kpi-good">
-            <h4>Total Orders</h4>
-            <p>{stats.totalOrders}</p>
-          </article>
-          <article className="kpi-card kpi-good">
-            <h4>Units Sold</h4>
-            <p>{stats.totalUnitsSold}</p>
-          </article>
           <article className="kpi-card kpi-good">
             <h4>Active Customers</h4>
             <p>{stats.activeCustomers}</p>
-          </article>
-          <article className="kpi-card kpi-muted">
-            <h4>Total Customers</h4>
-            <p>{stats.totalCustomers}</p>
-          </article>
-          <article className="kpi-card kpi-muted">
-            <h4>Total Products</h4>
-            <p>{stats.totalProducts}</p>
           </article>
         </div>
       </section>
