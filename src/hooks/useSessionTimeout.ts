@@ -3,9 +3,11 @@ import { supabase } from '../supabaseClient';
 import {
   getInactivityLimitMs,
   getStoredInactivityDurationMinutes,
+  getStoredSessionTimeoutEnabled,
   INACTIVITY_DURATION_STORAGE_KEY,
   getWarningLeadMs,
   LAST_ACTIVITY_STORAGE_KEY,
+  SESSION_TIMEOUT_ENABLED_STORAGE_KEY,
   WARNING_LEAD_MINUTES,
 } from '../utils/inactivity';
 
@@ -97,6 +99,13 @@ export const useSessionTimeout = (isAuthenticated: boolean) => {
     };
 
     const syncInactivityTimer = () => {
+      const timeoutEnabled = getStoredSessionTimeoutEnabled();
+      if (!timeoutEnabled) {
+        clearScheduledTimers();
+        closeWarning();
+        return;
+      }
+
       const storedValue = Number(localStorage.getItem(LAST_ACTIVITY_STORAGE_KEY));
       const lastActivityAt = Number.isFinite(storedValue) && storedValue > 0
         ? storedValue
@@ -135,6 +144,10 @@ export const useSessionTimeout = (isAuthenticated: boolean) => {
       }
 
       if (event.key === INACTIVITY_DURATION_STORAGE_KEY) {
+        syncInactivityTimer();
+      }
+
+      if (event.key === SESSION_TIMEOUT_ENABLED_STORAGE_KEY) {
         syncInactivityTimer();
       }
     };
@@ -196,6 +209,7 @@ export const useSessionTimeout = (isAuthenticated: boolean) => {
     countdownMinutes,
     countdownSeconds,
     inactivityMinutes: getStoredInactivityDurationMinutes(),
+    sessionTimeoutEnabled: getStoredSessionTimeoutEnabled(),
     warningLeadMinutes: WARNING_LEAD_MINUTES,
     handleStaySignedIn,
     handleLogoutNow,

@@ -74,6 +74,7 @@ tbody tr:hover {
     background: var(--surface-alt);
 }
 
+.table-id-chip,
 .delivery-order-id-chip {
     display: inline-flex;
     align-items: center;
@@ -87,8 +88,10 @@ tbody tr:hover {
     transition: var(--transition-fast);
 }
 
-.order-row-clickable:hover .delivery-order-id-chip,
-.order-row-clickable:focus-within .delivery-order-id-chip {
+.data-table tbody tr:hover .table-id-chip,
+.data-table tbody tr:focus-within .table-id-chip,
+.data-table tbody tr:hover .delivery-order-id-chip,
+.data-table tbody tr:focus-within .delivery-order-id-chip {
     color: var(--primary);
     border-color: var(--primary);
     background: var(--surface);

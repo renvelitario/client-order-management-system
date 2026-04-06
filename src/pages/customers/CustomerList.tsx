@@ -209,7 +209,7 @@ const CustomersList = () => {
             customers.map((c) => (
               <tr key={c.customer_id}>
                 <td>
-                  <span className="delivery-order-id-chip">#{c.customer_id}</span>
+                  <span className="table-id-chip">#{c.customer_id}</span>
                 </td>
                 <td>{c.name}</td>
                 <td>{c.address}</td>

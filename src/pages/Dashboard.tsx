@@ -501,7 +501,7 @@ const Dashboard = () => {
                 recentOrders.map((order) => (
                   <tr key={order.order_id} className="order-row-clickable">
                     <td className="table-col-number">
-                      <span className="delivery-order-id-chip">#{order.order_id}</span>
+                      <span className="table-id-chip">#{order.order_id}</span>
                     </td>
                     <td>{order.customer_name}</td>
                     <td>{order.delivery_date ? formatDateOnly(order.delivery_date) : 'Not Scheduled'}</td>

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
 import api from '../utils/api';
-import { setStoredInactivityDurationMinutes } from '../utils/inactivity';
+import { setStoredInactivityDurationMinutes, setStoredSessionTimeoutEnabled } from '../utils/inactivity';
 import { AuthContext } from './authContextObject';
 import type { LocalUser } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setStoredInactivityDurationMinutes(data.inactivity_timeout_minutes, { notify: false });
+        setStoredSessionTimeoutEnabled(Boolean(data.session_timeout_enabled), { notify: false });
         setSession(nextSession);
         setLocalUser(data);
         setAuthError('');

@@ -98,7 +98,7 @@
 }
 
 /* Delivery admin table row hover effects */
-.delivery-admin-table-wrap .data-table tbody tr:hover .delivery-order-id-chip {
+.delivery-admin-table-wrap .data-table tbody tr:hover .table-id-chip {
   color: var(--primary);
   border-color: var(--primary);
   background: var(--surface);

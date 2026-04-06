@@ -144,14 +144,16 @@
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  width: min(92vw, 280px);
+  width: min(92vw, 300px);
+  max-height: min(70vh, 420px);
   border-radius: 14px;
   background: #ffffff;
   border: 1px solid #d7e1d8;
   box-shadow: 0 18px 38px rgba(15, 23, 42, 0.2);
   padding: 10px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
@@ -198,7 +200,7 @@
   font-family: inherit;
   box-sizing: border-box;
   border-radius: 10px;
-  padding: 8px 8px;
+  padding: 9px 10px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -208,6 +210,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
+  min-height: 38px;
 }
 
 .top-account-item:hover {
@@ -217,11 +220,16 @@
 .top-account-item svg {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
   stroke: currentColor;
   fill: none;
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.top-account-item span {
+  line-height: 1.3;
 }
 
 .top-account-item.is-active {

@@ -264,7 +264,7 @@ const TodayOrders = () => {
                     aria-label={`Open order ${order.order_id}`}
                   >
                     <td>
-                      <span className="delivery-order-id-chip">#{order.order_id}</span>
+                      <span className="table-id-chip">#{order.order_id}</span>
                     </td>
                     <td>{order.customer_name || 'N/A'}</td>
                     <td>{order.address || 'N/A'}</td>

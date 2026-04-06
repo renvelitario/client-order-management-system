@@ -340,7 +340,7 @@ const UserManagement = () => {
             users.map((user) => (
               <tr key={user.user_id}>
                 <td>
-                  <span className="delivery-order-id-chip">#{user.user_id}</span>
+                  <span className="table-id-chip">#{user.user_id}</span>
                 </td>
                 <td>{user.username}</td>
                 <td>{user.name || 'N/A'}</td>

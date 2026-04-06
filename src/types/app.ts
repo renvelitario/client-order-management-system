@@ -91,6 +91,7 @@ export interface LocalUser {
   acc_type?: string;
   status?: string;
   inactivity_timeout_minutes?: number;
+  session_timeout_enabled?: boolean;
 }
 
 export interface AuthContextValue {

@@ -1,0 +1,306 @@
+.account-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1180px;
+}
+
+.account-shell-header h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 26px;
+}
+
+.account-shell-header p {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  max-width: 760px;
+}
+
+.account-shell-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.account-shell-nav-item {
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 8px 14px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.account-shell-nav-item:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.account-shell-nav-item.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-inverse);
+}
+
+.account-shell-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.account-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+  min-width: 0;
+}
+
+.account-card h2 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.account-form {
+  display: grid;
+  gap: 10px;
+}
+
+.account-form label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.account-form input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+.account-form .create-button,
+.account-card .delete-button {
+  width: fit-content;
+  align-self: start;
+  margin-top: 4px;
+}
+
+.account-card .notification {
+  margin-top: 10px;
+}
+
+.account-kv-list {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.account-kv-list div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: start;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.account-kv-list dt {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.account-kv-list dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+  max-width: 260px;
+}
+
+.account-card--read-only .delete-button {
+  margin-top: 14px;
+}
+
+.account-password-strength {
+  margin-top: 2px;
+}
+
+.account-password-strength span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.account-password-strength-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #e8ece8;
+  overflow: hidden;
+}
+
+.account-password-strength-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c62828 0%, #ef6c00 50%, #2e7d32 100%);
+  transition: width 180ms ease;
+}
+
+.account-checklist {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.account-note {
+  margin: 0 0 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.account-note--compact {
+  margin: -2px 0 2px;
+}
+
+.account-checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.account-checkbox-row input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.account-device-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.account-device-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.account-device-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--surface-alt);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.account-device-meta {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.account-device-meta strong {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.account-device-meta span {
+  color: var(--text-muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.account-device-actions {
+  flex-shrink: 0;
+}
+
+.account-device-current {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1d5a2e;
+  background: #dff2e1;
+}
+
+@media (max-width: 640px) {
+  .account-shell {
+    gap: 14px;
+  }
+
+  .account-shell-nav {
+    gap: 6px;
+  }
+
+  .account-shell-nav-item {
+    padding: 7px 12px;
+  }
+
+  .account-shell-content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .account-card {
+    padding: 14px;
+  }
+
+  .account-form .create-button,
+  .account-card .delete-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .account-kv-list div {
+    grid-template-columns: 1fr;
+    row-gap: 3px;
+  }
+
+  .account-kv-list dd {
+    text-align: left;
+    max-width: none;
+  }
+
+  .account-device-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .account-device-actions .delete-button {
+    width: 100%;
+    justify-content: center;
+  }
+}

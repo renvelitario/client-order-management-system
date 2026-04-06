@@ -49,8 +49,8 @@
   padding: 20px 16px;
 }
 
-#products-table tbody tr:hover .delivery-order-id-chip,
-#products-table tbody tr:focus-within .delivery-order-id-chip {
+#products-table tbody tr:hover .table-id-chip,
+#products-table tbody tr:focus-within .table-id-chip {
   color: var(--primary);
   border-color: var(--primary);
   background: var(--surface);

@@ -98,16 +98,14 @@ const Topbar = ({
 
       <div className="topbar-spacer" />
 
-      {!isAdmin && (
-        <NavLink
-          to="/delivery/inbox"
-          className={({ isActive }) => `top-inbox-link${isActive ? ' is-active' : ''}`}
-          aria-label="Open inbox"
-          title="Inbox"
-        >
-          <AppIcon name="inbox" aria-hidden="true" />
-        </NavLink>
-      )}
+      <NavLink
+        to="/delivery/inbox"
+        className={({ isActive }) => `top-inbox-link${isActive ? ' is-active' : ''}`}
+        aria-label="Open inbox"
+        title="Inbox"
+      >
+        <AppIcon name="inbox" aria-hidden="true" />
+      </NavLink>
 
       <div className="top-account-menu" ref={accountMenuRef}>
         <button
@@ -133,23 +131,35 @@ const Topbar = ({
           <div className="top-account-divider" role="separator" />
 
           <NavLink
-            to="/account/settings"
+            to="/account/profile"
             className={({ isActive }) => `top-account-item${isActive ? ' is-active' : ''}`}
             role="menuitem"
             onClick={() => setIsAccountMenuOpen(false)}
           >
-            <Icon name="settings" />
-            <span>Account Settings</span>
+            <AppIcon name="person" />
+            <span>Profile</span>
           </NavLink>
+
           <NavLink
             to="/account/security"
             className={({ isActive }) => `top-account-item${isActive ? ' is-active' : ''}`}
             role="menuitem"
             onClick={() => setIsAccountMenuOpen(false)}
           >
-            <Icon name="security" />
+            <AppIcon name="lock" />
             <span>Security</span>
           </NavLink>
+
+          <NavLink
+            to="/account/session"
+            className={({ isActive }) => `top-account-item${isActive ? ' is-active' : ''}`}
+            role="menuitem"
+            onClick={() => setIsAccountMenuOpen(false)}
+          >
+            <AppIcon name="update" />
+            <span>Sessions</span>
+          </NavLink>
+
           <div className="top-account-divider" role="separator" />
 
           <button type="button" className="top-account-item top-account-logout" role="menuitem" onClick={handleLogout}>

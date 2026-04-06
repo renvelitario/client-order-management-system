@@ -431,7 +431,7 @@ const AdminDelivery = () => {
               orders.map((order) => (
                 <tr key={order.order_id}>
                   <td>
-                    <span className="delivery-order-id-chip">#{order.order_id}</span>
+                    <span className="table-id-chip">#{order.order_id}</span>
                   </td>
                   <td>
                     <div className="delivery-admin-customer-cell">

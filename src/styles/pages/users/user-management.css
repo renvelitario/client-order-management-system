@@ -56,8 +56,8 @@
   white-space: normal;
 }
 
-#users-table tbody tr:hover .delivery-order-id-chip,
-#users-table tbody tr:focus-within .delivery-order-id-chip {
+#users-table tbody tr:hover .table-id-chip,
+#users-table tbody tr:focus-within .table-id-chip {
   color: var(--primary);
   border-color: var(--primary);
   background: var(--surface);

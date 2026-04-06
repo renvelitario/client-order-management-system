@@ -2,6 +2,9 @@ import axios from 'axios';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
 
+const CLIENT_DEVICE_ID_KEY = 'clientDeviceId';
+const CLIENT_DEVICE_LABEL_KEY = 'clientDeviceLabel';
+
 const localApiFallback = 'http://localhost:5000/api';
 const configuredApiBaseUrl = (
   import.meta.env.VITE_API_BASE_URL
@@ -25,6 +28,30 @@ if (!apiBaseUrl) {
 const api = axios.create({
   baseURL: apiBaseUrl,
 });
+
+const getClientDeviceId = (): string => {
+  const existing = localStorage.getItem(CLIENT_DEVICE_ID_KEY);
+  if (existing) {
+    return existing;
+  }
+
+  const generated = (crypto?.randomUUID?.() || `device-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`).slice(0, 80);
+  localStorage.setItem(CLIENT_DEVICE_ID_KEY, generated);
+  return generated;
+};
+
+const getClientDeviceLabel = (): string => {
+  const existing = localStorage.getItem(CLIENT_DEVICE_LABEL_KEY);
+  if (existing) {
+    return existing;
+  }
+
+  const platform = navigator.platform || 'Unknown Platform';
+  const language = navigator.language || 'Unknown Locale';
+  const generated = `${platform} (${language})`.slice(0, 200);
+  localStorage.setItem(CLIENT_DEVICE_LABEL_KEY, generated);
+  return generated;
+};
 
 const SESSION_CACHE_MS = 10_000;
 let cachedSessionAt = 0;
@@ -75,6 +102,8 @@ api.interceptors.request.use(async (config) => {
   // Send client timezone context so the server can resolve "today" in user local time.
   config.headers['X-Client-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
   config.headers['X-Client-Utc-Offset-Minutes'] = String(new Date().getTimezoneOffset());
+  config.headers['X-Client-Device-Id'] = getClientDeviceId();
+  config.headers['X-Client-Device-Label'] = getClientDeviceLabel();
 
   return config;
 });

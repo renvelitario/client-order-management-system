@@ -573,7 +573,7 @@ const OrdersList = () => {
                 aria-label={`View order ${o.order_id} items`}
               >
                 <td>
-                  <span className="delivery-order-id-chip">#{o.order_id}</span>
+                  <span className="table-id-chip">#{o.order_id}</span>
                 </td>
                 <td>{o.customer_name || `Customer #${o.customer_id}`}</td>
                 <td className="table-col-number">

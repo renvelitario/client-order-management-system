@@ -323,7 +323,7 @@ const ProductsList = () => {
                 className={normalizeProductStatus(p.status) === 'inactive' ? "inactive-row" : ""}
               >
                 <td>
-                  <span className="delivery-order-id-chip">#{p.product_id}</span>
+                  <span className="table-id-chip">#{p.product_id}</span>
                 </td>
                 <td>{p.sku || '-'}</td>
                 <td>{p.product_name}</td>

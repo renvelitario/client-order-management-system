@@ -96,7 +96,7 @@
 }
 
 /* ── Clickable order ID in table ────────────────────────────────── */
-.delivery-order-id-chip {
+.table-id-chip {
   display: inline-flex;
   align-items: center;
   background: var(--surface-alt);
@@ -109,8 +109,8 @@
   transition: var(--transition-fast);
 }
 
-.delivery-row-clickable:hover .delivery-order-id-chip,
-.delivery-row-clickable:focus-within .delivery-order-id-chip {
+.delivery-row-clickable:hover .table-id-chip,
+.delivery-row-clickable:focus-within .table-id-chip {
   color: var(--primary);
   border-color: var(--primary);
   background: var(--surface);

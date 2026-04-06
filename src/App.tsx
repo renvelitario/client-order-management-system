@@ -21,8 +21,10 @@ const DeliveryInbox = lazy(() => import('./pages/delivery/Inbox'));
 const UserManagement = lazy(() => import('./pages/users/UserManagement'));
 const Analytics = lazy(() => import('./pages/Analytics'));
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
-const AccountSettings = lazy(() => import('./pages/account/AccountSettings'));
+const AccountProfileOverview = lazy(() => import('./pages/account/AccountProfileOverview'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
+const AccountSessions = lazy(() => import('./pages/account/AccountSessions'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const STARTUP_OVERLAY_FADE_DELAY_MS = 900;
 const STARTUP_OVERLAY_HIDE_DELAY_MS = 1200;
@@ -43,6 +45,9 @@ const LEGACY_ROUTE_REDIRECTS = [
   { from: '/orders_list', to: '/orders' },
   { from: '/orders_add', to: '/orders' },
   { from: '/orders_update', to: '/orders' },
+  { from: '/account/settings', to: '/account/profile' },
+  { from: '/account/password', to: '/account/security' },
+  { from: '/account/sessions', to: '/account/session' },
 ] as const;
 
 const RouteLoader = () => (
@@ -130,12 +135,13 @@ function App() {
                       <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
                       <Route path="/analytics" element={<AdminRoute><Analytics /></AdminRoute>} />
                       <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
-                      <Route path="/account/settings" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
+                      <Route path="/account/profile" element={<ProtectedRoute><AccountProfileOverview /></ProtectedRoute>} />
                       <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />
+                      <Route path="/account/session" element={<ProtectedRoute><AccountSessions /></ProtectedRoute>} />
                       {LEGACY_ROUTE_REDIRECTS.map(({ from, to }) => (
                         <Route key={from} path={from} element={<Navigate to={to} replace />} />
                       ))}
-                      <Route path="*" element={<Navigate to={defaultAuthenticatedRoute} replace />} />
+                      <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
                     </Routes>
                   </Suspense>
             </AppLayout>
@@ -146,7 +152,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="*" element={<Navigate to="/login" replace />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
         )}
