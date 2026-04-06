@@ -19,7 +19,8 @@ import {
 import FilterDropdown from '../components/ui/FilterDropdown';
 import Notification from '../components/ui/Notification';
 import api from '../utils/api';
-import { formatPeso } from '../utils/formatters';
+import { formatDateOnly, formatPeso } from '../utils/formatters';
+import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
 import '../styles/pages/analytics.css';
 
@@ -56,6 +57,14 @@ type TrendPoint = {
   revenue: number;
   orders: number;
 };
+
+type ReportDelta = {
+  salesDeltaPct: number | null;
+  ordersDeltaPct: number | null;
+  deliveryRateDeltaPct: number | null;
+};
+
+type RecentOrder = Pick<Order, 'order_id' | 'customer_name' | 'delivery_date' | 'total_amount' | 'delivery_status'>;
 
 const RANGE_OPTIONS: Array<{ value: RangeKey; label: string }> = [
   { value: 'this_month', label: 'This Month' },
@@ -133,11 +142,71 @@ const monthLabel = (value: string): string => {
   return parsedDate.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
 };
 
+const getPreviousRangeQuery = (rangeKey: RangeKey): Record<string, string> | null => {
+  const now = new Date();
+
+  if (rangeKey === 'all_time') {
+    return null;
+  }
+
+  if (rangeKey === 'this_month') {
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+    return { from: start.toISOString(), to: end.toISOString() };
+  }
+
+  if (rangeKey === 'previous_month') {
+    const start = new Date(now.getFullYear(), now.getMonth() - 2, 1, 0, 0, 0, 0);
+    const end = new Date(now.getFullYear(), now.getMonth() - 1, 0, 23, 59, 59, 999);
+    return { from: start.toISOString(), to: end.toISOString() };
+  }
+
+  const previousYear = now.getFullYear() - 1;
+  const start = new Date(previousYear, 0, 1, 0, 0, 0, 0);
+  const end = new Date(previousYear, 11, 31, 23, 59, 59, 999);
+  return { from: start.toISOString(), to: end.toISOString() };
+};
+
+const percentageDelta = (current: number, previous: number): number | null => {
+  if (previous === 0) {
+    return null;
+  }
+
+  return ((current - previous) / previous) * 100;
+};
+
+const formatDelta = (value: number | null): string => {
+  if (value === null) {
+    return 'N/A';
+  }
+
+  const sign = value > 0 ? '+' : '';
+  return `${sign}${value.toFixed(1)}%`;
+};
+
+const normalizeDeliveryStatus = (value: string | null | undefined): string => {
+  const normalized = String(value || '').toLowerCase();
+  if (!normalized) {
+    return 'Unassigned';
+  }
+
+  return normalized
+    .split('_')
+    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
+    .join(' ');
+};
+
 const Analytics = () => {
   const [range, setRange] = useState<RangeKey>('this_month');
   const [summary, setSummary] = useState<AnalyticsSummary>(INITIAL_SUMMARY);
   const [trendData, setTrendData] = useState<TrendPoint[]>([]);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
+  const [reportDelta, setReportDelta] = useState<ReportDelta>({
+    salesDeltaPct: null,
+    ordersDeltaPct: null,
+    deliveryRateDeltaPct: null,
+  });
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [error, setError] = useState('');
@@ -145,6 +214,7 @@ const Analytics = () => {
 
   const reportRef = useRef<HTMLDivElement | null>(null);
   const rangeParams = useMemo(() => getRangeQuery(range), [range]);
+  const previousRangeParams = useMemo(() => getPreviousRangeQuery(range), [range]);
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -152,7 +222,13 @@ const Analytics = () => {
       setError('');
 
       try {
-        const summaryRes = await api.get('/dashboard/summary', { params: rangeParams });
+        const [summaryRes, recentOrdersRes, previousSummaryRes] = await Promise.all([
+          api.get('/dashboard/summary', { params: rangeParams }),
+          api.get('/dashboard/recent-orders', { params: rangeParams }),
+          previousRangeParams
+            ? api.get('/dashboard/summary', { params: previousRangeParams })
+            : Promise.resolve(null),
+        ]);
 
         setSummary({
           totalProducts: Number(summaryRes.data?.summary?.totalProducts || 0),
@@ -195,6 +271,46 @@ const Analytics = () => {
           revenue: Number(entry.revenue || 0),
         }));
         setTopProducts(normalizedTopProducts);
+
+        const normalizedRecentOrders = ((recentOrdersRes.data?.data || []) as Order[])
+          .slice(0, 8)
+          .map((order) => ({
+            order_id: order.order_id,
+            customer_name: order.customer_name || `Customer #${order.customer_id}`,
+            delivery_date: order.delivery_date,
+            total_amount: Number(order.total_amount || 0),
+            delivery_status: order.delivery_status,
+          }));
+        setRecentOrders(normalizedRecentOrders);
+
+        const previousSummary = previousSummaryRes?.data?.summary;
+        if (previousSummary) {
+          const currentDeliveryRate = summaryRes.data?.summary?.totalOrders
+            ? (Number(summaryRes.data.summary.deliveredOrders || 0) / Number(summaryRes.data.summary.totalOrders || 0)) * 100
+            : 0;
+          const previousDeliveryRate = Number(previousSummary.totalOrders || 0)
+            ? (Number(previousSummary.deliveredOrders || 0) / Number(previousSummary.totalOrders || 0)) * 100
+            : 0;
+
+          setReportDelta({
+            salesDeltaPct: percentageDelta(
+              Number(summaryRes.data?.summary?.totalSales || 0),
+              Number(previousSummary.totalSales || 0),
+            ),
+            ordersDeltaPct: percentageDelta(
+              Number(summaryRes.data?.summary?.totalOrders || 0),
+              Number(previousSummary.totalOrders || 0),
+            ),
+            deliveryRateDeltaPct: percentageDelta(currentDeliveryRate, previousDeliveryRate),
+          });
+        } else {
+          setReportDelta({
+            salesDeltaPct: null,
+            ordersDeltaPct: null,
+            deliveryRateDeltaPct: null,
+          });
+        }
+
         setLastUpdated(new Date());
       } catch (fetchError) {
         setError(resolveApiErrorMessage(fetchError, 'Failed to load analytics report.'));
@@ -204,7 +320,7 @@ const Analytics = () => {
     };
 
     fetchReport();
-  }, [rangeParams]);
+  }, [rangeParams, previousRangeParams]);
 
   const rangeLabel = useMemo(
     () => RANGE_OPTIONS.find((option) => option.value === range)?.label || 'Custom Range',
@@ -347,6 +463,21 @@ const Analytics = () => {
             <p className="analytics-last-updated">
               Last Updated: {lastUpdated ? lastUpdated.toLocaleString() : 'N/A'}
             </p>
+          </section>
+
+          <section className="analytics-comparison-grid" aria-label="Period comparison metrics">
+            <article className="analytics-comparison-card">
+              <h4>Sales vs Previous Period</h4>
+              <p>{formatDelta(reportDelta.salesDeltaPct)}</p>
+            </article>
+            <article className="analytics-comparison-card">
+              <h4>Order Volume vs Previous Period</h4>
+              <p>{formatDelta(reportDelta.ordersDeltaPct)}</p>
+            </article>
+            <article className="analytics-comparison-card">
+              <h4>Delivery Rate vs Previous Period</h4>
+              <p>{formatDelta(reportDelta.deliveryRateDeltaPct)}</p>
+            </article>
           </section>
 
           <section className="analytics-kpi-grid" aria-label="Sales and operations KPIs">
@@ -492,6 +623,38 @@ const Analytics = () => {
                 Top products currently account for {topProductRevenueShare.toFixed(1)}% of net sales, indicating concentration risk and targeting opportunities.
               </li>
             </ul>
+          </section>
+
+          <section className="analytics-appendix" aria-label="Recent order appendix">
+            <h3>Report Appendix: Recent Orders</h3>
+            <div className="analytics-appendix-table-wrap">
+              <table className="analytics-appendix-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Delivery Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOrders.length ? recentOrders.map((order) => (
+                    <tr key={order.order_id}>
+                      <td>#{order.order_id}</td>
+                      <td>{order.customer_name}</td>
+                      <td>{order.delivery_date ? formatDateOnly(order.delivery_date) : 'Not Scheduled'}</td>
+                      <td>{formatPeso(order.total_amount)}</td>
+                      <td>{normalizeDeliveryStatus(order.delivery_status)}</td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan={5} className="analytics-appendix-empty">No recent orders available.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </section>
         </div>
       )}
