@@ -108,4 +108,35 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+let isRevocationSignOutInFlight = false;
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = Number(error?.response?.status || 0);
+    const message = String(error?.response?.data?.error || '');
+    const hasAuthHeader = Boolean(error?.config?.headers?.Authorization || error?.config?.headers?.authorization);
+
+    if (
+      status === 401
+      && hasAuthHeader
+      && message.toLowerCase().includes('session has been signed out for this device')
+      && !isRevocationSignOutInFlight
+    ) {
+      isRevocationSignOutInFlight = true;
+      try {
+        await supabase.auth.signOut({ scope: 'local' });
+      } finally {
+        isRevocationSignOutInFlight = false;
+      }
+
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login')) {
+        window.location.assign('/login');
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 export default api;
