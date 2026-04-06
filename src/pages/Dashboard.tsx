@@ -261,13 +261,18 @@ const Dashboard = () => {
     revenue: entry.revenue,
   }));
   const pieColors = ['#2e7d32', '#43a047', '#66bb6a', '#a5d6a7', '#c8e6c9'];
+  const chartSeriesColors = {
+    orders: '#475569',
+    revenue: '#1f5130',
+    topProducts: '#2e7d32',
+  };
   const deliveryStatusColors: Record<string, string> = {
-    Unassigned: '#f4f1ea',
-    Pending: '#fff8e1',
-    'Out for Delivery': '#e3f2fd',
-    Delivered: '#e8f5e9',
-    Failed: '#ffebee',
-    Cancelled: '#eceff1',
+    Unassigned: '#70533c',
+    Pending: '#8d6e00',
+    'Out for Delivery': '#0d47a1',
+    Delivered: '#2e7d32',
+    Failed: '#b71c1c',
+    Cancelled: '#455a64',
   };
   const deliveryStatusData = [
     { name: 'Unassigned', value: stats.unassignedDeliveries },
@@ -357,31 +362,27 @@ const Dashboard = () => {
       <section className="kpi-section">
         <h3 className="kpi-section-title">Delivery Snapshot</h3>
         <div className="kpi-grid kpi-grid-delivery">
-          <article className="kpi-card kpi-warn">
-            <h4>Backlog Total</h4>
-            <p>{stats.pendingDeliveries}</p>
-          </article>
-          <article className="kpi-card kpi-warn">
+          <article className="kpi-card kpi-status-unassigned">
             <h4>Unassigned</h4>
             <p>{stats.unassignedDeliveries}</p>
           </article>
-          <article className="kpi-card kpi-warn">
+          <article className="kpi-card kpi-status-pending">
             <h4>Pending</h4>
             <p>{stats.scheduledDeliveries}</p>
           </article>
-          <article className="kpi-card kpi-warn">
+          <article className="kpi-card kpi-status-out-for-delivery">
             <h4>Out for Delivery</h4>
             <p>{stats.outForDelivery}</p>
           </article>
-          <article className="kpi-card kpi-good">
+          <article className="kpi-card kpi-status-delivered">
             <h4>Delivered</h4>
             <p>{stats.deliveredOrders}</p>
           </article>
-          <article className="kpi-card kpi-muted">
+          <article className="kpi-card kpi-status-failed">
             <h4>Failed</h4>
             <p>{stats.failedDeliveries}</p>
           </article>
-          <article className="kpi-card kpi-muted">
+          <article className="kpi-card kpi-status-cancelled">
             <h4>Cancelled</h4>
             <p>{stats.cancelledOrders}</p>
           </article>
@@ -393,23 +394,26 @@ const Dashboard = () => {
           <h3>Revenue vs Orders Trend</h3>
           {trendData.length ? (
             <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={trendData}>
+              <div className="chart-surface">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={trendData} margin={{ top: 8, right: 6, left: -6, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="label" />
-                  <YAxis yAxisId="left" allowDecimals={false} />
-                  <YAxis yAxisId="right" orientation="right" />
+                  <YAxis yAxisId="left" allowDecimals={false} width={34} />
+                  <YAxis yAxisId="right" orientation="right" width={42} />
                   <Tooltip
+                    contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }}
                     formatter={(value: number | string, name: string) => (
                       name === 'revenue' ? formatPeso(Number(value || 0)) : Number(value || 0)
                     )}
                     labelFormatter={(label) => `Month: ${label}`}
                   />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="orders" name="orders" fill="#90caf9" radius={[4, 4, 0, 0]} />
-                  <Line yAxisId="right" type="monotone" dataKey="revenue" name="revenue" stroke="#2e7d32" strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 5 }} />
-                </ComposedChart>
-              </ResponsiveContainer>
+                  <Bar yAxisId="left" dataKey="orders" name="orders" fill={chartSeriesColors.orders} radius={[6, 6, 0, 0]} />
+                  <Line yAxisId="right" type="monotone" dataKey="revenue" name="revenue" stroke={chartSeriesColors.revenue} strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           ) : (
             <p className="chart-empty">No order trend data for this range.</p>
@@ -420,20 +424,23 @@ const Dashboard = () => {
           <h3>Top-Selling Products (Units)</h3>
           {topProductsChartData.length ? (
             <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={topProductsChartData} layout="vertical" margin={{ left: 20, right: 8 }}>
+              <div className="chart-surface">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={topProductsChartData} layout="vertical" margin={{ top: 8, left: 0, right: 4, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis type="number" allowDecimals={false} />
-                  <YAxis type="category" dataKey="name" width={120} />
+                  <YAxis type="category" dataKey="name" width={108} />
                   <Tooltip
+                    contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }}
                     formatter={(value: number | string, name: string) => (
                       name === 'revenue' ? formatPeso(Number(value || 0)) : Number(value || 0)
                     )}
                   />
                   <Legend />
-                  <Bar dataKey="quantity" name="units sold" fill="#43a047" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+                  <Bar dataKey="quantity" name="units sold" fill={chartSeriesColors.topProducts} radius={[0, 6, 6, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           ) : (
             <p className="chart-empty">No product sales data for this range.</p>
@@ -444,25 +451,29 @@ const Dashboard = () => {
           <h3>Delivery Outcomes</h3>
           {deliveryStatusData.length ? (
             <div className="chart-container pie-chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={deliveryStatusData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="45%"
-                    outerRadius={72}
-                    label
-                  >
-                    {deliveryStatusData.map((entry, index) => (
-                      <Cell key={`${entry.name}-${index}`} fill={deliveryStatusColors[entry.name] || pieColors[index % pieColors.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend wrapperStyle={{ fontSize: '12px' }} />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="chart-surface">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={deliveryStatusData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="45%"
+                      outerRadius={82}
+                      innerRadius={42}
+                      paddingAngle={2}
+                      cornerRadius={4}
+                    >
+                      {deliveryStatusData.map((entry, index) => (
+                        <Cell key={`${entry.name}-${index}`} fill={deliveryStatusColors[entry.name] || pieColors[index % pieColors.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }} />
+                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           ) : (
             <p className="chart-empty">No delivery status data for this range.</p>
