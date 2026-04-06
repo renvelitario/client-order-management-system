@@ -1,11 +1,9 @@
 .delivery-home-page {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: block;
 }
 
 .delivery-home-header {
-  margin-bottom: 0;
+  margin-bottom: 14px;
 }
 
 .delivery-home-card-grid {
