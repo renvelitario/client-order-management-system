@@ -86,10 +86,14 @@ const Home = () => {
   );
 
   const handleOrderStatusUpdated = useCallback(
-    async (orderId: number, status: 'delivered' | 'failed') => {
+    async (orderId: number, status: 'out_for_delivery' | 'pending' | 'delivered' | 'failed') => {
       await fetchTodayOrders();
-      const statusMessage = status === 'delivered' ? 'delivered' : 'marked as failed';
-      setNotification({ type: 'success', message: `Order #${orderId} ${statusMessage}.` });
+      if (status === 'pending') {
+        setNotification({ type: 'success', message: `Order #${orderId} reverted to pending.` });
+      } else {
+        const statusMessage = status === 'delivered' ? 'delivered' : 'marked as failed';
+        setNotification({ type: 'success', message: `Order #${orderId} ${statusMessage}.` });
+      }
     },
     [fetchTodayOrders],
   );
@@ -112,9 +116,12 @@ const Home = () => {
 
   return (
     <section className="container delivery-home-page" aria-labelledby="delivery-home-title">
-      <header className="delivery-home-header">
-        <h1 id="delivery-home-title">Welcome, {displayName}</h1>
-        <p>Orders currently marked as out for delivery.</p>
+      <header className="header-row page-shell-header delivery-home-header">
+        <div className="page-shell-heading">
+          <p className="page-shell-kicker">Logistics</p>
+          <h2 id="delivery-home-title">Welcome, {displayName}</h2>
+          <p className="page-shell-subtitle">Orders currently marked as out for delivery.</p>
+        </div>
       </header>
 
       <Notification message={notification.message} type={notification.type} />

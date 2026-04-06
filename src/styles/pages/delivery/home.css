@@ -4,16 +4,8 @@
   gap: 18px;
 }
 
-.delivery-home-header h1 {
-  margin: 0;
-  font-size: clamp(22px, 2.4vw, 30px);
-  color: var(--text-primary);
-}
-
-.delivery-home-header p {
-  margin: 6px 0 0;
-  color: var(--text-muted);
-  font-size: 14px;
+.delivery-home-header {
+  margin-bottom: 0;
 }
 
 .delivery-home-card-grid {
@@ -72,26 +64,37 @@
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger,
-.delivery-order-modal-compact .entity-modal-actions .delivery-action-success {
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-success,
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-undo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-undo {
+  background: linear-gradient(130deg, #64748b, #475569);
+  border: none;
+  color: #ffffff;
+}
+
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-undo:hover:not(:disabled) {
+  filter: saturate(1.05);
+}
+
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: linear-gradient(130deg, #dc2626, #b91c1c);
+  border: none;
   color: #ffffff;
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger:hover:not(:disabled) {
-  background: #b91c1c;
-  border-color: #b91c1c;
+  filter: saturate(1.05);
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger .app-icon,
-.delivery-order-modal-compact .entity-modal-actions .delivery-action-success .app-icon {
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-success .app-icon,
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-undo .app-icon {
   font-size: 18px;
   line-height: 1;
 }

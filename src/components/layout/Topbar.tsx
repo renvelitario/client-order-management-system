@@ -153,7 +153,7 @@ const Topbar = ({
         <AppIcon name="inbox" aria-hidden="true" />
         {unreadNotifications > 0 && (
           <span className="top-inbox-badge" aria-label={`${unreadNotifications} unread notifications`}>
-            {unreadNotifications > 99 ? '99+' : unreadNotifications}
+            {unreadNotifications > 99 ? '99' : unreadNotifications}
           </span>
         )}
       </NavLink>

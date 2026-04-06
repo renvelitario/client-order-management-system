@@ -7,12 +7,16 @@ import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';
 import { formatDateOnly, formatPeso } from '../../utils/formatters';
 import AppIcon from '../ui/AppIcon';
+import DeleteConfirmModal from '../ui/DeleteConfirmModal';
 
 type DeliveryOrderDetailsModalProps = {
   isOpen: boolean;
   orderId: number | null;
   onClose: () => void;
-  onStatusUpdated: (orderId: number, status: 'delivered' | 'failed') => Promise<void> | void;
+  onStatusUpdated: (orderId: number, status: 'out_for_delivery' | 'pending' | 'delivered' | 'failed') => Promise<void> | void;
+  mode?: 'home' | 'delivery';
+  revertStatus?: 'pending' | 'out_for_delivery';
+  revertLabel?: string;
 };
 
 const DeliveryOrderDetailsModal = ({
@@ -20,11 +24,15 @@ const DeliveryOrderDetailsModal = ({
   orderId,
   onClose,
   onStatusUpdated,
+  mode = 'home',
+  revertStatus = 'pending',
+  revertLabel,
 }: DeliveryOrderDetailsModalProps) => {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [isRevertConfirmOpen, setIsRevertConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !orderId) {
@@ -71,6 +79,12 @@ const DeliveryOrderDetailsModal = ({
     return DELIVERY_STATUS_LABELS[order.delivery_status as DeliveryStatusKey] || order.delivery_status;
   }, [order]);
 
+  const revertStatusLabel = DELIVERY_STATUS_LABELS[revertStatus as DeliveryStatusKey] || revertStatus;
+  const resolvedRevertLabel = revertLabel || 'Undo Changes';
+  const isDeliveryRevertState = mode === 'delivery'
+    && Boolean(order)
+    && ['delivered', 'failed'].includes(String(order?.delivery_status || ''));
+
   const handleStatusChange = async (nextStatus: 'delivered' | 'failed') => {
     if (!order) {
       return;
@@ -90,19 +104,51 @@ const DeliveryOrderDetailsModal = ({
     }
   };
 
+  const handleRevert = async () => {
+    if (!order) {
+      return;
+    }
+
+    setSaving(true);
+    setError('');
+
+    try {
+      await api.patch(`/orders/${order.order_id}/delivery-status`, { delivery_status: revertStatus });
+      await onStatusUpdated(order.order_id, revertStatus);
+      setIsRevertConfirmOpen(false);
+      onClose();
+    } catch (updateError) {
+      setError(resolveApiErrorMessage(updateError, 'Unable to revert delivery status.'));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (!isOpen) {
     return null;
   }
 
   return createPortal(
-    <div className="modal-overlay" role="presentation" onClick={onClose}>
-      <div
-        className="modal-box order-items-modal delivery-order-modal-compact"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="delivery-order-details-title"
-        onClick={(event) => event.stopPropagation()}
-      >
+    <>
+      {isDeliveryRevertState ? (
+        <DeleteConfirmModal
+          open={isRevertConfirmOpen}
+          title="Undo Changes"
+          message={order ? `Undo changes for order #${order.order_id} and move it back to ${revertStatusLabel.toLowerCase()}?` : ''}
+          cancelLabel="No, keep it."
+          confirmLabel="Yes, undo changes."
+          onCancel={() => setIsRevertConfirmOpen(false)}
+          onConfirm={() => void handleRevert()}
+        />
+      ) : null}
+      <div className="modal-overlay" role="presentation" onClick={onClose}>
+        <div
+          className="modal-box order-items-modal delivery-order-modal-compact"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delivery-order-details-title"
+          onClick={(event) => event.stopPropagation()}
+        >
         <div className="order-items-modal-header">
           <div className="delivery-modal-title-wrap">
             <h3 id="delivery-order-details-title">Order #{order?.order_id || ''}</h3>
@@ -195,31 +241,46 @@ const DeliveryOrderDetailsModal = ({
             )}
 
             <div className="entity-modal-actions">
-              <button
-                type="button"
-                className="modal-cancel delivery-action-danger"
-                onClick={() => void handleStatusChange('failed')}
-                disabled={loading || saving || !order}
-              >
-                <AppIcon name="dangerous" aria-hidden="true" />
-                <span>Mark as Failed</span>
-              </button>
-              <button
-                type="button"
-                className="create-button delivery-action-success"
-                onClick={() => void handleStatusChange('delivered')}
-                disabled={loading || saving || !order}
-              >
-                <AppIcon name="task_alt" aria-hidden="true" />
-                <span>Mark as Delivered</span>
-              </button>
+              {isDeliveryRevertState ? (
+                <button
+                  type="button"
+                  className="create-button delivery-action-undo"
+                  onClick={() => setIsRevertConfirmOpen(true)}
+                  disabled={loading || saving || !order}
+                >
+                  <AppIcon name="undo" aria-hidden="true" />
+                  <span>{resolvedRevertLabel}</span>
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="create-button delivery-action-danger"
+                    onClick={() => void handleStatusChange('failed')}
+                    disabled={loading || saving || !order}
+                  >
+                    <AppIcon name="dangerous" aria-hidden="true" />
+                    <span>Mark as Failed</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="create-button delivery-action-success"
+                    onClick={() => void handleStatusChange('delivered')}
+                    disabled={loading || saving || !order}
+                  >
+                    <AppIcon name="task_alt" aria-hidden="true" />
+                    <span>Mark as Delivered</span>
+                  </button>
+                </>
+              )}
             </div>
           </>
         ) : (
           <p className="order-items-empty">Order details are unavailable.</p>
         )}
+        </div>
       </div>
-    </div>,
+    </>,
     document.body,
   );
 };
