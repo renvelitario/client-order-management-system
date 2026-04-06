@@ -24,7 +24,7 @@ const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount')
 const AccountProfileOverview = lazy(() => import('./pages/account/AccountProfileOverview'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
 const AccountSessions = lazy(() => import('./pages/account/AccountSessions'));
-const NotFound = lazy(() => import('./pages/NotFoundPage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const STARTUP_OVERLAY_FADE_DELAY_MS = 900;
 const STARTUP_OVERLAY_HIDE_DELAY_MS = 1200;

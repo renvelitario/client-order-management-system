@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../utils/api';
+import { devError } from '../utils/devLogger';
 import { getListData } from '../utils/listResponse';
 
 type UseListOptionsParams<T> = {
@@ -22,7 +23,9 @@ export const useListOptions = <T,>({ endpoint, filter }: UseListOptionsParams<T>
         const allRows = getListData<T>(res.data).data;
         setRows(typeof filter === 'function' ? allRows.filter(filter) : allRows);
       })
-      .catch(console.error);
+      .catch((error) => {
+        devError('[USE_LIST_OPTIONS] Failed to load list options.', error);
+      });
 
     return () => {
       cancelled = true;

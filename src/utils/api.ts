@@ -22,7 +22,7 @@ const normalizeApiBaseUrl = (value: string): string => {
 const apiBaseUrl = normalizeApiBaseUrl(configuredApiBaseUrl) || (import.meta.env.DEV ? localApiFallback : '');
 
 if (!apiBaseUrl) {
-  console.error('[API_CONFIG] Missing VITE_API_BASE_URL in production environment.');
+  throw new Error('Missing VITE_API_BASE_URL in production environment.');
 }
 
 const api = axios.create({
@@ -135,7 +135,16 @@ api.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    if (error instanceof Error) {
+      return Promise.reject(error);
+    }
+
+    const fallbackError = new Error(message || 'Request failed.');
+    if (error && typeof error === 'object') {
+      Object.assign(fallbackError, error);
+    }
+
+    return Promise.reject(fallbackError);
   },
 );
 

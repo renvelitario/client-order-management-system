@@ -28,6 +28,8 @@ import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
 import { DELIVERY_STATUS_LABELS } from '../types/delivery';
 import type { DeliveryStatusKey } from '../types/delivery';
+import { getPresetRangeQuery } from '../utils/dateRanges';
+import { devError } from '../utils/devLogger';
 
 type RangeKey = 'this_month' | 'previous_month' | 'this_year' | 'all_time';
 
@@ -75,39 +77,6 @@ const RANGE_OPTIONS: Array<{ value: RangeKey; label: string }> = [
   { value: 'all_time', label: 'All Time' },
 ];
 
-const getDateRange = (rangeKey: RangeKey): { start: Date | null; end: Date | null } => {
-  const now = new Date();
-  if (rangeKey === 'all_time') return { start: null, end: null };
-
-  if (rangeKey === 'this_month') {
-    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-    return { start, end };
-  }
-
-  if (rangeKey === 'previous_month') {
-    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0);
-    const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
-    return { start, end };
-  }
-
-  const start = new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0);
-  const end = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
-  return { start, end };
-};
-
-const getRangeQuery = (rangeKey: RangeKey): Record<string, string> => {
-  const { start, end } = getDateRange(rangeKey);
-  if (!start || !end) {
-    return {};
-  }
-
-  return {
-    from: start.toISOString(),
-    to: end.toISOString(),
-  };
-};
-
 const Dashboard = () => {
   const [range, setRange] = useState<RangeKey>('this_month');
   const [username, setUsername] = useState('User');
@@ -136,7 +105,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const rangeParams = useMemo(() => getRangeQuery(range), [range]);
+  const rangeParams = useMemo(() => getPresetRangeQuery(range), [range]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -145,7 +114,7 @@ const Dashboard = () => {
         const { data: authMeRes } = await api.get('/auth/me');
         setUsername((authMeRes?.username || authMeRes?.email || 'User').trim());
       } catch (error) {
-        console.error("Dashboard fetch error", error);
+        devError('[DASHBOARD] Failed to load user context.', error);
         setError(resolveApiErrorMessage(error, 'Failed to load dashboard data.'));
       }
     };
@@ -230,7 +199,7 @@ const Dashboard = () => {
 
         setRecentOrders(latestOrders);
       } catch (fetchError) {
-        console.error('Dashboard fetch error', fetchError);
+        devError('[DASHBOARD] Failed to load analytics data.', fetchError);
         setError(resolveApiErrorMessage(fetchError, 'Failed to load dashboard data.'));
       } finally {
         setLoading(false);

@@ -21,6 +21,8 @@ import FilterDropdown from '../components/ui/FilterDropdown';
 import Notification from '../components/ui/Notification';
 import PageLoader from '../components/ui/PageLoader';
 import api from '../utils/api';
+import { getPresetRangeQuery, getPreviousPresetRangeQuery } from '../utils/dateRanges';
+import { devError } from '../utils/devLogger';
 import { formatDateOnly, formatPeso } from '../utils/formatters';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
@@ -97,46 +99,6 @@ const INITIAL_SUMMARY: AnalyticsSummary = {
   totalUnitsSold: 0,
 };
 
-const getDateRange = (rangeKey: RangeKey): { start: Date | null; end: Date | null } => {
-  const now = new Date();
-
-  if (rangeKey === 'all_time') {
-    return { start: null, end: null };
-  }
-
-  if (rangeKey === 'this_month') {
-    return {
-      start: new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0),
-      end: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999),
-    };
-  }
-
-  if (rangeKey === 'previous_month') {
-    return {
-      start: new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0),
-      end: new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999),
-    };
-  }
-
-  return {
-    start: new Date(now.getFullYear(), 0, 1, 0, 0, 0, 0),
-    end: new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999),
-  };
-};
-
-const getRangeQuery = (rangeKey: RangeKey): Record<string, string> => {
-  const { start, end } = getDateRange(rangeKey);
-
-  if (!start || !end) {
-    return {};
-  }
-
-  return {
-    from: start.toISOString(),
-    to: end.toISOString(),
-  };
-};
-
 const monthLabel = (value: string): string => {
   const parsedDate = new Date(`${value}-01T00:00:00`);
   if (Number.isNaN(parsedDate.getTime())) {
@@ -144,31 +106,6 @@ const monthLabel = (value: string): string => {
   }
 
   return parsedDate.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
-};
-
-const getPreviousRangeQuery = (rangeKey: RangeKey): Record<string, string> | null => {
-  const now = new Date();
-
-  if (rangeKey === 'all_time') {
-    return null;
-  }
-
-  if (rangeKey === 'this_month') {
-    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0, 0);
-    const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
-    return { from: start.toISOString(), to: end.toISOString() };
-  }
-
-  if (rangeKey === 'previous_month') {
-    const start = new Date(now.getFullYear(), now.getMonth() - 2, 1, 0, 0, 0, 0);
-    const end = new Date(now.getFullYear(), now.getMonth() - 1, 0, 23, 59, 59, 999);
-    return { from: start.toISOString(), to: end.toISOString() };
-  }
-
-  const previousYear = now.getFullYear() - 1;
-  const start = new Date(previousYear, 0, 1, 0, 0, 0, 0);
-  const end = new Date(previousYear, 11, 31, 23, 59, 59, 999);
-  return { from: start.toISOString(), to: end.toISOString() };
 };
 
 const percentageDelta = (current: number, previous: number): number | null => {
@@ -217,8 +154,8 @@ const Analytics = () => {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const reportRef = useRef<HTMLDivElement | null>(null);
-  const rangeParams = useMemo(() => getRangeQuery(range), [range]);
-  const previousRangeParams = useMemo(() => getPreviousRangeQuery(range), [range]);
+  const rangeParams = useMemo(() => getPresetRangeQuery(range), [range]);
+  const previousRangeParams = useMemo(() => getPreviousPresetRangeQuery(range), [range]);
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -317,6 +254,7 @@ const Analytics = () => {
 
         setLastUpdated(new Date());
       } catch (fetchError) {
+        devError('[ANALYTICS] Failed to load analytics report.', fetchError);
         setError(resolveApiErrorMessage(fetchError, 'Failed to load analytics report.'));
       } finally {
         setLoading(false);

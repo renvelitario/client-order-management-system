@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { devError } from '../utils/devLogger';
 import Notification from '../components/ui/Notification';
 import AppIcon from '../components/ui/AppIcon';
 
@@ -37,7 +38,7 @@ const ResetPassword = () => {
       if (code) {
         const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
         if (exchangeError) {
-          console.error('[RESET_PASSWORD] Failed to exchange code for session.', exchangeError);
+          devError('[RESET_PASSWORD] Failed to exchange code for session.', exchangeError);
         }
       }
 
@@ -103,7 +104,7 @@ const ResetPassword = () => {
       setConfirmPassword('');
       window.setTimeout(() => navigate('/login'), 1200);
     } catch (err) {
-      console.error('[RESET_PASSWORD] Failed to update password.', err);
+      devError('[RESET_PASSWORD] Failed to update password.', err);
       setError('Unable to reset password. Please request a new reset link and try again.');
     } finally {
       setLoading(false);

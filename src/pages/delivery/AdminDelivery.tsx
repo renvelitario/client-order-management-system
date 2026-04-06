@@ -73,7 +73,6 @@ const AdminDelivery = () => {
   const {
     rows: orders,
     searchInput,
-    loading,
     initialLoading,
     currentPage,
     pageSize,

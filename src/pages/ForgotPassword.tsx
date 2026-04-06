@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { devError } from '../utils/devLogger';
 import Notification from '../components/ui/Notification';
 import AppIcon from '../components/ui/AppIcon';
 
@@ -42,7 +43,7 @@ const ForgotPassword = () => {
       setSuccessMessage(SUCCESS_MESSAGE);
       setEmail('');
     } catch (err) {
-      console.error('[FORGOT_PASSWORD] Failed to request reset email.', err);
+      devError('[FORGOT_PASSWORD] Failed to request reset email.', err);
       setError('Unable to send password reset email right now. Please try again.');
     } finally {
       setLoading(false);
