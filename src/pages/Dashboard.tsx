@@ -104,6 +104,8 @@ const Dashboard = () => {
   const [topProducts, setTopProducts] = useState<TopProductEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [summaryAvailable, setSummaryAvailable] = useState(true);
+  const [recentOrdersAvailable, setRecentOrdersAvailable] = useState(true);
 
   const rangeParams = useMemo(() => getPresetRangeQuery(range), [range]);
 
@@ -139,6 +141,9 @@ const Dashboard = () => {
         const recentOrdersError = recentOrdersResult.status === 'rejected'
           ? resolveApiErrorMessage(recentOrdersResult.reason, 'Failed to load recent orders.')
           : '';
+
+        setSummaryAvailable(summaryResult.status === 'fulfilled');
+        setRecentOrdersAvailable(recentOrdersResult.status === 'fulfilled');
 
         if (summaryError || recentOrdersError) {
           const combinedError = [summaryError, recentOrdersError].filter(Boolean).join(' ');
@@ -337,7 +342,9 @@ const Dashboard = () => {
       <section className="chart-grid">
         <article className="chart-card">
           <h3>Revenue vs Orders Trend</h3>
-          {trendData.length ? (
+          {!summaryAvailable ? (
+            <p className="chart-empty">Summary analytics are temporarily unavailable. Showing partial dashboard data.</p>
+          ) : trendData.length ? (
             <div className="chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
@@ -369,7 +376,9 @@ const Dashboard = () => {
 
         <article className="chart-card">
           <h3>Top-Selling Products (Units)</h3>
-          {topProductsChartData.length ? (
+          {!summaryAvailable ? (
+            <p className="chart-empty">Top-product analytics are temporarily unavailable.</p>
+          ) : topProductsChartData.length ? (
             <div className="chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
@@ -398,7 +407,9 @@ const Dashboard = () => {
 
         <article className="chart-card">
           <h3>Delivery Outcomes</h3>
-          {deliveryStatusData.length ? (
+          {!summaryAvailable ? (
+            <p className="chart-empty">Delivery outcome analytics are temporarily unavailable.</p>
+          ) : deliveryStatusData.length ? (
             <div className="chart-container pie-chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
@@ -432,6 +443,9 @@ const Dashboard = () => {
 
       <section className="recent-orders-section">
         <h3>Recent Orders</h3>
+        {!recentOrdersAvailable && (
+          <Notification message="Recent orders are temporarily unavailable." type="error" />
+        )}
         <DataTable wrapperClassName="recent-orders-table-wrapper" tableClassName="recent-orders-table">
             <thead>
               <tr>
