@@ -67,15 +67,15 @@
 	min-width: 0;
 }
 
-.app-content > .container,
-.app-content > .dashboard-page,
-.app-content > .settings-container,
-.app-content > .form-container,
-.app-content > .product-container,
-.app-content > .add-customer,
-.app-content > .order-container,
-.app-content > .update-product,
-.app-content > .update-customer-container {
+.app-page-container {
+	width: min(100%, 1320px);
+	min-height: 620px;
+	margin: 0 auto;
+	padding: 28px;
+	box-sizing: border-box;
+	overflow: visible;
+	display: flex;
+	flex-direction: column;
 	background: rgba(255, 255, 255, 0.92);
 	border: 1px solid var(--border-color);
 	border-radius: var(--radius-xl);
@@ -83,33 +83,28 @@
 	backdrop-filter: blur(10px);
 }
 
-.app-content > .container,
-.app-content > .settings-container,
-.app-content > .form-container,
-.app-content > .product-container,
-.app-content > .add-customer,
-.app-content > .order-container,
-.app-content > .update-product,
-.app-content > .update-customer-container {
-	padding: 28px;
+.app-page-container > * {
+	width: 100%;
+	max-width: none;
+	margin: 0;
 	box-sizing: border-box;
 }
 
-.app-content > .settings-container,
-.app-content > .form-container,
-.app-content > .product-container,
-.app-content > .add-customer,
-.app-content > .order-container,
-.app-content > .update-product,
-.app-content > .update-customer-container {
-	max-width: 520px;
-	margin: 0 auto;
-}
-
-.app-content > .dashboard-page {
-	padding: 24px;
-	max-width: 1320px;
-	box-sizing: border-box;
+.app-page-container > .container,
+.app-page-container > .dashboard-page,
+.app-page-container > .settings-container,
+.app-page-container > .form-container,
+.app-page-container > .product-container,
+.app-page-container > .add-customer,
+.app-page-container > .order-container,
+.app-page-container > .update-product,
+.app-page-container > .update-customer-container {
+	padding: 0;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	backdrop-filter: none;
 }
 
 @keyframes logoPulse {
@@ -217,15 +212,7 @@
 		padding-bottom: 96px;
 	}
 
-	.app-content > .container,
-	.app-content > .settings-container,
-	.app-content > .form-container,
-	.app-content > .product-container,
-	.app-content > .add-customer,
-	.app-content > .order-container,
-	.app-content > .update-product,
-	.app-content > .update-customer-container,
-	.app-content > .dashboard-page {
+	.app-page-container {
 		border-radius: 22px;
 	}
 }
@@ -242,16 +229,9 @@
 		padding: 16px;
 	}
 
-	.app-content > .container,
-	.app-content > .settings-container,
-	.app-content > .form-container,
-	.app-content > .product-container,
-	.app-content > .add-customer,
-	.app-content > .order-container,
-	.app-content > .update-product,
-	.app-content > .update-customer-container,
-	.app-content > .dashboard-page {
+	.app-page-container {
 		padding: 18px;
+		min-height: 0;
 	}
 
 	.session-warning-actions {

@@ -3,6 +3,7 @@ import type { Dispatch, ReactNode, RefObject, SetStateAction } from 'react';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
 import DeliveryNav from './DeliveryNav';
+import PageContainer from './PageContainer';
 import { useAuth } from '../../hooks/useAuth';
 import '../../styles/components/header.css';
 
@@ -84,7 +85,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         
         <main className={`app-main${isAdmin ? '' : ' app-main-delivery'}`}>
           <div className="app-content">
-            {children}
+            <PageContainer>{children}</PageContainer>
           </div>
         </main>
       </div>
