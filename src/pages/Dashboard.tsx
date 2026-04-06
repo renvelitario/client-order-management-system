@@ -75,17 +75,6 @@ const RANGE_OPTIONS: Array<{ value: RangeKey; label: string }> = [
   { value: 'all_time', label: 'All Time' },
 ];
 
-const formatOrderDate = (value: string | number | Date | null | undefined): string => {
-  if (!value) return 'N/A';
-
-  const parsedDate = new Date(value);
-  if (Number.isNaN(parsedDate.getTime())) {
-    return 'N/A';
-  }
-
-  return parsedDate.toLocaleString();
-};
-
 const getDateRange = (rangeKey: RangeKey): { start: Date | null; end: Date | null } => {
   const now = new Date();
   if (rangeKey === 'all_time') return { start: null, end: null };
@@ -405,9 +394,11 @@ const Dashboard = () => {
                   <YAxis yAxisId="right" orientation="right" width={42} />
                   <Tooltip
                     contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }}
-                    formatter={(value: number | string, name: string) => (
-                      name === 'revenue' ? formatPeso(Number(value || 0)) : Number(value || 0)
-                    )}
+                    formatter={(value, name) => {
+                      const resolvedName = String(name || '');
+                      const resolvedValue = Number(value || 0);
+                      return [resolvedName === 'revenue' ? formatPeso(resolvedValue) : resolvedValue, resolvedName];
+                    }}
                     labelFormatter={(label) => `Month: ${label}`}
                   />
                   <Legend />
@@ -434,9 +425,11 @@ const Dashboard = () => {
                   <YAxis type="category" dataKey="name" width={108} />
                   <Tooltip
                     contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }}
-                    formatter={(value: number | string, name: string) => (
-                      name === 'revenue' ? formatPeso(Number(value || 0)) : Number(value || 0)
-                    )}
+                    formatter={(value, name) => {
+                      const resolvedName = String(name || '');
+                      const resolvedValue = Number(value || 0);
+                      return [resolvedName === 'revenue' ? formatPeso(resolvedValue) : resolvedValue, resolvedName];
+                    }}
                   />
                   <Legend />
                   <Bar dataKey="quantity" name="units sold" fill={chartSeriesColors.topProducts} radius={[0, 6, 6, 0]} />
