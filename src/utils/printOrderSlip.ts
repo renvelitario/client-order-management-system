@@ -23,6 +23,7 @@ function escapeHtml(value: string | number | null | undefined): string {
     .replace(/"/g, '&quot;');
 }
 
+
 function buildSlipPage(
   order: Order,
   pageItems: OrderItem[],
@@ -33,8 +34,8 @@ function buildSlipPage(
   isLastPage: boolean,
   totalAmount: number,
 ): string {
-  const discountAmount = 0;
-  const deliveryFee = 0;
+  const discountAmount = order.discount ?? 0;
+  const deliveryFee = order.delivery_fee ?? 0;
   const finalTotal = totalAmount - discountAmount + deliveryFee;
 
   const theadClass = copyLabel === 'ORIGINAL' ? 'thead-original' : 'thead-duplicate';
@@ -61,6 +62,7 @@ function buildSlipPage(
       </tr>`,
   ).join('');
 
+
   const totalRow = isLastPage
     ? `<div class="slip-summary-layout">
         <div class="summary-top">
@@ -72,20 +74,21 @@ function buildSlipPage(
               <span>Subtotal:</span>
               <strong class="tr">${escapeHtml(formatPeso(totalAmount))}</strong>
               <span>Discount:</span>
-              <strong class="tr">${escapeHtml(formatPeso(discountAmount))}</strong>
+              <strong class="tr">${discountAmount > 0 ? escapeHtml(formatPeso(discountAmount)) : '-'}</strong>
               <span>Delivery:</span>
-              <strong class="tr">FREE</strong>
+              <strong class="tr">${deliveryFee > 0 ? escapeHtml(formatPeso(deliveryFee)) : 'FREE'}</strong>
               <span class="total-label total-divider">Total:</span>
               <strong class="tr total-value total-divider">${escapeHtml(formatPeso(finalTotal))}</strong>
             </div>
           </div>
         </div>
         <div class="payment-block" aria-label="Mode of Payment">
-          <span class="payment-title">Mode of Payment (Rider Check):</span>
-          <div class="payment-options">
+          <span class="payment-title">Mode of Payment:</span>
+          <div class="payment-options payment-options-inline">
             <label><span class="payment-box"></span>COD</label>
             <label><span class="payment-box"></span>Check</label>
-            <label><span class="payment-box"></span>Cashless (GCash / Maya / Bank Transfer)</label>
+            <label><span class="payment-box"></span>Cashless (GCash / Bank Transfer)</label>
+            <label><span class="payment-box"></span>Other: <span class="payment-other-line"></span></label>
           </div>
         </div>
        </div>`
@@ -116,7 +119,7 @@ function buildSlipPage(
     </div>
     <div class="slip-meta">
       <div class="meta-row"><span class="meta-key">Customer:</span><span>${escapeHtml(order.customer_name || `Customer #${order.customer_id}`)}</span></div>
-      <div class="meta-row meta-right"><span class="order-num">No. ${String(order.order_id).padStart(4, '0')}</span></div>
+      <div class="meta-row meta-right"><span class="order-num ${copyLabelClass}">No. ${String(order.order_id).padStart(4, '0')}</span></div>
       <div class="meta-row"><span class="meta-key">Contact:</span><span>${escapeHtml(order.contact_no || 'N/A')}</span></div>
       <div class="meta-row meta-right"><span class="meta-key">Date:</span><span>${escapeHtml(formatDateOnly(order.order_date))}</span></div>
       ${addressRow}
@@ -176,7 +179,7 @@ export async function printOrderSlip(order: Order): Promise<void> {
   const allContent =
     buildCopyPages('ORIGINAL') + buildCopyPages('DUPLICATE');
 
-  const popup = window.open('', '_blank', 'width=520,height=780');
+  const popup = window.open('', '_blank', 'width=800,height=1100');
   if (!popup) return;
 
   popup.document.write(`<!DOCTYPE html>
@@ -286,7 +289,9 @@ export async function printOrderSlip(order: Order): Promise<void> {
       letter-spacing: 1px;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-      box-shadow: inset 0 -0.5mm 0 rgba(0, 0, 0, 0.12);
+      box-shadow: none !important;
+      text-shadow: none !important;
+      background-image: none !important;
     }
     .copy-label-original {
       background: #14532d;
@@ -339,8 +344,20 @@ export async function printOrderSlip(order: Order): Promise<void> {
       font-size: 9pt;
       line-height: 1;
       font-weight: 700;
-      color: #0f172a;
       letter-spacing: 0.3px;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      background: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+    }
+    .order-num.copy-label-original {
+      color: #14532d;
+      background: none !important;
+    }
+    .order-num.copy-label-duplicate {
+      color: #c41a1a;
+      background: none !important;
     }
 
     /* ── Items table ── */
@@ -472,6 +489,12 @@ export async function printOrderSlip(order: Order): Promise<void> {
       gap: 0.5mm 2.5mm;
       font-size: 7pt;
     }
+    .payment-options-inline {
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      overflow-x: visible;
+      gap: 0.5mm 1.5mm;
+    }
     .payment-options label {
       display: flex;
       align-items: center;
@@ -483,12 +506,21 @@ export async function printOrderSlip(order: Order): Promise<void> {
       border: 0.5px solid #64748b;
       display: inline-block;
       flex-shrink: 0;
+      border-radius: 0.6mm;
+    }
+    .payment-other-line {
+      display: inline-block;
+      border-bottom: 0.5px solid #64748b;
+      min-width: 18mm;
+      height: 2.5mm;
+      margin-left: 1mm;
+      vertical-align: middle;
     }
 
     /* ── Footer ── */
     .slip-bottom {
       margin-top: auto;
-      border-top: 0.8px solid #cbd5e1;
+      border-top: 2.5px solid #0f172a;
       padding-top: 0.8mm;
     }
     .slip-page-original .slip-bottom {

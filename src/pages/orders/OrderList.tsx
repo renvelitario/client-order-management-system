@@ -41,6 +41,8 @@ type OrderForm = {
   order_date: string;
   delivery_date: string;
   items_data: OrderItemForm[];
+  discount?: string;
+  delivery_fee?: string;
 };
 
 const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '', price: '' });
@@ -65,6 +67,8 @@ const emptyOrderForm = (): OrderForm => ({
   order_date: new Date().toISOString().split('T')[0],
   delivery_date: new Date().toISOString().split('T')[0],
   items_data: ensureMinimumOrderRows([emptyOrderItem()]),
+  discount: '',
+  delivery_fee: '',
 });
 
 const OrdersList = () => {
@@ -305,7 +309,14 @@ const OrdersList = () => {
     setModalError('');
   };
 
-  const handleItemChange = (index: number, field: keyof OrderItemForm, value: string) => {
+  const handleItemChange = (index: number, field: keyof OrderItemForm | 'discount' | 'delivery_fee', value: string) => {
+    if (index === -1 && (field === 'discount' || field === 'delivery_fee')) {
+      setFormData((previous) => ({
+        ...previous,
+        [field]: value,
+      }));
+      return;
+    }
     if (field === 'product_id' && value) {
       const duplicateIndex = formData.items_data.findIndex(
         (item, itemIndex) => itemIndex !== index && String(item.product_id) === String(value),
@@ -410,9 +421,11 @@ const OrdersList = () => {
       return;
     }
 
-    const payload: OrderForm = {
+    const payload: any = {
       ...formData,
       items_data: sanitizedItems,
+      discount: formData.discount ? Number(formData.discount) : 0,
+      delivery_fee: formData.delivery_fee ? Number(formData.delivery_fee) : 0,
     };
 
     try {

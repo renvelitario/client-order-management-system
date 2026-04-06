@@ -69,6 +69,8 @@ export interface Order {
   total_amount: number;
   items_count?: number;
   items?: OrderItem[];
+  discount?: number;
+  delivery_fee?: number;
 }
 
 export interface UserSummary {

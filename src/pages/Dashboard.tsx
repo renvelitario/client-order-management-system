@@ -6,8 +6,10 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  LineChart,
+  ComposedChart,
   Line,
+  Bar,
+  BarChart,
   PieChart,
   Pie,
   Cell,
@@ -29,11 +31,29 @@ type DashboardStats = {
   totalProducts: number;
   totalCustomers: number;
   totalOrders: number;
+  totalSales: number;
+  grossSales: number;
+  totalDiscounts: number;
+  totalDeliveryFees: number;
+  averageOrderValue: number;
+  activeCustomers: number;
+  pendingDeliveries: number;
+  deliveredOrders: number;
+  failedDeliveries: number;
+  cancelledOrders: number;
+  totalUnitsSold: number;
 };
 
 type TopProductEntry = {
   product: string;
   quantity: number;
+  revenue: number;
+};
+
+type MonthlyTrend = {
+  label: string;
+  revenue: number;
+  orders: number;
 };
 
 type RecentOrder = Order & {
@@ -98,10 +118,21 @@ const Dashboard = () => {
   const [stats, setStats] = useState<DashboardStats>({
     totalProducts: 0,
     totalCustomers: 0,
-    totalOrders: 0
+    totalOrders: 0,
+    totalSales: 0,
+    grossSales: 0,
+    totalDiscounts: 0,
+    totalDeliveryFees: 0,
+    averageOrderValue: 0,
+    activeCustomers: 0,
+    pendingDeliveries: 0,
+    deliveredOrders: 0,
+    failedDeliveries: 0,
+    cancelledOrders: 0,
+    totalUnitsSold: 0,
   });
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
-  const [lineData, setLineData] = useState<Array<{ label: string; value: number }>>([]);
+  const [trendData, setTrendData] = useState<MonthlyTrend[]>([]);
   const [topProducts, setTopProducts] = useState<TopProductEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -138,15 +169,49 @@ const Dashboard = () => {
           totalProducts: Number(summaryRes.data?.summary?.totalProducts || 0),
           totalCustomers: Number(summaryRes.data?.summary?.totalCustomers || 0),
           totalOrders: Number(summaryRes.data?.summary?.totalOrders || 0),
+          totalSales: Number(summaryRes.data?.summary?.totalSales || 0),
+          grossSales: Number(summaryRes.data?.summary?.grossSales || 0),
+          totalDiscounts: Number(summaryRes.data?.summary?.totalDiscounts || 0),
+          totalDeliveryFees: Number(summaryRes.data?.summary?.totalDeliveryFees || 0),
+          averageOrderValue: Number(summaryRes.data?.summary?.averageOrderValue || 0),
+          activeCustomers: Number(summaryRes.data?.summary?.activeCustomers || 0),
+          pendingDeliveries: Number(summaryRes.data?.summary?.pendingDeliveries || 0),
+          deliveredOrders: Number(summaryRes.data?.summary?.deliveredOrders || 0),
+          failedDeliveries: Number(summaryRes.data?.summary?.failedDeliveries || 0),
+          cancelledOrders: Number(summaryRes.data?.summary?.cancelledOrders || 0),
+          totalUnitsSold: Number(summaryRes.data?.summary?.totalUnitsSold || 0),
         });
 
-        const monthly = (summaryRes.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
-        setLineData(monthly.map((entry) => ({ label: String(entry.month || 'N/A'), value: Number(entry.revenue || 0) })));
+        const monthlyTrends = (summaryRes.data?.monthlyTrends || []) as Array<{
+          month?: string;
+          revenue?: number | string;
+          orders?: number | string;
+        }>;
 
-        const top = (summaryRes.data?.topProducts || []) as Array<{ product_name?: string; sold_quantity?: number | string }>;
+        if (monthlyTrends.length) {
+          setTrendData(monthlyTrends.map((entry) => ({
+            label: String(entry.month || 'N/A'),
+            revenue: Number(entry.revenue || 0),
+            orders: Number(entry.orders || 0),
+          })));
+        } else {
+          const monthlyRevenue = (summaryRes.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
+          setTrendData(monthlyRevenue.map((entry) => ({
+            label: String(entry.month || 'N/A'),
+            revenue: Number(entry.revenue || 0),
+            orders: 0,
+          })));
+        }
+
+        const top = (summaryRes.data?.topProducts || []) as Array<{
+          product_name?: string;
+          sold_quantity?: number | string;
+          revenue?: number | string;
+        }>;
         setTopProducts(top.map((entry) => ({
           product: entry.product_name || 'N/A',
           quantity: Number(entry.sold_quantity || 0),
+          revenue: Number(entry.revenue || 0),
         })));
 
         const latestOrders = ((recentOrdersRes.data?.data || []) as Order[]).map((order) => {
@@ -183,9 +248,16 @@ const Dashboard = () => {
 
   const topProductsChartData = topProducts.map((entry) => ({
     name: entry.product,
-    value: entry.quantity,
+    quantity: entry.quantity,
+    revenue: entry.revenue,
   }));
   const pieColors = ['#2e7d32', '#43a047', '#66bb6a', '#a5d6a7', '#c8e6c9'];
+  const deliveryStatusData = [
+    { name: 'Pending / Backlog', value: stats.pendingDeliveries },
+    { name: 'Delivered', value: stats.deliveredOrders },
+    { name: 'Failed', value: stats.failedDeliveries },
+    { name: 'Cancelled', value: stats.cancelledOrders },
+  ].filter((entry) => entry.value > 0);
   const rangeFilterLabelId = 'dashboard-range-filter-label';
 
   return (
@@ -213,32 +285,68 @@ const Dashboard = () => {
 
       <section className="kpi-grid">
         <article className="kpi-card kpi-good">
-          <h4>Total Products</h4>
-          <p>{stats.totalProducts}</p>
+          <h4>Total Sales</h4>
+          <p>{formatPeso(stats.totalSales)}</p>
         </article>
         <article className="kpi-card kpi-good">
-          <h4>Total Customers</h4>
-          <p>{stats.totalCustomers}</p>
+          <h4>Average Order Value</h4>
+          <p>{formatPeso(stats.averageOrderValue)}</p>
         </article>
         <article className="kpi-card kpi-good">
           <h4>Total Orders</h4>
           <p>{stats.totalOrders}</p>
         </article>
+        <article className="kpi-card kpi-good">
+          <h4>Active Customers</h4>
+          <p>{stats.activeCustomers}</p>
+        </article>
+        <article className="kpi-card kpi-warn">
+          <h4>Pending Deliveries</h4>
+          <p>{stats.pendingDeliveries}</p>
+        </article>
+        <article className="kpi-card kpi-good">
+          <h4>Units Sold</h4>
+          <p>{stats.totalUnitsSold}</p>
+        </article>
+        <article className="kpi-card kpi-good kpi-muted">
+          <h4>Total Products</h4>
+          <p>{stats.totalProducts}</p>
+        </article>
+        <article className="kpi-card kpi-good kpi-muted">
+          <h4>Total Customers</h4>
+          <p>{stats.totalCustomers}</p>
+        </article>
+        <article className="kpi-card kpi-good kpi-muted">
+          <h4>Gross Sales</h4>
+          <p>{formatPeso(stats.grossSales)}</p>
+        </article>
+        <article className="kpi-card kpi-good kpi-muted">
+          <h4>Discounts + Fees</h4>
+          <p>{formatPeso((stats.totalDiscounts * -1) + stats.totalDeliveryFees)}</p>
+        </article>
       </section>
 
       <section className="chart-grid">
         <article className="chart-card">
-          <h3>Orders Over Time</h3>
-          {lineData.length ? (
+          <h3>Revenue vs Orders Trend</h3>
+          {trendData.length ? (
             <div className="chart-container">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={lineData}>
+                <ComposedChart data={trendData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis dataKey="label" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#2e7d32" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                </LineChart>
+                  <YAxis yAxisId="left" allowDecimals={false} />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip
+                    formatter={(value: number | string, name: string) => (
+                      name === 'revenue' ? formatPeso(Number(value || 0)) : Number(value || 0)
+                    )}
+                    labelFormatter={(label) => `Month: ${label}`}
+                  />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="orders" name="orders" fill="#90caf9" radius={[4, 4, 0, 0]} />
+                  <Line yAxisId="right" type="monotone" dataKey="revenue" name="revenue" stroke="#2e7d32" strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           ) : (
@@ -247,13 +355,37 @@ const Dashboard = () => {
         </article>
 
         <article className="chart-card">
-          <h3>Top-Selling Products</h3>
+          <h3>Top-Selling Products (Units)</h3>
           {topProductsChartData.length ? (
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={topProductsChartData} layout="vertical" margin={{ left: 20, right: 8 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis type="number" allowDecimals={false} />
+                  <YAxis type="category" dataKey="name" width={120} />
+                  <Tooltip
+                    formatter={(value: number | string, name: string) => (
+                      name === 'revenue' ? formatPeso(Number(value || 0)) : Number(value || 0)
+                    )}
+                  />
+                  <Legend />
+                  <Bar dataKey="quantity" name="units sold" fill="#43a047" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="chart-empty">No product sales data for this range.</p>
+          )}
+        </article>
+
+        <article className="chart-card">
+          <h3>Delivery Outcomes</h3>
+          {deliveryStatusData.length ? (
             <div className="chart-container pie-chart-container">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={topProductsChartData}
+                    data={deliveryStatusData}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
@@ -261,7 +393,7 @@ const Dashboard = () => {
                     outerRadius={72}
                     label
                   >
-                    {topProductsChartData.map((entry, index) => (
+                    {deliveryStatusData.map((entry, index) => (
                       <Cell key={`${entry.name}-${index}`} fill={pieColors[index % pieColors.length]} />
                     ))}
                   </Pie>
@@ -271,7 +403,7 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
           ) : (
-            <p className="chart-empty">No product sales data for this range.</p>
+            <p className="chart-empty">No delivery status data for this range.</p>
           )}
         </article>
       </section>

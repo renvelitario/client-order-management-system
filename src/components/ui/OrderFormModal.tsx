@@ -18,6 +18,8 @@ type OrderForm = {
   order_date: string;
   delivery_date: string;
   items_data: OrderItemForm[];
+  discount?: string;
+  delivery_fee?: string;
 };
 
 type OrderFormModalProps = {
@@ -316,6 +318,34 @@ const OrderFormModal = ({
                   </button>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Discount and Delivery Fee fields */}
+          <div className="entity-modal-field-group">
+            <div className="entity-modal-field">
+              <label htmlFor="order-discount">Discount</label>
+              <input
+                id="order-discount"
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.discount ?? ''}
+                onChange={e => onItemChange(-1, 'discount', e.target.value)}
+                placeholder="0.00"
+              />
+            </div>
+            <div className="entity-modal-field">
+              <label htmlFor="order-delivery-fee">Delivery Fee</label>
+              <input
+                id="order-delivery-fee"
+                type="number"
+                min="0"
+                step="0.01"
+                value={formData.delivery_fee ?? ''}
+                onChange={e => onItemChange(-1, 'delivery_fee', e.target.value)}
+                placeholder="0.00"
+              />
             </div>
           </div>
 
