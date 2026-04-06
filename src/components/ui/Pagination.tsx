@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import type { ChangeEvent, KeyboardEvent } from 'react';
+import AppIcon from './AppIcon';
+import FilterDropdown from './FilterDropdown';
 
 type PaginationProps = {
   currentPage: number;
@@ -51,25 +53,30 @@ const Pagination = ({ currentPage, totalPages, onPageChange, pageSize, onPageSiz
 
   const isFirst = currentPage === 1;
   const isLast = currentPage === totalPages;
+  const pageSizeOptions = getOptions().map((opt) => ({ value: String(opt), label: String(opt) }));
+  const selectedPageSize = String(pageSize);
 
   return (
     <div className="pagination-footer">
       <div className="rows-per-page">
         <span>Rows per page:</span>
-        <select value={pageSize} onChange={(e) => onPageSizeChange(Number(e.target.value))}>
-          {getOptions().map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
+        <FilterDropdown
+          id="rows-per-page"
+          className="rows-per-page-dropdown filter-inline-dropdown"
+          ariaLabel="Rows per page"
+          value={selectedPageSize}
+          options={pageSizeOptions}
+          onChange={(nextValue) => onPageSizeChange(Number(nextValue))}
+        />
       </div>
 
       {totalPages > 1 && (
         <div className="pagination">
           <button className="pagination-btn" onClick={() => onPageChange(1)} disabled={isFirst} title="First page">
-            <span className="material-icons">first_page</span>
+            <AppIcon name="first_page" />
           </button>
           <button className="pagination-btn" onClick={() => onPageChange(currentPage - 1)} disabled={isFirst} title="Previous page">
-            <span className="material-icons">chevron_left</span>
+            <AppIcon name="chevron_left" />
           </button>
 
           <input
@@ -85,10 +92,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange, pageSize, onPageSiz
           <span className="pagination-of">of {totalPages}</span>
 
           <button className="pagination-btn" onClick={() => onPageChange(currentPage + 1)} disabled={isLast} title="Next page">
-            <span className="material-icons">chevron_right</span>
+            <AppIcon name="chevron_right" />
           </button>
           <button className="pagination-btn" onClick={() => onPageChange(totalPages)} disabled={isLast} title="Last page">
-            <span className="material-icons">last_page</span>
+            <AppIcon name="last_page" />
           </button>
         </div>
       )}

@@ -18,28 +18,10 @@
     color: #64748b;
 }
 
-.rows-per-page select {
+.rows-per-page .rows-per-page-dropdown,
+.rows-per-page .rows-per-page-dropdown .dropdown-filter-trigger {
+    min-width: 84px;
     height: 38px;
-    padding: 0 28px 0 12px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: 'Montserrat', Arial, sans-serif;
-    color: var(--text-main);
-    background: var(--surface);
-    cursor: pointer;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    transition: var(--transition-fast);
-}
-
-.rows-per-page select:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--border-focus);
 }
 
 /* PAGINATION CONTROLS */
@@ -79,7 +61,7 @@
     opacity: 0.6;
 }
 
-.pagination-btn .material-icons {
+.pagination-btn .app-icon {
     font-size: 18px;
     display: block;
     line-height: 1;
@@ -120,3 +102,5 @@
     white-space: nowrap;
     padding: 0 2px;
 }
+
+

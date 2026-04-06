@@ -2,6 +2,7 @@ import { createPortal } from 'react-dom';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import type { Html5Qrcode } from 'html5-qrcode';
+import AppIcon from '../ui/AppIcon';
 
 type CameraScannerModalProps = {
   isOpen: boolean;
@@ -371,7 +372,7 @@ const CameraScannerModal = ({
         onClick={handleClose}
         aria-label="Close scanner"
       >
-        <span className="material-icons" aria-hidden="true">close</span>
+        <AppIcon name="close" aria-hidden="true" />
       </button>
 
       {loadingCamera && (
@@ -395,7 +396,7 @@ const CameraScannerModal = ({
           className={`${classNamePrefix}-upload-btn`}
           onClick={() => uploadInputRef.current?.click()}
         >
-          <span className="material-icons" aria-hidden="true">photo_library</span>
+          <AppIcon name="photo_library" aria-hidden="true" />
           <span>{uploadButtonLabel}</span>
         </button>
       </div>

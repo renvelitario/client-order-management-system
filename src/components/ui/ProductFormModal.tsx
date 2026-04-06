@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import BarcodeScanner from '../features/BarcodeScanner';
 import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
+import AppIcon from './AppIcon';
+import FilterDropdown from './FilterDropdown';
 
 type ProductFormData = {
   sku: string;
@@ -10,6 +12,11 @@ type ProductFormData = {
   price: string;
   status: string;
 };
+
+const PRODUCT_STATUS_OPTIONS = [
+  { value: 'active', label: 'Active' },
+  { value: 'inactive', label: 'Inactive' },
+] as const;
 
 type ProductFormModalProps = {
   open: boolean;
@@ -85,7 +92,7 @@ const ProductFormModal = ({
                 aria-label="Scan barcode"
                 title="Scan barcode"
               >
-                <span className="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
+                <AppIcon name="barcode_scanner" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -120,17 +127,20 @@ const ProductFormModal = ({
         </div>
 
         <div className="entity-modal-field">
-          <label htmlFor="product-status">Status</label>
-          <select
+          <label id="product-status-label">Status</label>
+          <FilterDropdown
             id="product-status"
-            name="status"
+            className="entity-modal-dropdown filter-inline-dropdown"
+            ariaLabelledBy="product-status-label"
             value={formData.status}
-            onChange={onChange}
-            required
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
+            options={PRODUCT_STATUS_OPTIONS}
+            onChange={(nextStatus) => {
+              onChange({
+                target: { name: 'status', value: nextStatus },
+              } as ChangeEvent<HTMLInputElement | HTMLSelectElement>);
+            }}
+            disabled={isSubmitting}
+          />
         </div>
 
         <div className="entity-modal-actions">

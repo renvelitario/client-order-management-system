@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { ReactNode } from 'react';
+import AppIcon from './AppIcon';
 
 type EntityModalShellProps = {
   open: boolean;
@@ -59,7 +60,7 @@ const EntityModalShell = ({
         <div className="entity-modal-header">
           <h3 id={titleId}>{title}</h3>
           <button type="button" className="entity-modal-close" onClick={onRequestClose} aria-label={closeLabel}>
-            <span className="material-icons">close</span>
+            <AppIcon name="close" />
           </button>
         </div>
         <div className="entity-modal-divider" aria-hidden="true" />

@@ -3,7 +3,22 @@ import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import '../../styles/pages/auth/register.css';
 import Notification from '../../components/ui/Notification';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import { resolveApiErrorMessage } from '../../types/app';
+
+type AccountType = 'Admin' | 'User';
+type AccountStatus = 'Active' | 'Disabled' | 'Suspended';
+
+const ACCOUNT_TYPE_OPTIONS: Array<{ value: AccountType; label: string }> = [
+  { value: 'Admin', label: 'Admin' },
+  { value: 'User', label: 'User' },
+];
+
+const ACCOUNT_STATUS_OPTIONS: Array<{ value: AccountStatus; label: string }> = [
+  { value: 'Active', label: 'Active' },
+  { value: 'Disabled', label: 'Disabled' },
+  { value: 'Suspended', label: 'Suspended' },
+];
 
 const CreateUserAccount = () => {
   const [formData, setFormData] = useState({
@@ -13,13 +28,13 @@ const CreateUserAccount = () => {
     phone_number: '',
     password: '',
     confirm_password: '',
-    acc_type: 'User',
-    status: 'Active'
+    acc_type: 'User' as AccountType,
+    status: 'Active' as AccountStatus,
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -91,20 +106,27 @@ const CreateUserAccount = () => {
         </div>
 
         <div className="form-group">
-          <label>Account Type:</label>
-          <select name="acc_type" value={formData.acc_type} onChange={handleChange}>
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-          </select>
+          <label id="create-user-account-type-label">Account Type:</label>
+          <FilterDropdown
+            id="create-user-account-type"
+            className="create-user-select filter-inline-dropdown"
+            ariaLabelledBy="create-user-account-type-label"
+            value={formData.acc_type}
+            options={ACCOUNT_TYPE_OPTIONS}
+            onChange={(nextValue) => setFormData((previous) => ({ ...previous, acc_type: nextValue }))}
+          />
         </div>
 
         <div className="form-group">
-          <label>Status:</label>
-          <select name="status" value={formData.status} onChange={handleChange}>
-            <option value="Active">Active</option>
-            <option value="Disabled">Disabled</option>
-            <option value="Suspended">Suspended</option>
-          </select>
+          <label id="create-user-status-label">Status:</label>
+          <FilterDropdown
+            id="create-user-status"
+            className="create-user-select filter-inline-dropdown"
+            ariaLabelledBy="create-user-status-label"
+            value={formData.status}
+            options={ACCOUNT_STATUS_OPTIONS}
+            onChange={(nextValue) => setFormData((previous) => ({ ...previous, status: nextValue }))}
+          />
         </div>
 
         <div className="form-group">

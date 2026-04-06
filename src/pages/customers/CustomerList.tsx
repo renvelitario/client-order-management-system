@@ -18,6 +18,7 @@ import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import CustomerFormModal from '../../components/ui/CustomerFormModal';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
+import AppIcon from '../../components/ui/AppIcon';
 import PageLoader from '../../components/ui/PageLoader';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import { resolveEntityMutationErrorMessage } from '../../types/app';
@@ -161,8 +162,6 @@ const CustomersList = () => {
     />
   );
 
-  if (initialLoading) return <PageLoader pageName="Customers" />;
-
   return (
     <div className="container">
       <DeleteConfirmModal
@@ -181,7 +180,7 @@ const CustomersList = () => {
         onSearchChange={handleSearchChange}
         action={isAdmin && (
           <button type="button" className="create-button" onClick={openCreateModal}>
-            <span className="material-icons">add</span>
+            <AppIcon name="add" />
             Create
           </button>
         )}
@@ -191,6 +190,10 @@ const CustomersList = () => {
       <Notification message={notification.message} type={notification.type} />
       {customerModal}
 
+      {initialLoading ? (
+        <PageLoader pageName="Customers" />
+      ) : (
+      <>
       <DataTable id="customers-table">
         <thead>
           <tr>
@@ -217,14 +220,14 @@ const CustomersList = () => {
                       className="edit-button"
                       onClick={() => openUpdateModal(c)}
                     >
-                      <span className="material-icons">edit</span>
+                      <AppIcon name="edit" />
                       <span className="edit-text">Edit</span>
                     </button>
                     <button
                       className="delete-button"
                       onClick={() => handleDeleteClick(c.customer_id)}
                     >
-                      <span className="material-icons">delete</span>
+                      <AppIcon name="delete" />
                       <span className="delete-text">Delete</span>
                     </button>
                   </DataTableActions>
@@ -244,6 +247,8 @@ const CustomersList = () => {
         onPageSizeChange={handlePageSizeChange}
         totalRows={totalRows}
       />
+      </>
+      )}
     </div>
   );
 };

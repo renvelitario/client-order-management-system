@@ -97,7 +97,7 @@ body.login-page {
     background: var(--input-bg);
 }
 
-.input-group .material-icons {
+.input-group .app-icon {
     color: var(--input-icon);
     font-size: 20px;
 }
@@ -262,3 +262,4 @@ body.login-page {
         font-size: 15px;
     }
 }
+

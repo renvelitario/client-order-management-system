@@ -94,11 +94,14 @@ const AccountSettings = () => {
     }
   };
 
-  if (loading) return <PageLoader pageName="Account Settings" />;
-
   return (
     <div className="settings-container">
       <h2>Account Settings</h2>
+
+      {loading ? (
+        <PageLoader pageName="Account Settings" />
+      ) : (
+      <>
 
       <div className="edit-account">
         <h3>Edit Account Details</h3>
@@ -153,6 +156,8 @@ const AccountSettings = () => {
           {timeoutMessage && <p className="settings-message">{timeoutMessage}</p>}
         </form>
       </div>
+      </>
+      )}
     </div>
   );
 };

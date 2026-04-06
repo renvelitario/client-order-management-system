@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Notification from '../components/ui/Notification';
+import AppIcon from '../components/ui/AppIcon';
 
 import '../styles/pages/login.css';
 
@@ -58,7 +59,7 @@ const ForgotPassword = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <span className="material-icons">mail</span>
+          <AppIcon name="mail" />
           <input
             type="email"
             placeholder="Email"

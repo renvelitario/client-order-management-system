@@ -6,6 +6,7 @@ import { resolveApiErrorMessage } from '../../types/app';
 import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';
 import { formatDateOnly, formatPeso } from '../../utils/formatters';
+import AppIcon from '../ui/AppIcon';
 
 type DeliveryOrderDetailsModalProps = {
   isOpen: boolean;
@@ -116,7 +117,7 @@ const DeliveryOrderDetailsModal = ({
             aria-label="Close modal"
             disabled={saving}
           >
-            <span className="material-icons">close</span>
+            <AppIcon name="close" />
           </button>
         </div>
 
@@ -200,7 +201,7 @@ const DeliveryOrderDetailsModal = ({
                 onClick={() => void handleStatusChange('failed')}
                 disabled={loading || saving || !order}
               >
-                <span className="material-symbols-outlined" aria-hidden="true">dangerous</span>
+                <AppIcon name="dangerous" aria-hidden="true" />
                 <span>Mark as Failed</span>
               </button>
               <button
@@ -209,7 +210,7 @@ const DeliveryOrderDetailsModal = ({
                 onClick={() => void handleStatusChange('delivered')}
                 disabled={loading || saving || !order}
               >
-                <span className="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                <AppIcon name="task_alt" aria-hidden="true" />
                 <span>Mark as Delivered</span>
               </button>
             </div>

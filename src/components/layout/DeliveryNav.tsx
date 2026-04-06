@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import OrderScanner from '../features/OrderScanner';
+import AppIcon from '../ui/AppIcon';
 
 const DeliveryNav = () => {
   const [scannerOpen, setScannerOpen] = useState(false);
@@ -24,7 +25,7 @@ const DeliveryNav = () => {
             to="/delivery/home"
             className={({ isActive }) => `delivery-nav-link${isActive ? ' is-active' : ''}`}
           >
-            <span className="material-symbols-outlined delivery-nav-icon" aria-hidden="true">home</span>
+            <AppIcon name="home" className="delivery-nav-icon" aria-hidden="true" />
             <span>Home</span>
           </NavLink>
 
@@ -35,14 +36,14 @@ const DeliveryNav = () => {
             title="QR Scanner"
             onClick={() => setScannerOpen(true)}
           >
-            <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+            <AppIcon name="qr_code_scanner" aria-hidden="true" />
           </button>
 
           <NavLink
             to="/delivery/orders"
             className={({ isActive }) => `delivery-nav-link${isActive ? ' is-active' : ''}`}
           >
-            <span className="material-symbols-outlined delivery-nav-icon" aria-hidden="true">local_shipping</span>
+            <AppIcon name="local_shipping" className="delivery-nav-icon" aria-hidden="true" />
             <span>Deliveries</span>
           </NavLink>
         </div>

@@ -5,6 +5,7 @@ import { supabase } from '../supabaseClient';
 import api, { invalidateSessionCache } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import Notification from '../components/ui/Notification';
+import AppIcon from '../components/ui/AppIcon';
 
 import '../styles/pages/login.css';
 
@@ -109,7 +110,7 @@ const Login = () => {
       <form onSubmit={handleLogin}>
         {/* IDENTIFIER (EMAIL, USERNAME, OR PHONE) */}
         <div className="input-group">
-          <span className="material-icons">person</span>
+          <AppIcon name="person" />
           <input
             type="text"
             placeholder="Email, username, or phone"
@@ -121,7 +122,7 @@ const Login = () => {
 
         {/* PASSWORD */}
         <div className="input-group">
-          <span className="material-icons">lock</span>
+          <AppIcon name="lock" />
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
@@ -129,12 +130,11 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <span
-            className="material-icons toggle-password"
+          <AppIcon
+            name={showPassword ? 'visibility_off' : 'visibility'}
+            className="toggle-password"
             onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? 'visibility_off' : 'visibility'}
-          </span>
+          />
         </div>
 
         {/* SUBMIT */}

@@ -90,8 +90,8 @@
   border-color: #b91c1c;
 }
 
-.delivery-order-modal-compact .entity-modal-actions .delivery-action-danger .material-symbols-outlined,
-.delivery-order-modal-compact .entity-modal-actions .delivery-action-success .material-symbols-outlined {
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-danger .app-icon,
+.delivery-order-modal-compact .entity-modal-actions .delivery-action-success .app-icon {
   font-size: 18px;
   line-height: 1;
 }
@@ -121,3 +121,5 @@
     width: calc(100vw - 56px) !important;
   }
 }
+
+

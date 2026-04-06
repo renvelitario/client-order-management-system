@@ -1,6 +1,7 @@
 import type { ChangeEvent, FormEvent } from 'react';
 import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
+import FilterDropdown from './FilterDropdown';
 
 type UserFormData = {
   email: string;
@@ -22,6 +23,16 @@ type UserFormModalProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   onRequestClose: () => void;
 };
+
+const USER_ROLE_OPTIONS = [
+  { value: 'Admin', label: 'Admin' },
+  { value: 'User', label: 'Delivery User' },
+] as const;
+
+const USER_STATUS_OPTIONS = [
+  { value: 'Active', label: 'Active' },
+  { value: 'Disabled', label: 'Disabled' },
+] as const;
 
 const UserFormModal = ({
   open,
@@ -158,33 +169,37 @@ const UserFormModal = ({
 
         <div className="entity-modal-field-group">
           <div className="entity-modal-field">
-            <label htmlFor="user-role">Role</label>
-            <select
+            <label id="user-role-label">Role</label>
+            <FilterDropdown
               id="user-role"
-              name="acc_type"
+              className="entity-modal-dropdown filter-inline-dropdown"
+              ariaLabelledBy="user-role-label"
               value={formData.acc_type}
-              onChange={onChange}
+              options={USER_ROLE_OPTIONS}
+              onChange={(nextRole) => {
+                onChange({
+                  target: { name: 'acc_type', value: nextRole },
+                } as ChangeEvent<HTMLInputElement | HTMLSelectElement>);
+              }}
               disabled={isSubmitting}
-              required
-            >
-              <option value="Admin">Admin</option>
-              <option value="User">Delivery User</option>
-            </select>
+            />
           </div>
 
           <div className="entity-modal-field">
-            <label htmlFor="user-status">Status</label>
-            <select
+            <label id="user-status-label">Status</label>
+            <FilterDropdown
               id="user-status"
-              name="status"
+              className="entity-modal-dropdown filter-inline-dropdown"
+              ariaLabelledBy="user-status-label"
               value={formData.status}
-              onChange={onChange}
+              options={USER_STATUS_OPTIONS}
+              onChange={(nextStatus) => {
+                onChange({
+                  target: { name: 'status', value: nextStatus },
+                } as ChangeEvent<HTMLInputElement | HTMLSelectElement>);
+              }}
               disabled={isSubmitting}
-              required
-            >
-              <option value="Active">Active</option>
-              <option value="Disabled">Disabled</option>
-            </select>
+            />
           </div>
         </div>
 

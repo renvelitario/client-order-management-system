@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Notification from '../components/ui/Notification';
+import AppIcon from '../components/ui/AppIcon';
 
 import '../styles/pages/login.css';
 
@@ -119,7 +120,7 @@ const ResetPassword = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <span className="material-icons">lock</span>
+          <AppIcon name="lock" />
           <input
             type="password"
             placeholder="New password"
@@ -131,7 +132,7 @@ const ResetPassword = () => {
         </div>
 
         <div className="input-group">
-          <span className="material-icons">lock</span>
+          <AppIcon name="lock" />
           <input
             type="password"
             placeholder="Confirm new password"

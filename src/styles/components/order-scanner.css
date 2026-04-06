@@ -129,7 +129,7 @@
   outline-offset: 2px;
 }
 
-.order-scanner-close .material-icons {
+.order-scanner-close .app-icon {
   font-size: 26px;
 }
 
@@ -206,7 +206,7 @@
   transition: var(--transition-fast);
 }
 
-.order-scanner-upload-btn .material-icons {
+.order-scanner-upload-btn .app-icon {
   font-size: 18px;
   line-height: 1;
 }
@@ -246,3 +246,4 @@
     justify-content: center;
   }
 }
+

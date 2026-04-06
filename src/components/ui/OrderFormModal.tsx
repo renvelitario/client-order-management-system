@@ -5,6 +5,7 @@ import BarcodeScanner from '../features/BarcodeScanner';
 import { formatPeso } from '../../utils/formatters';
 import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
+import AppIcon from './AppIcon';
 import type { Customer, Product } from '../../types/app';
 
 type OrderItemForm = {
@@ -102,6 +103,74 @@ const OrderFormModal = ({
     return formatPeso(parsedQuantity * parsedPrice);
   };
 
+  const buildSelectStyles = (fontSize: string, minHeight: number) => ({
+    control: (base: Record<string, unknown>, state: { isFocused: boolean }) => ({
+      ...base,
+      minHeight,
+      fontSize,
+      borderColor: state.isFocused ? 'var(--primary)' : 'var(--border-color)',
+      background: 'linear-gradient(180deg, #ffffff 0%, #f7faf7 100%)',
+      boxShadow: state.isFocused
+        ? '0 0 0 3px var(--border-focus)'
+        : '0 1px 2px rgba(15, 23, 42, 0.04)',
+      borderRadius: 'var(--radius-sm)',
+      transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast)',
+    }),
+    placeholder: (base: Record<string, unknown>) => ({
+      ...base,
+      color: '#b0bac6',
+      fontSize,
+    }),
+    singleValue: (base: Record<string, unknown>) => ({
+      ...base,
+      fontSize,
+      color: 'var(--text-main)',
+    }),
+    menu: (base: Record<string, unknown>) => ({
+      ...base,
+      border: '1px solid rgba(54, 90, 56, 0.2)',
+      borderRadius: '12px',
+      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 242, 0.98))',
+      boxShadow: '0 18px 40px rgba(15, 23, 42, 0.16)',
+      overflow: 'hidden',
+      marginTop: 8,
+    }),
+    menuList: (base: Record<string, unknown>) => ({
+      ...base,
+      padding: 8,
+      display: 'grid',
+      gap: 4,
+    }),
+    option: (
+      base: Record<string, unknown>,
+      state: { isFocused: boolean; isSelected: boolean },
+    ) => ({
+      ...base,
+      fontSize,
+      borderRadius: '10px',
+      padding: '10px 12px',
+      cursor: 'pointer',
+      color: state.isSelected || state.isFocused ? 'var(--primary)' : 'var(--text-main)',
+      background: state.isSelected
+        ? 'linear-gradient(180deg, rgba(54, 90, 56, 0.18), rgba(54, 90, 56, 0.1))'
+        : state.isFocused
+          ? 'rgba(54, 90, 56, 0.11)'
+          : 'transparent',
+      fontWeight: state.isSelected ? 600 : 500,
+    }),
+    dropdownIndicator: (base: Record<string, unknown>, state: { isFocused: boolean }) => ({
+      ...base,
+      color: state.isFocused ? 'var(--primary)' : 'var(--text-muted)',
+    }),
+    indicatorSeparator: () => ({
+      display: 'none',
+    }),
+    menuPortal: (base: Record<string, unknown>) => ({
+      ...base,
+      zIndex: 2000,
+    }),
+  });
+
   return (
     <EntityModalShell
       open={open}
@@ -140,33 +209,7 @@ const OrderFormModal = ({
               isClearable={false}
               menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
               menuPosition="fixed"
-              styles={{
-                control: (base, state) => ({
-                  ...base,
-                  minHeight: 42,
-                  fontSize: '14px',
-                  borderColor: state.isFocused ? 'var(--primary)' : 'var(--border-color)',
-                  boxShadow: state.isFocused ? '0 0 0 3px var(--border-focus)' : 'none',
-                }),
-                placeholder: (base) => ({
-                  ...base,
-                  color: '#b0bac6',
-                  fontSize: '14px',
-                }),
-                singleValue: (base) => ({
-                  ...base,
-                  fontSize: '14px',
-                  color: 'var(--text-main)',
-                }),
-                option: (base) => ({
-                  ...base,
-                  fontSize: '14px',
-                }),
-                menuPortal: (base) => ({
-                  ...base,
-                  zIndex: 2000,
-                }),
-              }}
+              styles={buildSelectStyles('14px', 42)}
             />
           </div>
 
@@ -209,7 +252,7 @@ const OrderFormModal = ({
                 aria-label="Scan product barcode"
                 title="Scan product barcode"
               >
-                <span className="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
+                <AppIcon name="barcode_scanner" aria-hidden="true" />
                 Scan Product
               </button>
             </div>
@@ -260,32 +303,7 @@ const OrderFormModal = ({
                       isClearable
                       menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
                       menuPosition="fixed"
-                      styles={{
-                        control: (base, state) => ({
-                          ...base,
-                          minHeight: 36,
-                          fontSize: '13px',
-                          borderColor: state.isFocused ? 'var(--primary)' : 'var(--border-color)',
-                          boxShadow: state.isFocused ? '0 0 0 3px var(--border-focus)' : 'none',
-                        }),
-                        placeholder: (base) => ({
-                          ...base,
-                          color: '#b0bac6',
-                          fontSize: '13px',
-                        }),
-                        singleValue: (base) => ({
-                          ...base,
-                          fontSize: '13px',
-                        }),
-                        option: (base) => ({
-                          ...base,
-                          fontSize: '13px',
-                        }),
-                        menuPortal: (base) => ({
-                          ...base,
-                          zIndex: 2000,
-                        }),
-                      }}
+                      styles={buildSelectStyles('13px', 36)}
                     />
                   </div>
 
@@ -314,7 +332,7 @@ const OrderFormModal = ({
                     disabled={isSubmitting}
                     aria-label={`Remove row ${index + 1}`}
                   >
-                    <span className="material-icons" style={{ fontSize: '16px' }}>close</span>
+                    <AppIcon name="close" size={16} />
                   </button>
                 </div>
               ))}

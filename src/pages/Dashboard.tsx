@@ -251,10 +251,6 @@ const Dashboard = () => {
     fetchAnalytics();
   }, [rangeParams]);
 
-  if (loading) {
-    return <PageLoader pageName="Dashboard" />;
-  }
-
   const topProductsChartData = topProducts.map((entry) => ({
     name: entry.product,
     quantity: entry.quantity,
@@ -308,6 +304,9 @@ const Dashboard = () => {
 
       {error && <Notification message={error} type="error" />}
 
+      {loading ? (
+        <PageLoader className="dashboard-report-canvas" pageName="Dashboard" />
+      ) : (
       <div className="dashboard-report-canvas" aria-label="Dashboard report content">
 
       <section className="kpi-section">
@@ -522,6 +521,7 @@ const Dashboard = () => {
           </DataTable>
       </section>
       </div>
+      )}
     </div>
   );
 };

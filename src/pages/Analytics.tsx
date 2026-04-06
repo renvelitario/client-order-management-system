@@ -25,6 +25,7 @@ import { formatDateOnly, formatPeso } from '../utils/formatters';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
 import '../styles/shared/table-ui-core.css';
+import '../styles/shared/table-ui-layout-controls.css';
 import '../styles/pages/analytics.css';
 
 type RangeKey = 'this_month' | 'previous_month' | 'this_year' | 'all_time';
@@ -415,16 +416,17 @@ const Analytics = () => {
 
   return (
     <div className="container analytics-page">
-      <header className="analytics-header-shell">
-        <div className="analytics-header-copy">
+      <section className="header-row page-shell-header analytics-header" aria-label="Analytics report header">
+        <div className="page-shell-heading analytics-header-copy">
+          <p className="page-shell-kicker">Analytics</p>
           <h2>Business Intelligence Report</h2>
-          <p>
+          <p className="page-shell-subtitle analytics-subtitle">
             Performance snapshot covering revenue, delivery execution, and product momentum.
             This report is export-ready for management review.
           </p>
         </div>
 
-        <div className="analytics-actions">
+        <div className="analytics-actions page-shell-controls">
           <div className="analytics-filter-group filter-inline-control">
             <label id={rangeFilterLabelId} className="filter-inline-label">Reporting Window</label>
             <FilterDropdown
@@ -447,7 +449,7 @@ const Analytics = () => {
             {exporting ? 'Preparing PDF...' : 'Save PDF Report'}
           </button>
         </div>
-      </header>
+      </section>
 
       {error && <Notification message={error} type="error" />}
 

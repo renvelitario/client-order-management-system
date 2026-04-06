@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import AppIcon from './AppIcon';
 
 type DeleteConfirmModalProps = {
   open: boolean;
@@ -56,7 +57,7 @@ const DeleteConfirmModal = ({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="modal-icon-wrap" aria-hidden="true">
-          <span className="material-icons modal-warning-icon">warning</span>
+          <AppIcon name="warning" className="modal-warning-icon" />
         </div>
         <h3 id="delete-confirm-title">{title}</h3>
         <p className="modal-message">{message}</p>

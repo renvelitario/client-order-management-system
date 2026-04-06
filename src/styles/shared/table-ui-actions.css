@@ -22,7 +22,7 @@
     filter: saturate(1.06);
 }
 
-.edit-button .material-icons {
+.edit-button .app-icon {
     font-size: 16px;
 }
 
@@ -48,7 +48,7 @@
     filter: saturate(1.06);
 }
 
-.view-button .material-icons {
+.view-button .app-icon {
     font-size: 16px;
 }
 
@@ -74,7 +74,7 @@
     filter: saturate(1.06);
 }
 
-.delete-button .material-icons {
+.delete-button .app-icon {
     font-size: 16px;
 }
 
@@ -95,3 +95,5 @@
     font-size: 12px;
     padding: 6px 10px;
 }
+
+

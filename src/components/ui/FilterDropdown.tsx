@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import AppIcon from './AppIcon';
 import '../../styles/shared/filter-dropdown.css';
 
 export type FilterDropdownOption<T extends string = string> = {
@@ -129,7 +130,7 @@ function FilterDropdown<T extends string>({
         }}
       >
         <span className="dropdown-filter-trigger-label">{selectedOption?.label ?? ''}</span>
-        <span className={joinClasses('material-icons', 'dropdown-filter-trigger-icon', isOpen && 'is-open')} aria-hidden="true">expand_more</span>
+        <AppIcon name="expand_more" className={joinClasses('dropdown-filter-trigger-icon', isOpen && 'is-open')} aria-hidden="true" />
       </button>
 
       <div

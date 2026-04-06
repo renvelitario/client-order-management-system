@@ -18,6 +18,7 @@ import UserFormModal from '../../components/ui/UserFormModal';
 import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import FilterDropdown from '../../components/ui/FilterDropdown';
+import AppIcon from '../../components/ui/AppIcon';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
 import { useAuth } from '../../hooks/useAuth';
 import { resolveApiErrorMessage } from '../../types/app';
@@ -253,7 +254,7 @@ const UserManagement = () => {
 
   const usersHeaderAction = (
     <button type="button" className="create-button" onClick={openCreateModal}>
-      <span className="material-icons">person_add</span>
+      <AppIcon name="person_add" />
       Create / Sign Up User
     </button>
   );
@@ -274,8 +275,6 @@ const UserManagement = () => {
       </div>
     </div>
   );
-
-  if (initialLoading) return <PageLoader pageName="User Management" />;
 
   return (
     <div className="container users-management-container">
@@ -320,6 +319,10 @@ const UserManagement = () => {
         onRequestClose={closeModal}
       />
 
+      {initialLoading ? (
+        <PageLoader pageName="User Management" />
+      ) : (
+      <>
       <DataTable id="users-table">
         <thead>
           <tr>
@@ -357,7 +360,7 @@ const UserManagement = () => {
                       disabled={user.acc_type === 'Admin' && Number(user.user_id) !== Number(localUser?.user_id)}
                       title={user.acc_type === 'Admin' && Number(user.user_id) !== Number(localUser?.user_id) ? 'Co-admin accounts cannot be edited here.' : 'Edit user'}
                     >
-                      <span className="material-icons">edit</span>
+                      <AppIcon name="edit" />
                       <span className="edit-text">Edit</span>
                     </button>
                   </DataTableActions>
@@ -378,6 +381,8 @@ const UserManagement = () => {
         onPageSizeChange={handlePageSizeChange}
         totalRows={totalRows}
       />
+      </>
+      )}
     </div>
   );
 };

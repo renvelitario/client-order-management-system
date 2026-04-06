@@ -23,6 +23,7 @@ import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import FilterDropdown from '../../components/ui/FilterDropdown';
+import AppIcon from '../../components/ui/AppIcon';
 import { resolveEntityMutationErrorMessage } from '../../types/app';
 import type { ApiError, Product } from '../../types/app';
 
@@ -228,8 +229,6 @@ const ProductsList = () => {
     />
   );
 
-  if (initialLoading) return <PageLoader pageName="Products" />;
-
   return (
     <div className="container">
       <DeleteConfirmModal
@@ -264,13 +263,13 @@ const ProductsList = () => {
               aria-label="Scan barcode to search products"
               title="Scan barcode"
             >
-              <span className="material-symbols-outlined" aria-hidden="true">barcode_scanner</span>
+              <AppIcon name="barcode_scanner" aria-hidden="true" />
             </button>
           </>
         )}
         action={isAdmin && (
           <button type="button" className="create-button" onClick={openCreateModal}>
-            <span className="material-icons">add</span>
+            <AppIcon name="add" />
             Create
           </button>
         )}
@@ -294,6 +293,10 @@ const ProductsList = () => {
       <Notification message={notification.message} type={notification.type} />
       {productModal}
 
+      {initialLoading ? (
+        <PageLoader pageName="Products" />
+      ) : (
+      <>
       <DataTable id="products-table">
         <thead>
           <tr>
@@ -336,14 +339,14 @@ const ProductsList = () => {
                       className="edit-button"
                       onClick={() => openUpdateModal(p)}
                     >
-                      <span className="material-icons">edit</span>
+                      <AppIcon name="edit" />
                       <span className="edit-text">Edit</span>
                     </button>
                     <button
                       className="delete-button"
                       onClick={() => handleDeleteClick(p.product_id)}
                     >
-                      <span className="material-icons">delete</span>
+                      <AppIcon name="delete" />
                       <span className="delete-text">Delete</span>
                     </button>
                   </DataTableActions>
@@ -363,6 +366,8 @@ const ProductsList = () => {
         onPageSizeChange={handlePageSizeChange}
         totalRows={totalRows}
       />
+      </>
+      )}
     </div>
   );
 };

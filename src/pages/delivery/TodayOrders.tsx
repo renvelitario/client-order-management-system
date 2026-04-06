@@ -8,7 +8,9 @@ import { formatDateTime } from '../../utils/formatters';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
+import FilterDropdown from '../../components/ui/FilterDropdown';
 import DataTable, { DataTableEmptyState } from '../../components/ui/DataTable';
+import AppIcon from '../../components/ui/AppIcon';
 import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/shared/table-ui-actions.css';
@@ -123,10 +125,6 @@ const TodayOrders = () => {
     navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
   }, [location.pathname, location.search, location.state, navigate]);
 
-  if (initialLoading) {
-    return <PageLoader pageName="Delivery Orders" />;
-  }
-
   return (
     <div className="container delivery-page">
 
@@ -149,7 +147,7 @@ const TodayOrders = () => {
               aria-label="Scan QR code to search today's delivery orders"
               title="Scan QR code"
             >
-              <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+              <AppIcon name="qr_code_scanner" aria-hidden="true" />
             </button>
           </>
         )}
@@ -175,7 +173,7 @@ const TodayOrders = () => {
               onClick={() => setSelectedOrder(null)}
               aria-label="Dismiss selected order"
             >
-              <span className="material-icons" aria-hidden="true">cancel</span>
+              <AppIcon name="cancel" aria-hidden="true" />
             </button>
           </div>
           <div className="delivery-order-card">
@@ -200,20 +198,19 @@ const TodayOrders = () => {
               </div>
             </div>
             <div className="delivery-status-actions">
-              <select
+              <FilterDropdown
+                id="delivery-status-picker"
+                className="delivery-status-select filter-inline-dropdown"
                 value={selectedOrderStatus || selectedOrder.delivery_status}
-                onChange={(event) =>
+                options={DELIVERY_USER_STATUS_OPTIONS}
+                onChange={(nextStatus) =>
                   setStatusDrafts((prev) => ({
                     ...prev,
-                    [selectedOrder.order_id]: event.target.value as DeliveryStatusKey,
+                    [selectedOrder.order_id]: nextStatus,
                   }))
                 }
                 aria-label="Change delivery status"
-              >
-                {DELIVERY_USER_STATUS_OPTIONS.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
-                ))}
-              </select>
+              />
               <button
                 type="button"
                 className="delivery-status-update-btn"
@@ -224,7 +221,7 @@ const TodayOrders = () => {
                   )
                 }
               >
-                <span className="material-icons" aria-hidden="true">update</span>
+                <AppIcon name="update" aria-hidden="true" />
                 <span>Update</span>
               </button>
             </div>
@@ -233,6 +230,9 @@ const TodayOrders = () => {
       )}
 
       {/* ── Orders table ── */}
+      {initialLoading ? (
+        <PageLoader pageName="Delivery Orders" />
+      ) : (
       <DataTable wrapperClassName="delivery-table-wrap" ariaLabel="Today's delivery orders">
           <thead>
             <tr>
@@ -287,6 +287,7 @@ const TodayOrders = () => {
             )}
           </tbody>
       </DataTable>
+      )}
 
       <Pagination
         currentPage={currentPage}

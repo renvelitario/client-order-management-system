@@ -12,6 +12,7 @@ import DeleteConfirmModal from '../../components/ui/DeleteConfirmModal';
 import DeliveryAssignmentModal from '../../components/ui/DeliveryAssignmentModal';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import FilterDropdown from '../../components/ui/FilterDropdown';
+import AppIcon from '../../components/ui/AppIcon';
 import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/shared/table-ui-actions.css';
@@ -202,7 +203,7 @@ const AdminDelivery = () => {
       return (
         <DataTableActions className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'assign')}>
-            <span className="material-icons">calendar_month</span>
+            <AppIcon name="calendar_month" />
             <span className="edit-text">Schedule</span>
           </button>
         </DataTableActions>
@@ -213,7 +214,7 @@ const AdminDelivery = () => {
       return (
         <DataTableActions className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'reassign')}>
-            <span className="material-icons">edit_calendar</span>
+            <AppIcon name="edit_calendar" />
             <span className="edit-text">Reschedule</span>
           </button>
           <button
@@ -221,11 +222,11 @@ const AdminDelivery = () => {
             className="view-button"
             onClick={() => updateStatus(order, 'out_for_delivery', `Order #${order.order_id} moved out for delivery.`)}
           >
-            <span className="material-icons">local_shipping</span>
+            <AppIcon name="local_shipping" />
             <span className="view-text">Start</span>
           </button>
           <button type="button" className="delete-button" onClick={() => setCancelTarget(order)}>
-            <span className="material-icons">cancel</span>
+            <AppIcon name="cancel" />
             <span className="delete-text">Cancel</span>
           </button>
         </DataTableActions>
@@ -240,7 +241,7 @@ const AdminDelivery = () => {
             className="edit-button"
             onClick={() => updateStatus(order, 'delivered', `Order #${order.order_id} marked delivered.`)}
           >
-            <span className="material-icons">done_all</span>
+            <AppIcon name="done_all" />
             <span className="edit-text">Delivered</span>
           </button>
           <button
@@ -248,7 +249,7 @@ const AdminDelivery = () => {
             className="delete-button"
             onClick={() => updateStatus(order, 'failed', `Order #${order.order_id} marked failed.`)}
           >
-            <span className="material-icons">report_problem</span>
+            <AppIcon name="report_problem" />
             <span className="delete-text">Failed</span>
           </button>
         </DataTableActions>
@@ -259,11 +260,11 @@ const AdminDelivery = () => {
       return (
         <DataTableActions className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => openAssignmentModal(order, 'reassign')}>
-            <span className="material-icons">restart_alt</span>
+            <AppIcon name="restart_alt" />
             <span className="edit-text">Reschedule</span>
           </button>
           <button type="button" className="delete-button" onClick={() => setCancelTarget(order)}>
-            <span className="material-icons">cancel</span>
+            <AppIcon name="cancel" />
             <span className="delete-text">Cancel</span>
           </button>
         </DataTableActions>
@@ -274,7 +275,7 @@ const AdminDelivery = () => {
       return (
         <DataTableActions className="delivery-admin-actions">
           <button type="button" className="edit-button" onClick={() => setRevertTarget(order)}>
-            <span className="material-icons">undo</span>
+            <AppIcon name="undo" />
             <span className="edit-text">Revert</span>
           </button>
         </DataTableActions>
@@ -283,10 +284,6 @@ const AdminDelivery = () => {
 
     return <span className="delivery-admin-actions-empty">No actions</span>;
   };
-
-  if (initialLoading) {
-    return <PageLoader pageName="Delivery Management" />;
-  }
 
   return (
     <div className="container delivery-admin-page">
@@ -346,7 +343,7 @@ const AdminDelivery = () => {
               aria-label="Scan QR code to search delivery orders"
               title="Scan QR code"
             >
-              <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+              <AppIcon name="qr_code_scanner" aria-hidden="true" />
             </button>
           </>
         )}
@@ -413,6 +410,10 @@ const AdminDelivery = () => {
 
       <Notification message={notification.message} type={notification.type} />
 
+      {initialLoading ? (
+        <PageLoader pageName="Delivery Management" />
+      ) : (
+      <>
       <DataTable wrapperClassName="delivery-admin-table-wrap" ariaLabel="Delivery management orders">
           <thead>
             <tr>
@@ -469,6 +470,8 @@ const AdminDelivery = () => {
         onPageSizeChange={handlePageSizeChange}
         totalRows={totalRows}
       />
+      </>
+      )}
     </div>
   );
 };

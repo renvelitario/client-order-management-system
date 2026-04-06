@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import AppIcon from './AppIcon';
 
 type ListPageHeaderProps = {
   title: string;
@@ -30,7 +31,7 @@ const ListPageHeader = ({
 
     <div className="search-container page-shell-controls">
       <div className="search-input-wrapper">
-        <span className="material-icons" aria-hidden="true">search</span>
+        <AppIcon name="search" aria-hidden="true" />
         <input
           type="text"
           placeholder="Search..."

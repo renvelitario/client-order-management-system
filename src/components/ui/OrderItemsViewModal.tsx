@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { formatPeso } from '../../utils/formatters';
 import type { Order } from '../../types/app';
+import AppIcon from './AppIcon';
 
 type OrderItemsViewModalProps = {
   open: boolean;
@@ -63,7 +64,7 @@ const OrderItemsViewModal = ({
             onClick={onClose}
             aria-label="Close modal"
           >
-            <span className="material-icons">close</span>
+            <AppIcon name="close" />
           </button>
         </div>
 

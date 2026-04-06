@@ -108,7 +108,7 @@
         display: none;
     }
 
-    .edit-button .material-icons {
+    .edit-button .app-icon {
         font-size: 18px;
     }
 
@@ -117,7 +117,7 @@
         display: none;
     }
 
-    .view-button .material-icons {
+    .view-button .app-icon {
         font-size: 18px;
     }
 
@@ -126,7 +126,9 @@
         display: none;
     }
 
-    .delete-button .material-icons {
+    .delete-button .app-icon {
         font-size: 18px;
     }
 }
+
+

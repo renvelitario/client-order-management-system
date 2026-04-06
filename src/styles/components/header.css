@@ -88,7 +88,7 @@
   border-color: rgba(232, 255, 227, 0.4);
 }
 
-.top-inbox-link .material-symbols-outlined {
+.top-inbox-link .app-icon {
   font-size: 21px;
   line-height: 1;
 }
@@ -457,7 +457,7 @@
   filter: saturate(1.08);
 }
 
-.delivery-nav-scan-link .material-symbols-outlined {
+.delivery-nav-scan-link .app-icon {
   font-size: 27px;
   line-height: 1;
 }
@@ -636,7 +636,7 @@
     transform: translateY(-16px);
   }
 
-  .delivery-nav-scan-link .material-symbols-outlined {
+  .delivery-nav-scan-link .app-icon {
     font-size: 26px;
   }
 
@@ -663,3 +663,5 @@
     justify-content: center;
   }
 }
+
+

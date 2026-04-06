@@ -25,6 +25,7 @@ import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
+import AppIcon from '../../components/ui/AppIcon';
 import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import { resolveApiErrorMessage, resolveEntityMutationErrorMessage } from '../../types/app';
 import type { DeliveryStatusKey } from '../../types/delivery';
@@ -481,8 +482,6 @@ const OrdersList = () => {
     />
   );
 
-  if (initialLoading) return <PageLoader pageName="Orders" />;
-
   return (
     <div className="container">
       <DeleteConfirmModal
@@ -523,13 +522,13 @@ const OrdersList = () => {
               aria-label="Scan QR code to search orders"
               title="Scan QR code"
             >
-              <span className="material-symbols-outlined" aria-hidden="true">qr_code_scanner</span>
+              <AppIcon name="qr_code_scanner" aria-hidden="true" />
             </button>
           </>
         )}
         action={isAdmin && (
           <button type="button" className="create-button" onClick={openCreateModal}>
-            <span className="material-icons">add</span>
+            <AppIcon name="add" />
             Create
           </button>
         )}
@@ -539,6 +538,10 @@ const OrdersList = () => {
       <Notification message={notification.message} type={notification.type} />
       {orderModal}
 
+      {initialLoading ? (
+        <PageLoader pageName="Orders" />
+      ) : (
+      <>
       <DataTable id="orders-table">
         <thead>
           <tr>
@@ -595,7 +598,7 @@ const OrdersList = () => {
                         void openUpdateModal(o.order_id);
                       }}
                     >
-                      <span className="material-icons">edit</span>
+                      <AppIcon name="edit" />
                       <span className="edit-text">Edit</span>
                     </button>
                     <button
@@ -605,7 +608,7 @@ const OrdersList = () => {
                         handlePrintReceipt(o);
                       }}
                     >
-                      <span className="material-icons">description</span>
+                      <AppIcon name="description" />
                       <span className="view-text">Order Slip</span>
                     </button>
                     {isAdmin && (
@@ -616,7 +619,7 @@ const OrdersList = () => {
                           handleDeleteClick(o.order_id);
                         }}
                       >
-                        <span className="material-icons">delete</span>
+                        <AppIcon name="delete" />
                         <span className="delete-text">Delete</span>
                       </button>
                     )}
@@ -637,6 +640,8 @@ const OrdersList = () => {
         onPageSizeChange={handlePageSizeChange}
         totalRows={totalRows}
       />
+      </>
+      )}
     </div>
   );
 };

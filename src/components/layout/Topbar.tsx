@@ -3,6 +3,7 @@ import type { Dispatch, MouseEvent, RefObject, SetStateAction } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import { useAuth } from '../../hooks/useAuth';
+import AppIcon from '../ui/AppIcon';
 import Icon from '../ui/Icon';
 
 const Topbar = ({
@@ -104,7 +105,7 @@ const Topbar = ({
           aria-label="Open inbox"
           title="Inbox"
         >
-          <span className="material-symbols-outlined" aria-hidden="true">inbox</span>
+          <AppIcon name="inbox" aria-hidden="true" />
         </NavLink>
       )}
 

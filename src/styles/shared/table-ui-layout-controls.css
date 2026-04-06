@@ -2,7 +2,7 @@
 .header-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     margin-bottom: 14px;
     gap: 14px;
 }
@@ -70,7 +70,7 @@
     box-shadow: 0 0 0 3px var(--border-focus);
 }
 
-.search-input-wrapper .material-icons {
+.search-input-wrapper > .app-icon {
     font-size: 18px;
     color: var(--text-muted);
     margin-left: 0;
@@ -80,6 +80,8 @@
 .search-input-wrapper input {
     border: none;
     outline: none;
+    background: transparent;
+    color: var(--text-main);
     width: 100%;
     font-size: 14px;
     min-width: 0;
@@ -121,10 +123,11 @@
     background: rgba(54, 90, 56, 0.08);
 }
 
-.search-input-action .material-symbols-outlined,
-.search-input-action .material-icons {
+.search-input-action .app-icon {
     font-size: 20px;
     line-height: 1;
+    margin: 0;
+    display: block;
 }
 
 /* CREATE BUTTON */
@@ -152,6 +155,8 @@
     box-shadow: var(--shadow-md);
 }
 
-.create-button .material-icons {
+.create-button .app-icon {
     font-size: 18px;
 }
+
+

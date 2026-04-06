@@ -110,10 +110,6 @@ const Home = () => {
     navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
   }, [location.pathname, location.search, location.state, navigate]);
 
-  if (loading) {
-    return <PageLoader pageName="Delivery Home" />;
-  }
-
   return (
     <section className="container delivery-home-page" aria-labelledby="delivery-home-title">
       <header className="delivery-home-header">
@@ -123,7 +119,9 @@ const Home = () => {
 
       <Notification message={notification.message} type={notification.type} />
 
-      {outForDeliveryOrders.length > 0 ? (
+      {loading ? (
+        <PageLoader pageName="Delivery Home" />
+      ) : outForDeliveryOrders.length > 0 ? (
         <div className="delivery-home-card-grid">
           {outForDeliveryOrders.map((order) => (
             <DeliveryOrderCard key={order.order_id} order={order} onClick={() => setActiveOrderId(order.order_id)} />
