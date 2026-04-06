@@ -111,7 +111,7 @@ const Home = () => {
   }, [location.pathname, location.search, location.state, navigate]);
 
   if (loading) {
-    return <PageLoader message="Loading your delivery home..." />;
+    return <PageLoader pageName="Delivery Home" />;
   }
 
   return (

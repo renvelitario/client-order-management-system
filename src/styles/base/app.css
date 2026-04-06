@@ -3,7 +3,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #f8fafc;
+	background: #f3f6f1;
 }
 
 .app-startup-overlay {
@@ -76,8 +76,8 @@
 .app-content > .order-container,
 .app-content > .update-product,
 .app-content > .update-customer-container {
-	background: rgba(255, 255, 255, 0.86);
-	border: 1px solid rgba(186, 200, 188, 0.52);
+	background: rgba(255, 255, 255, 0.92);
+	border: 1px solid var(--border-color);
 	border-radius: var(--radius-xl);
 	box-shadow: var(--shadow-xl);
 	backdrop-filter: blur(10px);

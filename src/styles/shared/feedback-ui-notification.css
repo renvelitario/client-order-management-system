@@ -1,19 +1,19 @@
 /* NOTIFICATION MESSAGES */
 .notification {
     padding: 12px 16px;
-    border-radius: 6px;
+    border-radius: 10px;
     margin-bottom: 14px;
     font-size: 14px;
 }
 
 .notification.success {
-    background: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #a5d6a7;
+    background: #e6efe3;
+    color: #2f5736;
+    border: 1px solid #bfd1b8;
 }
 
 .notification.error {
-    background: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef9a9a;
+    background: #fbeceb;
+    color: #98362d;
+    border: 1px solid #efbbb4;
 }

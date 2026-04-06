@@ -161,7 +161,7 @@ const CustomersList = () => {
     />
   );
 
-  if (initialLoading) return <PageLoader />;
+  if (initialLoading) return <PageLoader pageName="Customers" />;
 
   return (
     <div className="container">
@@ -174,7 +174,9 @@ const CustomersList = () => {
       />
 
       <ListPageHeader
+        kicker="Operations"
         title="Customers"
+        subtitle="Manage customer profiles and contact details used in orders."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         action={isAdmin && (

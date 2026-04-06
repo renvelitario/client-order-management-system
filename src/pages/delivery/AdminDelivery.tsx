@@ -285,7 +285,7 @@ const AdminDelivery = () => {
   };
 
   if (initialLoading) {
-    return <PageLoader />;
+    return <PageLoader pageName="Delivery Management" />;
   }
 
   return (
@@ -329,7 +329,9 @@ const AdminDelivery = () => {
       />
 
       <ListPageHeader
+        kicker="Logistics"
         title="Delivery Management"
+        subtitle="Coordinate delivery scheduling and status transitions for active orders."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search delivery orders"

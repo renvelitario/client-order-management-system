@@ -1,4 +1,4 @@
-:root {
+.analytics-page {
   --analytics-ink: #1f2f22;
   --analytics-muted: #5a6657;
   --analytics-surface: #fbfcf8;
@@ -298,34 +298,12 @@
   color: var(--analytics-ink);
 }
 
-.analytics-appendix-table-wrap {
-  overflow-x: auto;
-}
-
 .analytics-appendix-table {
-  width: 100%;
-  border-collapse: collapse;
   min-width: 680px;
 }
 
-.analytics-appendix-table th,
-.analytics-appendix-table td {
-  border-bottom: 1px solid #e1e5dc;
-  text-align: left;
-  padding: 10px 8px;
-  color: #465247;
-  font-size: 13px;
-}
-
-.analytics-appendix-table th {
-  color: #354533;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.analytics-appendix-empty {
-  text-align: center;
-  color: #607061;
+.analytics-appendix-table-wrapper {
+  overflow-x: auto;
 }
 
 @media (max-width: 1180px) {

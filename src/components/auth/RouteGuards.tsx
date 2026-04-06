@@ -1,9 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import PageLoader from '../ui/PageLoader';
 
 const AuthLoadingFallback = () => (
-  <div className="app-loader" role="status" aria-live="polite">Loading...</div>
+  <PageLoader className="app-loader" pageName="Application" />
 );
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {

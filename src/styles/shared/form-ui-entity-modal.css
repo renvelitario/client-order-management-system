@@ -5,7 +5,8 @@
 .entity-form-modal,
 .order-form-modal {
     background: var(--surface);
-    border-radius: var(--radius-md);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
     box-shadow: var(--shadow-xl);
     display: flex;
     flex-direction: column;
@@ -247,8 +248,8 @@
 }
 
 .entity-modal-actions .modal-cancel:hover {
-    background: #e8ecf2;
-    border-color: #c3ccd8;
+    background: #e6ece1;
+    border-color: #c4d0c0;
 }
 
 .entity-modal-actions .create-button {

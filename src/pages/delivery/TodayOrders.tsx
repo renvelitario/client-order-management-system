@@ -124,7 +124,7 @@ const TodayOrders = () => {
   }, [location.pathname, location.search, location.state, navigate]);
 
   if (initialLoading) {
-    return <PageLoader message="Loading..." />;
+    return <PageLoader pageName="Delivery Orders" />;
   }
 
   return (
@@ -132,7 +132,9 @@ const TodayOrders = () => {
 
       {/* ── Top controls ── */}
       <ListPageHeader
+        kicker="Logistics"
         title="Delivery Orders (Today)"
+        subtitle="Monitor and update today’s active delivery workload in real time."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search delivery orders"

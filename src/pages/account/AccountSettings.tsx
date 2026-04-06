@@ -94,7 +94,7 @@ const AccountSettings = () => {
     }
   };
 
-  if (loading) return <PageLoader />;
+  if (loading) return <PageLoader pageName="Account Settings" />;
 
   return (
     <div className="settings-container">

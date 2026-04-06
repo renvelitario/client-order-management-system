@@ -1,7 +1,7 @@
 .delivery-order-summary-card {
   background: #ffffff;
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   box-shadow: var(--shadow-md);
   padding: 16px;
   display: flex;
@@ -13,8 +13,8 @@
 
 .delivery-order-summary-card:hover,
 .delivery-order-summary-card:focus-visible {
-  border-color: #b8d1bf;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+  border-color: #bfd1b8;
+  box-shadow: 0 10px 28px rgba(20, 38, 27, 0.14);
   transform: translateY(-1px);
   outline: none;
 }
@@ -42,9 +42,9 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  border: 1px solid #dfe8df;
+  border: 1px solid #d6ddd0;
   border-radius: var(--radius-sm);
-  background: #f8fcf8;
+  background: #f4f7f2;
   padding: 10px 12px;
 }
 

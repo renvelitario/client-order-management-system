@@ -16,12 +16,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import DataTable, { DataTableEmptyState } from '../components/ui/DataTable';
 import FilterDropdown from '../components/ui/FilterDropdown';
 import Notification from '../components/ui/Notification';
+import PageLoader from '../components/ui/PageLoader';
 import api from '../utils/api';
 import { formatDateOnly, formatPeso } from '../utils/formatters';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
+import '../styles/shared/table-ui-core.css';
 import '../styles/pages/analytics.css';
 
 type RangeKey = 'this_month' | 'previous_month' | 'this_year' | 'all_time';
@@ -449,9 +452,7 @@ const Analytics = () => {
       {error && <Notification message={error} type="error" />}
 
       {loading ? (
-        <section className="analytics-loading-shell">
-          <p className="analytics-loading">Loading analytics report...</p>
-        </section>
+        <PageLoader pageName="Analytics Report" className="analytics-loading-shell" />
       ) : (
         <div ref={reportRef} className="analytics-report-canvas" aria-label="Analytics report">
           <section className="analytics-report-meta">
@@ -627,34 +628,36 @@ const Analytics = () => {
 
           <section className="analytics-appendix" aria-label="Recent order appendix">
             <h3>Report Appendix: Recent Orders</h3>
-            <div className="analytics-appendix-table-wrap">
-              <table className="analytics-appendix-table">
+            <DataTable wrapperClassName="analytics-appendix-table-wrapper" tableClassName="analytics-appendix-table">
                 <thead>
                   <tr>
-                    <th>Order ID</th>
+                    <th className="table-col-number">Order ID</th>
                     <th>Customer</th>
                     <th>Delivery Date</th>
-                    <th>Amount</th>
+                    <th className="table-col-number">Amount</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentOrders.length ? recentOrders.map((order) => (
                     <tr key={order.order_id}>
-                      <td>#{order.order_id}</td>
+                      <td className="table-col-number">
+                        <span className="delivery-order-id-chip">#{order.order_id}</span>
+                      </td>
                       <td>{order.customer_name}</td>
                       <td>{order.delivery_date ? formatDateOnly(order.delivery_date) : 'Not Scheduled'}</td>
-                      <td>{formatPeso(order.total_amount)}</td>
-                      <td>{normalizeDeliveryStatus(order.delivery_status)}</td>
+                      <td className="table-col-number">{formatPeso(order.total_amount)}</td>
+                      <td>
+                        <span className={`delivery-status-pill status-${order.delivery_status || 'unassigned'}`}>
+                          {normalizeDeliveryStatus(order.delivery_status)}
+                        </span>
+                      </td>
                     </tr>
                   )) : (
-                    <tr>
-                      <td colSpan={5} className="analytics-appendix-empty">No recent orders available.</td>
-                    </tr>
+                    <DataTableEmptyState colSpan={5} message="No recent orders available." />
                   )}
                 </tbody>
-              </table>
-            </div>
+            </DataTable>
           </section>
         </div>
       )}

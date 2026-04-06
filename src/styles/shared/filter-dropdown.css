@@ -38,8 +38,8 @@
 }
 
 .filter-inline-dropdown .dropdown-filter-trigger:hover {
-  border-color: rgba(76, 175, 80, 0.45);
-  box-shadow: 0 6px 14px rgba(76, 175, 80, 0.08);
+  border-color: rgba(54, 90, 56, 0.45);
+  box-shadow: 0 6px 14px rgba(54, 90, 56, 0.1);
 }
 
 .filter-inline-dropdown .dropdown-filter-trigger:focus {
@@ -82,9 +82,9 @@
   z-index: 20;
   display: none;
   padding: 8px;
-  border: 1px solid rgba(76, 175, 80, 0.18);
+  border: 1px solid rgba(54, 90, 56, 0.2);
   border-radius: 12px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(246, 251, 247, 0.98));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 242, 0.98));
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
   backdrop-filter: blur(14px);
 }
@@ -116,13 +116,13 @@
 .dropdown-filter-option:hover,
 .dropdown-filter-option:focus {
   outline: none;
-  background: rgba(76, 175, 80, 0.1);
-  color: #1b5e20;
+  background: rgba(54, 90, 56, 0.11);
+  color: var(--primary);
 }
 
 .dropdown-filter-option.is-selected {
-  background: linear-gradient(180deg, rgba(76, 175, 80, 0.18), rgba(76, 175, 80, 0.1));
-  color: #1b5e20;
+  background: linear-gradient(180deg, rgba(54, 90, 56, 0.18), rgba(54, 90, 56, 0.1));
+  color: var(--primary);
   font-weight: 600;
 }
 

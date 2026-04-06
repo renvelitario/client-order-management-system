@@ -17,10 +17,12 @@ import {
 } from 'recharts';
 import '../styles/shared/table-ui-core.css';
 import '../styles/shared/feedback-ui-notification.css';
+import '../styles/shared/table-ui-layout-controls.css';
 import '../styles/pages/dashboard.css';
 import FilterDropdown from '../components/ui/FilterDropdown';
 import { formatDateOnly, formatPeso } from '../utils/formatters';
 import Notification from '../components/ui/Notification';
+import PageLoader from '../components/ui/PageLoader';
 import DataTable, { DataTableEmptyState } from '../components/ui/DataTable';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
@@ -250,11 +252,7 @@ const Dashboard = () => {
   }, [rangeParams]);
 
   if (loading) {
-    return (
-      <div className="dashboard-page">
-        <div className="dashboard-loading">Loading...</div>
-      </div>
-    );
+    return <PageLoader pageName="Dashboard" />;
   }
 
   const topProductsChartData = topProducts.map((entry) => ({
@@ -262,19 +260,19 @@ const Dashboard = () => {
     quantity: entry.quantity,
     revenue: entry.revenue,
   }));
-  const pieColors = ['#2e7d32', '#43a047', '#66bb6a', '#a5d6a7', '#c8e6c9'];
+  const pieColors = ['#2f5736', '#6f7d48', '#8b6d33', '#486a72', '#a24b3e', '#5f6b68'];
   const chartSeriesColors = {
-    orders: '#475569',
-    revenue: '#1f5130',
-    topProducts: '#2e7d32',
+    orders: '#5b685b',
+    revenue: '#365a38',
+    topProducts: '#456d3b',
   };
   const deliveryStatusColors: Record<string, string> = {
-    Unassigned: '#70533c',
-    Pending: '#8d6e00',
-    'Out for Delivery': '#0d47a1',
-    Delivered: '#2e7d32',
-    Failed: '#b71c1c',
-    Cancelled: '#455a64',
+    Unassigned: '#73583f',
+    Pending: '#7f6a2f',
+    'Out for Delivery': '#486a72',
+    Delivered: '#2f5736',
+    Failed: '#a24b3e',
+    Cancelled: '#5f6b68',
   };
   const deliveryStatusData = [
     { name: 'Unassigned', value: stats.unassignedDeliveries },
@@ -288,13 +286,14 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
-      <div className="dashboard-header">
-        <div>
+      <section className="header-row page-shell-header dashboard-header" aria-label="Dashboard summary header">
+        <div className="page-shell-heading">
+          <p className="page-shell-kicker">Dashboard</p>
           <h2>Welcome, {username}</h2>
-          <p className="dashboard-subtitle">Business overview and trend insights</p>
+          <p className="page-shell-subtitle dashboard-subtitle">Business overview and trend insights</p>
         </div>
 
-        <div className="dashboard-filter-group filter-inline-control">
+        <div className="dashboard-filter-group filter-inline-control page-shell-controls">
           <label id={rangeFilterLabelId} className="filter-inline-label">Date Range</label>
           <FilterDropdown
             id="range-filter"
@@ -305,9 +304,11 @@ const Dashboard = () => {
             onChange={setRange}
           />
         </div>
-      </div>
+      </section>
 
       {error && <Notification message={error} type="error" />}
+
+      <div className="dashboard-report-canvas" aria-label="Dashboard report content">
 
       <section className="kpi-section">
         <h3 className="kpi-section-title">Sales Overview</h3>
@@ -520,6 +521,7 @@ const Dashboard = () => {
             </tbody>
           </DataTable>
       </section>
+      </div>
     </div>
   );
 };

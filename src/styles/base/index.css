@@ -1,27 +1,27 @@
 :root {
   /* Colors */
-  --primary: #4caf50;
-  --primary-hover: #45a049;
-  --primary-light: #e8f5e9;
+  --primary: #365a38;
+  --primary-hover: #2f5034;
+  --primary-light: #e6efe3;
   
-  --secondary: #1e88e5;
-  --secondary-hover: #1565c0;
+  --secondary: #486a72;
+  --secondary-hover: #3d5b62;
   
-  --danger: #e53935;
-  --danger-hover: #c62828;
-  --danger-light: #ffebee;
+  --danger: #b94438;
+  --danger-hover: #98362d;
+  --danger-light: #fbeceb;
   
   --surface: #ffffff;
-  --surface-alt: #f8fafc;
+  --surface-alt: #f3f6f1;
   
   /* Text */
-  --text-main: #333333;
-  --text-muted: #64748b;
+  --text-main: #1f2f22;
+  --text-muted: #5b685b;
   --text-inverse: #ffffff;
   
   /* Borders and Layout */
-  --border-color: #dde3ec;
-  --border-focus: rgba(76, 175, 80, 0.25);
+  --border-color: #d6ddd0;
+  --border-focus: rgba(54, 90, 56, 0.24);
   
   /* Radii */
   --radius-sm: 6px;
@@ -42,8 +42,8 @@
 
 body {
 	background:
-		radial-gradient(circle at top left, rgba(111, 183, 92, 0.18), transparent 28%),
-		linear-gradient(180deg, #eef4ee 0%, #f7f6f2 52%, #edf3ec 100%);
+    radial-gradient(circle at top left, rgba(54, 90, 56, 0.14), transparent 28%),
+    linear-gradient(180deg, #eef3ec 0%, #f7f8f5 52%, #ecf1eb 100%);
 	color: var(--text-main);
 	font-family: 'Montserrat', Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;

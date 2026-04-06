@@ -2,8 +2,46 @@
 .header-row {
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 14px;
+    gap: 14px;
+}
+
+.page-shell-header {
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: linear-gradient(145deg, #f5f7f1 0%, #eaeee5 100%);
+}
+
+.page-shell-heading {
+    min-width: 0;
+}
+
+.page-shell-kicker {
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.page-shell-heading h2 {
+    margin: 6px 0 4px;
+    color: var(--text-main);
+}
+
+.page-shell-subtitle {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.page-shell-controls {
+    display: flex;
     align-items: center;
-    margin-bottom: 12px;
+    gap: 10px;
 }
 
 /* SEARCH + CREATE BUTTONS */
@@ -17,9 +55,9 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    background: var(--surface);
+    background: linear-gradient(180deg, #ffffff 0%, #f7faf5 100%);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     min-height: 40px;
     padding: 0 12px;
     width: 280px;
@@ -34,7 +72,7 @@
 
 .search-input-wrapper .material-icons {
     font-size: 18px;
-    color: #888;
+    color: var(--text-muted);
     margin-left: 0;
     margin-right: 6px;
 }
@@ -65,7 +103,7 @@
     padding: 0;
     border: none;
     background: transparent;
-    color: #666;
+    color: var(--text-muted);
     border-radius: 999px;
     cursor: pointer;
     transition: var(--transition-fast);
@@ -74,13 +112,13 @@
 
 .search-input-action:hover {
     color: var(--primary);
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(54, 90, 56, 0.08);
 }
 
 .search-input-action:focus-visible {
     outline: none;
     color: var(--primary);
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(54, 90, 56, 0.08);
 }
 
 .search-input-action .material-symbols-outlined,
@@ -96,10 +134,10 @@
     gap: 6px;
     min-height: 40px;
     padding: 0 16px;
-    background-color: var(--primary);
+    background: linear-gradient(130deg, var(--primary), var(--primary-hover));
     color: var(--text-inverse);
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
@@ -110,7 +148,7 @@
 }
 
 .create-button:hover {
-    background-color: var(--primary-hover);
+    filter: saturate(1.05);
     box-shadow: var(--shadow-md);
 }
 

@@ -481,7 +481,7 @@ const OrdersList = () => {
     />
   );
 
-  if (initialLoading) return <PageLoader />;
+  if (initialLoading) return <PageLoader pageName="Orders" />;
 
   return (
     <div className="container">
@@ -506,7 +506,9 @@ const OrdersList = () => {
       />
 
       <ListPageHeader
+        kicker="Commerce"
         title="Orders"
+        subtitle="Track order records, schedule deliveries, and monitor order values."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search orders"

@@ -228,7 +228,7 @@ const ProductsList = () => {
     />
   );
 
-  if (initialLoading) return <PageLoader />;
+  if (initialLoading) return <PageLoader pageName="Products" />;
 
   return (
     <div className="container">
@@ -247,7 +247,9 @@ const ProductsList = () => {
       />
 
       <ListPageHeader
+        kicker="Operations"
         title="Products"
+        subtitle="Manage catalog records, pricing, and availability status."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search products"

@@ -275,7 +275,7 @@ const UserManagement = () => {
     </div>
   );
 
-  if (initialLoading) return <PageLoader />;
+  if (initialLoading) return <PageLoader pageName="User Management" />;
 
   return (
     <div className="container users-management-container">
@@ -297,7 +297,9 @@ const UserManagement = () => {
       />
 
       <ListPageHeader
+        kicker="Administration"
         title="User Management"
+        subtitle="Control user access, roles, and account status across the system."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         action={usersHeaderAction}
