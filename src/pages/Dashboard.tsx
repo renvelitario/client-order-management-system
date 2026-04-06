@@ -504,12 +504,12 @@ const Dashboard = () => {
                       <span className="delivery-order-id-chip">#{order.order_id}</span>
                     </td>
                     <td>{order.customer_name}</td>
-                    <td>{formatDateOnly(order.delivery_date)}</td>
+                    <td>{order.delivery_date ? formatDateOnly(order.delivery_date) : 'Not Scheduled'}</td>
                     <td className="table-col-number">{order.item_count}</td>
                     <td className="table-col-number">{formatPeso(order.total_amount || 0)}</td>
                     <td>
-                      <span className={`delivery-status-pill status-${order.delivery_status || 'pending'}`}>
-                        {DELIVERY_STATUS_LABELS[order.delivery_status as DeliveryStatusKey] || order.delivery_status || 'Pending'}
+                      <span className={`delivery-status-pill status-${order.delivery_status || 'unassigned'}`}>
+                        {DELIVERY_STATUS_LABELS[(order.delivery_status || 'unassigned') as DeliveryStatusKey] || 'Unassigned'}
                       </span>
                     </td>
                   </tr>
