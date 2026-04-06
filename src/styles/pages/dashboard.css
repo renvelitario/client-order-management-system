@@ -26,6 +26,8 @@
 
 .dashboard-header {
     margin-bottom: 0;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .dashboard-header h2 {
@@ -39,6 +41,14 @@
 
 .dashboard-filter-group {
     min-width: 0;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.dashboard-filter-group .dashboard-range-dropdown,
+.dashboard-filter-group .dashboard-range-dropdown .dropdown-filter-trigger {
+    width: 100%;
+    max-width: 280px;
 }
 
 .kpi-section {
@@ -227,6 +237,11 @@
     .dashboard-report-canvas {
         padding: 12px;
         gap: 14px;
+    }
+
+    .dashboard-filter-group .dashboard-range-dropdown,
+    .dashboard-filter-group .dashboard-range-dropdown .dropdown-filter-trigger {
+        max-width: none;
     }
 
     .kpi-grid {
