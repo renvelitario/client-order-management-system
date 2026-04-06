@@ -71,17 +71,25 @@ body {
 
 :where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button) {
   cursor: pointer;
-  transition: filter 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
   transform-origin: center;
 }
 
 :where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button):hover:not(:disabled):not([aria-disabled='true']) {
-  filter: brightness(1.1);
-  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.14);
+  filter: none;
+  box-shadow: none;
 }
 
 :where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button):active:not(:disabled):not([aria-disabled='true']) {
-  animation: buttonPress 190ms cubic-bezier(0.2, 0.78, 0.2, 1);
+  animation: none;
+}
+
+:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button) {
+  box-shadow: none !important;
+}
+
+:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button):hover:not(:disabled):not([aria-disabled='true']) {
+  box-shadow: none !important;
 }
 
 .notification {
@@ -119,8 +127,8 @@ body {
   font-family: 'Montserrat', Arial, sans-serif;
   font-weight: 500;
   color: var(--text-main);
-  background: linear-gradient(180deg, #ffffff 0%, #f7faf7 100%);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  background: #ffffff;
+  box-shadow: none;
   cursor: pointer;
   outline: none;
   appearance: none;
@@ -133,7 +141,7 @@ body {
 
 .filter-like-select:hover {
   border-color: rgba(54, 90, 56, 0.45);
-  box-shadow: 0 6px 14px rgba(54, 90, 56, 0.1);
+  box-shadow: none;
 }
 
 .filter-like-select:focus,
@@ -151,4 +159,15 @@ body {
 .filter-like-select option {
   background: #f5f8f2;
   color: var(--text-main);
+}
+
+/* Global flat form controls and dropdowns */
+:where(input:not([type='checkbox']):not([type='radio']):not([type='range']), textarea, select, .dropdown-filter-trigger, .dropdown-filter-menu, .search-input-wrapper input) {
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+:where(.dropdown-filter-trigger, .dropdown-filter-menu, .dropdown-filter-option.is-selected) {
+  background: #ffffff !important;
 }

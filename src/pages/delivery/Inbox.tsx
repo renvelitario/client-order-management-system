@@ -2,9 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import api from '../../utils/api';
 import { useAuth } from '../../hooks/useAuth';
 import Notification from '../../components/ui/Notification';
+import Pagination from '../../components/ui/Pagination';
 import type { InboxNotification, PaginatedResponse } from '../../types/app';
 import { resolveApiErrorMessage } from '../../types/app';
 import '../../styles/pages/delivery/inbox.css';
+import '../../styles/shared/table-ui-pagination.css';
 
 type InboxFilter = 'all' | 'unread';
 
@@ -26,6 +28,8 @@ const Inbox = () => {
   const [items, setItems] = useState<InboxNotification[]>([]);
   const [filter, setFilter] = useState<InboxFilter>('all');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalRows, setTotalRows] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<number | null>(null);
@@ -43,10 +47,12 @@ const Inbox = () => {
   const loadNotifications = useCallback(async ({
     nextFilter,
     nextPage,
+    nextPageSize,
     showLoader = true,
   }: {
     nextFilter: InboxFilter;
     nextPage: number;
+    nextPageSize: number;
     showLoader?: boolean;
   }) => {
     if (showLoader) {
@@ -58,11 +64,12 @@ const Inbox = () => {
         params: {
           status: nextFilter,
           page: nextPage,
-          limit: 20,
+          limit: nextPageSize,
         },
       });
 
       setItems(data.data || []);
+      setTotalRows(data.pagination?.total || 0);
       setTotalPages(data.pagination?.totalPages || 1);
     } catch (error) {
       setFeedback({
@@ -75,8 +82,8 @@ const Inbox = () => {
   }, []);
 
   useEffect(() => {
-    void loadNotifications({ nextFilter: filter, nextPage: page });
-  }, [filter, page, loadNotifications]);
+    void loadNotifications({ nextFilter: filter, nextPage: page, nextPageSize: pageSize });
+  }, [filter, page, pageSize, loadNotifications]);
 
   const dispatchNotificationChanged = () => {
     window.dispatchEvent(new Event('notifications:changed'));
@@ -91,7 +98,7 @@ const Inbox = () => {
       dispatchNotificationChanged();
 
       if (filter === 'unread') {
-        void loadNotifications({ nextFilter: filter, nextPage: page, showLoader: false });
+        void loadNotifications({ nextFilter: filter, nextPage: page, nextPageSize: pageSize, showLoader: false });
       } else {
         setItems((previous) => previous.map((item) => (
           item.notification_id === notificationId
@@ -217,21 +224,17 @@ const Inbox = () => {
       )}
 
       <footer className="inbox-pagination" aria-label="Inbox pagination">
-        <button
-          type="button"
-          onClick={() => setPage((current) => Math.max(1, current - 1))}
-          disabled={page <= 1 || loading}
-        >
-          Previous
-        </button>
-        <span>Page {page} of {Math.max(1, totalPages)}</span>
-        <button
-          type="button"
-          onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
-          disabled={page >= totalPages || loading}
-        >
-          Next
-        </button>
+        <Pagination
+          currentPage={page}
+          totalPages={Math.max(1, totalPages)}
+          onPageChange={setPage}
+          pageSize={pageSize}
+          onPageSizeChange={(size) => {
+            setPage(1);
+            setPageSize(size);
+          }}
+          totalRows={totalRows}
+        />
       </footer>
     </section>
   );
