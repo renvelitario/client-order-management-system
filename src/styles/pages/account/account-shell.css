@@ -161,7 +161,7 @@
 .account-password-strength-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #c62828 0%, #ef6c00 50%, #2e7d32 100%);
+  background: #c62828;
   transition: width 180ms ease;
 }
 

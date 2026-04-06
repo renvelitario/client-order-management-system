@@ -12,19 +12,31 @@ type PasswordState = {
 };
 
 const calculatePasswordStrength = (value: string): number => {
+  if (!value) {
+    return 0;
+  }
+
   let score = 0;
+  if (value.length > 0) score += 1;
   if (value.length >= 8) score += 1;
   if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score += 1;
-  if (/\d/.test(value)) score += 1;
-  if (/[^A-Za-z0-9]/.test(value)) score += 1;
-  return score;
+  if (/\d/.test(value) || /[^A-Za-z0-9]/.test(value)) score += 1;
+  return Math.min(score, 4);
 };
 
 const strengthLabel = (score: number): string => {
+  if (score === 0) return 'Too Weak';
   if (score <= 1) return 'Weak';
   if (score === 2) return 'Fair';
   if (score === 3) return 'Strong';
   return 'Very Strong';
+};
+
+const strengthColor = (score: number): string => {
+  if (score <= 1) return '#c62828';
+  if (score === 2) return '#ef6c00';
+  if (score === 3) return '#2e7d32';
+  return '#1b5e20';
 };
 
 const AccountSecurity = () => {
@@ -105,7 +117,13 @@ const AccountSecurity = () => {
           <div className="account-password-strength" aria-live="polite">
             <span>Password strength: {strengthLabel(score)}</span>
             <div className="account-password-strength-track" role="progressbar" aria-valuemin={0} aria-valuemax={4} aria-valuenow={score}>
-              <div className="account-password-strength-fill" style={{ width: `${(score / 4) * 100}%` }} />
+              <div
+                className="account-password-strength-fill"
+                style={{
+                  width: `${(score / 4) * 100}%`,
+                  backgroundColor: strengthColor(score),
+                }}
+              />
             </div>
           </div>
 

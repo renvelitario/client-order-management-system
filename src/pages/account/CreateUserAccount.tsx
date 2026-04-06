@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import api from '../../utils/api';
 import '../../styles/pages/auth/register.css';
@@ -20,6 +20,34 @@ const ACCOUNT_STATUS_OPTIONS: Array<{ value: AccountStatus; label: string }> = [
   { value: 'Suspended', label: 'Suspended' },
 ];
 
+const calculatePasswordStrength = (value: string): number => {
+  if (!value) {
+    return 0;
+  }
+
+  let score = 0;
+  if (value.length > 0) score += 1;
+  if (value.length >= 8) score += 1;
+  if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score += 1;
+  if (/\d/.test(value) || /[^A-Za-z0-9]/.test(value)) score += 1;
+  return Math.min(score, 4);
+};
+
+const strengthLabel = (score: number): string => {
+  if (score === 0) return 'Too Weak';
+  if (score <= 1) return 'Weak';
+  if (score === 2) return 'Fair';
+  if (score === 3) return 'Strong';
+  return 'Very Strong';
+};
+
+const strengthColor = (score: number): string => {
+  if (score <= 1) return '#c62828';
+  if (score === 2) return '#ef6c00';
+  if (score === 3) return '#2e7d32';
+  return '#1b5e20';
+};
+
 const CreateUserAccount = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -33,6 +61,7 @@ const CreateUserAccount = () => {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const passwordScore = useMemo(() => calculatePasswordStrength(formData.password), [formData.password]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -98,6 +127,18 @@ const CreateUserAccount = () => {
         <div className="form-group">
           <label>Password:</label>
           <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+          <div className="account-password-strength" aria-live="polite">
+            <span>Password strength: {strengthLabel(passwordScore)}</span>
+            <div className="account-password-strength-track" role="progressbar" aria-valuemin={0} aria-valuemax={4} aria-valuenow={passwordScore}>
+              <div
+                className="account-password-strength-fill"
+                style={{
+                  width: `${(passwordScore / 4) * 100}%`,
+                  backgroundColor: strengthColor(passwordScore),
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="form-group">
