@@ -2,9 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import type { Dispatch, MouseEvent, RefObject, SetStateAction } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
+import api from '../../utils/api';
 import { useAuth } from '../../hooks/useAuth';
 import AppIcon from '../ui/AppIcon';
 import Icon from '../ui/Icon';
+
+const NOTIFICATION_POLL_INTERVAL_MS = 30_000;
 
 const Topbar = ({
   isSidebarOpen,
@@ -19,6 +22,7 @@ const Topbar = ({
 }) => {
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [fallbackAccount, setFallbackAccount] = useState({ name: 'Account', email: '' });
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   const accountMenuRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const { localUser, isAdmin } = useAuth();
@@ -65,6 +69,48 @@ const Topbar = ({
     });
   }, [localUser]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadUnreadSummary = async () => {
+      try {
+        const { data } = await api.get('/notifications/summary');
+        if (isMounted) {
+          setUnreadNotifications(Number(data?.unread || 0));
+        }
+      } catch {
+        if (isMounted) {
+          setUnreadNotifications(0);
+        }
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void loadUnreadSummary();
+      }
+    };
+
+    const handleNotificationChange = () => {
+      void loadUnreadSummary();
+    };
+
+    void loadUnreadSummary();
+    const intervalId = window.setInterval(() => {
+      void loadUnreadSummary();
+    }, NOTIFICATION_POLL_INTERVAL_MS);
+
+    window.addEventListener('notifications:changed', handleNotificationChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener('notifications:changed', handleNotificationChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   const handleLogout = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsAccountMenuOpen(false);
@@ -105,6 +151,11 @@ const Topbar = ({
         title="Inbox"
       >
         <AppIcon name="inbox" aria-hidden="true" />
+        {unreadNotifications > 0 && (
+          <span className="top-inbox-badge" aria-label={`${unreadNotifications} unread notifications`}>
+            {unreadNotifications > 99 ? '99+' : unreadNotifications}
+          </span>
+        )}
       </NavLink>
 
       <div className="top-account-menu" ref={accountMenuRef}>

@@ -73,6 +73,21 @@ export interface Order {
   delivery_fee?: number;
 }
 
+export interface InboxNotification {
+  notification_id: number;
+  event_type: string;
+  title: string;
+  message: string;
+  order_id: number | null;
+  is_read: boolean;
+  read_at: string | null;
+  created_at: string;
+}
+
+export interface NotificationSummary {
+  unread: number;
+}
+
 export interface UserSummary {
   user_id: number;
   email?: string;
