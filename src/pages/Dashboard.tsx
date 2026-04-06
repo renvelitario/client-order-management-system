@@ -128,32 +128,47 @@ const Dashboard = () => {
       setError('');
 
       try {
-        const [summaryRes, recentOrdersRes] = await Promise.all([
+        const [summaryResult, recentOrdersResult] = await Promise.allSettled([
           api.get('/dashboard/summary', { params: rangeParams }),
           api.get('/dashboard/recent-orders', { params: rangeParams }),
         ]);
 
+        const summaryError = summaryResult.status === 'rejected'
+          ? resolveApiErrorMessage(summaryResult.reason, 'Failed to load dashboard summary.')
+          : '';
+        const recentOrdersError = recentOrdersResult.status === 'rejected'
+          ? resolveApiErrorMessage(recentOrdersResult.reason, 'Failed to load recent orders.')
+          : '';
+
+        if (summaryError || recentOrdersError) {
+          const combinedError = [summaryError, recentOrdersError].filter(Boolean).join(' ');
+          setError(combinedError || 'Failed to load dashboard data.');
+        }
+
+        const summaryRes = summaryResult.status === 'fulfilled' ? summaryResult.value : null;
+        const recentOrdersRes = recentOrdersResult.status === 'fulfilled' ? recentOrdersResult.value : null;
+
         setStats({
-          totalProducts: Number(summaryRes.data?.summary?.totalProducts || 0),
-          totalCustomers: Number(summaryRes.data?.summary?.totalCustomers || 0),
-          totalOrders: Number(summaryRes.data?.summary?.totalOrders || 0),
-          totalSales: Number(summaryRes.data?.summary?.totalSales || 0),
-          grossSales: Number(summaryRes.data?.summary?.grossSales || 0),
-          totalDiscounts: Number(summaryRes.data?.summary?.totalDiscounts || 0),
-          totalDeliveryFees: Number(summaryRes.data?.summary?.totalDeliveryFees || 0),
-          averageOrderValue: Number(summaryRes.data?.summary?.averageOrderValue || 0),
-          activeCustomers: Number(summaryRes.data?.summary?.activeCustomers || 0),
-          unassignedDeliveries: Number(summaryRes.data?.summary?.unassignedDeliveries || 0),
-          scheduledDeliveries: Number(summaryRes.data?.summary?.scheduledDeliveries || 0),
-          outForDelivery: Number(summaryRes.data?.summary?.outForDelivery || 0),
-          pendingDeliveries: Number(summaryRes.data?.summary?.pendingDeliveries || 0),
-          deliveredOrders: Number(summaryRes.data?.summary?.deliveredOrders || 0),
-          failedDeliveries: Number(summaryRes.data?.summary?.failedDeliveries || 0),
-          cancelledOrders: Number(summaryRes.data?.summary?.cancelledOrders || 0),
-          totalUnitsSold: Number(summaryRes.data?.summary?.totalUnitsSold || 0),
+          totalProducts: Number(summaryRes?.data?.summary?.totalProducts || 0),
+          totalCustomers: Number(summaryRes?.data?.summary?.totalCustomers || 0),
+          totalOrders: Number(summaryRes?.data?.summary?.totalOrders || 0),
+          totalSales: Number(summaryRes?.data?.summary?.totalSales || 0),
+          grossSales: Number(summaryRes?.data?.summary?.grossSales || 0),
+          totalDiscounts: Number(summaryRes?.data?.summary?.totalDiscounts || 0),
+          totalDeliveryFees: Number(summaryRes?.data?.summary?.totalDeliveryFees || 0),
+          averageOrderValue: Number(summaryRes?.data?.summary?.averageOrderValue || 0),
+          activeCustomers: Number(summaryRes?.data?.summary?.activeCustomers || 0),
+          unassignedDeliveries: Number(summaryRes?.data?.summary?.unassignedDeliveries || 0),
+          scheduledDeliveries: Number(summaryRes?.data?.summary?.scheduledDeliveries || 0),
+          outForDelivery: Number(summaryRes?.data?.summary?.outForDelivery || 0),
+          pendingDeliveries: Number(summaryRes?.data?.summary?.pendingDeliveries || 0),
+          deliveredOrders: Number(summaryRes?.data?.summary?.deliveredOrders || 0),
+          failedDeliveries: Number(summaryRes?.data?.summary?.failedDeliveries || 0),
+          cancelledOrders: Number(summaryRes?.data?.summary?.cancelledOrders || 0),
+          totalUnitsSold: Number(summaryRes?.data?.summary?.totalUnitsSold || 0),
         });
 
-        const monthlyTrends = (summaryRes.data?.monthlyTrends || []) as Array<{
+        const monthlyTrends = (summaryRes?.data?.monthlyTrends || []) as Array<{
           month?: string;
           revenue?: number | string;
           orders?: number | string;
@@ -166,7 +181,7 @@ const Dashboard = () => {
             orders: Number(entry.orders || 0),
           })));
         } else {
-          const monthlyRevenue = (summaryRes.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
+          const monthlyRevenue = (summaryRes?.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
           setTrendData(monthlyRevenue.map((entry) => ({
             label: String(entry.month || 'N/A'),
             revenue: Number(entry.revenue || 0),
@@ -174,7 +189,7 @@ const Dashboard = () => {
           })));
         }
 
-        const top = (summaryRes.data?.topProducts || []) as Array<{
+        const top = (summaryRes?.data?.topProducts || []) as Array<{
           product_name?: string;
           sold_quantity?: number | string;
           revenue?: number | string;
@@ -185,7 +200,7 @@ const Dashboard = () => {
           revenue: Number(entry.revenue || 0),
         })));
 
-        const latestOrders = ((recentOrdersRes.data?.data || []) as Order[]).map((order) => {
+        const latestOrders = ((recentOrdersRes?.data?.data || []) as Order[]).map((order) => {
           const items = order.items || [];
           return {
           ...order,
