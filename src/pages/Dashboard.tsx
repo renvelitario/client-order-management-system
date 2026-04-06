@@ -37,6 +37,9 @@ type DashboardStats = {
   totalDeliveryFees: number;
   averageOrderValue: number;
   activeCustomers: number;
+  unassignedDeliveries: number;
+  scheduledDeliveries: number;
+  outForDelivery: number;
   pendingDeliveries: number;
   deliveredOrders: number;
   failedDeliveries: number;
@@ -125,6 +128,9 @@ const Dashboard = () => {
     totalDeliveryFees: 0,
     averageOrderValue: 0,
     activeCustomers: 0,
+    unassignedDeliveries: 0,
+    scheduledDeliveries: 0,
+    outForDelivery: 0,
     pendingDeliveries: 0,
     deliveredOrders: 0,
     failedDeliveries: 0,
@@ -175,6 +181,9 @@ const Dashboard = () => {
           totalDeliveryFees: Number(summaryRes.data?.summary?.totalDeliveryFees || 0),
           averageOrderValue: Number(summaryRes.data?.summary?.averageOrderValue || 0),
           activeCustomers: Number(summaryRes.data?.summary?.activeCustomers || 0),
+          unassignedDeliveries: Number(summaryRes.data?.summary?.unassignedDeliveries || 0),
+          scheduledDeliveries: Number(summaryRes.data?.summary?.scheduledDeliveries || 0),
+          outForDelivery: Number(summaryRes.data?.summary?.outForDelivery || 0),
           pendingDeliveries: Number(summaryRes.data?.summary?.pendingDeliveries || 0),
           deliveredOrders: Number(summaryRes.data?.summary?.deliveredOrders || 0),
           failedDeliveries: Number(summaryRes.data?.summary?.failedDeliveries || 0),
@@ -252,12 +261,22 @@ const Dashboard = () => {
     revenue: entry.revenue,
   }));
   const pieColors = ['#2e7d32', '#43a047', '#66bb6a', '#a5d6a7', '#c8e6c9'];
+  const deliveryStatusColors: Record<string, string> = {
+    Unassigned: '#f4f1ea',
+    Pending: '#fff8e1',
+    'Out for Delivery': '#e3f2fd',
+    Delivered: '#e8f5e9',
+    Failed: '#ffebee',
+    Cancelled: '#eceff1',
+  };
   const deliveryStatusData = [
-    { name: 'Pending / Backlog', value: stats.pendingDeliveries },
+    { name: 'Unassigned', value: stats.unassignedDeliveries },
+    { name: 'Pending', value: stats.scheduledDeliveries },
+    { name: 'Out for Delivery', value: stats.outForDelivery },
     { name: 'Delivered', value: stats.deliveredOrders },
     { name: 'Failed', value: stats.failedDeliveries },
     { name: 'Cancelled', value: stats.cancelledOrders },
-  ].filter((entry) => entry.value > 0);
+  ];
   const rangeFilterLabelId = 'dashboard-range-filter-label';
 
   return (
@@ -283,47 +302,90 @@ const Dashboard = () => {
 
       {error && <Notification message={error} type="error" />}
 
-      <section className="kpi-grid">
-        <article className="kpi-card kpi-good">
-          <h4>Total Sales</h4>
-          <p>{formatPeso(stats.totalSales)}</p>
-        </article>
-        <article className="kpi-card kpi-good">
-          <h4>Average Order Value</h4>
-          <p>{formatPeso(stats.averageOrderValue)}</p>
-        </article>
-        <article className="kpi-card kpi-good">
-          <h4>Total Orders</h4>
-          <p>{stats.totalOrders}</p>
-        </article>
-        <article className="kpi-card kpi-good">
-          <h4>Active Customers</h4>
-          <p>{stats.activeCustomers}</p>
-        </article>
-        <article className="kpi-card kpi-warn">
-          <h4>Pending Deliveries</h4>
-          <p>{stats.pendingDeliveries}</p>
-        </article>
-        <article className="kpi-card kpi-good">
-          <h4>Units Sold</h4>
-          <p>{stats.totalUnitsSold}</p>
-        </article>
-        <article className="kpi-card kpi-good kpi-muted">
-          <h4>Total Products</h4>
-          <p>{stats.totalProducts}</p>
-        </article>
-        <article className="kpi-card kpi-good kpi-muted">
-          <h4>Total Customers</h4>
-          <p>{stats.totalCustomers}</p>
-        </article>
-        <article className="kpi-card kpi-good kpi-muted">
-          <h4>Gross Sales</h4>
-          <p>{formatPeso(stats.grossSales)}</p>
-        </article>
-        <article className="kpi-card kpi-good kpi-muted">
-          <h4>Discounts + Fees</h4>
-          <p>{formatPeso((stats.totalDiscounts * -1) + stats.totalDeliveryFees)}</p>
-        </article>
+      <section className="kpi-section">
+        <h3 className="kpi-section-title">Sales Overview</h3>
+        <div className="kpi-grid kpi-grid-sales">
+          <article className="kpi-card kpi-good">
+            <h4>Total Sales</h4>
+            <p>{formatPeso(stats.totalSales)}</p>
+          </article>
+          <article className="kpi-card kpi-good">
+            <h4>Gross Sales</h4>
+            <p>{formatPeso(stats.grossSales)}</p>
+          </article>
+          <article className="kpi-card kpi-good">
+            <h4>Average Order Value</h4>
+            <p>{formatPeso(stats.averageOrderValue)}</p>
+          </article>
+          <article className="kpi-card kpi-muted">
+            <h4>Discounts</h4>
+            <p>{formatPeso(stats.totalDiscounts)}</p>
+          </article>
+          <article className="kpi-card kpi-muted">
+            <h4>Delivery Fees</h4>
+            <p>{formatPeso(stats.totalDeliveryFees)}</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="kpi-section">
+        <h3 className="kpi-section-title">Orders and Catalog</h3>
+        <div className="kpi-grid kpi-grid-ops">
+          <article className="kpi-card kpi-good">
+            <h4>Total Orders</h4>
+            <p>{stats.totalOrders}</p>
+          </article>
+          <article className="kpi-card kpi-good">
+            <h4>Units Sold</h4>
+            <p>{stats.totalUnitsSold}</p>
+          </article>
+          <article className="kpi-card kpi-good">
+            <h4>Active Customers</h4>
+            <p>{stats.activeCustomers}</p>
+          </article>
+          <article className="kpi-card kpi-muted">
+            <h4>Total Customers</h4>
+            <p>{stats.totalCustomers}</p>
+          </article>
+          <article className="kpi-card kpi-muted">
+            <h4>Total Products</h4>
+            <p>{stats.totalProducts}</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="kpi-section">
+        <h3 className="kpi-section-title">Delivery Snapshot</h3>
+        <div className="kpi-grid kpi-grid-delivery">
+          <article className="kpi-card kpi-warn">
+            <h4>Backlog Total</h4>
+            <p>{stats.pendingDeliveries}</p>
+          </article>
+          <article className="kpi-card kpi-warn">
+            <h4>Unassigned</h4>
+            <p>{stats.unassignedDeliveries}</p>
+          </article>
+          <article className="kpi-card kpi-warn">
+            <h4>Pending</h4>
+            <p>{stats.scheduledDeliveries}</p>
+          </article>
+          <article className="kpi-card kpi-warn">
+            <h4>Out for Delivery</h4>
+            <p>{stats.outForDelivery}</p>
+          </article>
+          <article className="kpi-card kpi-good">
+            <h4>Delivered</h4>
+            <p>{stats.deliveredOrders}</p>
+          </article>
+          <article className="kpi-card kpi-muted">
+            <h4>Failed</h4>
+            <p>{stats.failedDeliveries}</p>
+          </article>
+          <article className="kpi-card kpi-muted">
+            <h4>Cancelled</h4>
+            <p>{stats.cancelledOrders}</p>
+          </article>
+        </div>
       </section>
 
       <section className="chart-grid">
@@ -394,7 +456,7 @@ const Dashboard = () => {
                     label
                   >
                     {deliveryStatusData.map((entry, index) => (
-                      <Cell key={`${entry.name}-${index}`} fill={pieColors[index % pieColors.length]} />
+                      <Cell key={`${entry.name}-${index}`} fill={deliveryStatusColors[entry.name] || pieColors[index % pieColors.length]} />
                     ))}
                   </Pie>
                   <Tooltip />
