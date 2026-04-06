@@ -104,6 +104,14 @@
     grid-template-columns: 1fr;
   }
 
+  .delivery-order-modal-compact .entity-modal-actions .delivery-action-success {
+    order: 1;
+  }
+
+  .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger {
+    order: 2;
+  }
+
   .delivery-modal-title-wrap {
     flex-wrap: wrap;
   }
