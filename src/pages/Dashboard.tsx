@@ -19,11 +19,13 @@ import '../styles/shared/table-ui-core.css';
 import '../styles/shared/feedback-ui-notification.css';
 import '../styles/pages/dashboard.css';
 import FilterDropdown from '../components/ui/FilterDropdown';
-import { formatPeso } from '../utils/formatters';
+import { formatDateOnly, formatPeso } from '../utils/formatters';
 import Notification from '../components/ui/Notification';
 import DataTable, { DataTableEmptyState } from '../components/ui/DataTable';
 import type { Order } from '../types/app';
 import { resolveApiErrorMessage } from '../types/app';
+import { DELIVERY_STATUS_LABELS } from '../types/delivery';
+import type { DeliveryStatusKey } from '../types/delivery';
 
 type RangeKey = 'this_month' | 'previous_month' | 'this_year' | 'all_time';
 
@@ -486,24 +488,30 @@ const Dashboard = () => {
         <DataTable wrapperClassName="recent-orders-table-wrapper" tableClassName="recent-orders-table">
             <thead>
               <tr>
-                <th className="table-col-number">Order ID</th>
-                <th>Product Names</th>
-                <th>Customer Name</th>
-                <th className="table-col-number">Number of Items</th>
-                <th className="table-col-number">Total Amount</th>
-                <th>Order Date</th>
+                <th className="table-col-number">Order</th>
+                <th>Customer</th>
+                <th>Delivery Date</th>
+                <th className="table-col-number">Items</th>
+                <th className="table-col-number">Amount</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {recentOrders.length > 0 ? (
                 recentOrders.map((order) => (
-                  <tr key={order.order_id}>
-                    <td className="table-col-number">{order.order_id}</td>
-                    <td>{order.product_name}</td>
+                  <tr key={order.order_id} className="order-row-clickable">
+                    <td className="table-col-number">
+                      <span className="delivery-order-id-chip">#{order.order_id}</span>
+                    </td>
                     <td>{order.customer_name}</td>
+                    <td>{formatDateOnly(order.delivery_date)}</td>
                     <td className="table-col-number">{order.item_count}</td>
                     <td className="table-col-number">{formatPeso(order.total_amount || 0)}</td>
-                    <td>{formatOrderDate(order.order_date)}</td>
+                    <td>
+                      <span className={`delivery-status-pill status-${order.delivery_status || 'pending'}`}>
+                        {DELIVERY_STATUS_LABELS[order.delivery_status as DeliveryStatusKey] || order.delivery_status || 'Pending'}
+                      </span>
+                    </td>
                   </tr>
                 ))
               ) : (
