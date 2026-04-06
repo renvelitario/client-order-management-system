@@ -1,7 +1,7 @@
 import api from '../../utils/api';
 import type { FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import QRCode from 'qrcode';
+import { printOrderSlip } from '../../utils/printOrderSlip';
 import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
 import '../../styles/shared/table-ui-actions.css';
@@ -138,43 +138,12 @@ const OrdersList = () => {
   };
 
   const handlePrintReceipt = async (order: Order) => {
-    const qrCodeDataUrl = await QRCode.toDataURL(String(order.order_id), {
-      width: 180,
-      margin: 1,
-    });
-
-    const popup = window.open('', '_blank', 'width=420,height=700');
-    if (!popup) {
-      return;
+    try {
+      const { data } = await api.get<Order>(`/orders/${order.order_id}`);
+      await printOrderSlip(data);
+    } catch {
+      // popup blocked or fetch failed — no-op
     }
-
-    popup.document.write(`
-      <html>
-        <head>
-          <title>Receipt #${order.order_id}</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 16px; }
-            h2 { margin: 0 0 10px; }
-            .line { margin: 4px 0; }
-            .qr { margin: 16px 0; }
-            .footer { margin-top: 14px; font-size: 12px; color: #444; }
-          </style>
-        </head>
-        <body>
-          <h2>Order Receipt</h2>
-          <div class="line"><strong>Order ID:</strong> ${order.order_id}</div>
-          <div class="line"><strong>Customer ID:</strong> ${order.customer_id}</div>
-          <div class="line"><strong>Total:</strong> ${formatPeso(order.total_amount || 0)}</div>
-          <div class="line"><strong>Status:</strong> ${DELIVERY_STATUS_LABELS[order.delivery_status as DeliveryStatusKey] || 'Pending'}</div>
-          <div class="qr"><img src="${qrCodeDataUrl}" alt="Order QR Code" /></div>
-          <div class="footer">Scan this QR to quickly open Order #${order.order_id} during delivery.</div>
-          <script>
-            window.onload = function () { window.print(); };
-          </script>
-        </body>
-      </html>
-    `);
-    popup.document.close();
   };
 
   const handleSearchScanDetected = (orderId: string) => {
