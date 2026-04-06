@@ -96,7 +96,7 @@ function buildSlipPage(
     : '';
 
   return `
-  <div class="slip-page">
+  <div class="slip-page slip-page-${copyLabel.toLowerCase()}">
     <div class="slip-header">
       <div class="header-top">
         <div class="brand-wrap">
@@ -355,13 +355,15 @@ export async function printOrderSlip(order: Order): Promise<void> {
     }
     .items-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       table-layout: fixed;
       flex: 1;
     }
     .items-table th,
     .items-table td {
-      border: 0.5px solid #cbd5e1;
+      border-right: 0.5px solid #cbd5e1;
+      border-bottom: 0.5px solid #cbd5e1;
       padding: 0.6mm 1.2mm;
       font-size: 7.5pt;
       line-height: 1.35;
@@ -372,10 +374,18 @@ export async function printOrderSlip(order: Order): Promise<void> {
     .items-table th {
       font-weight: bold;
       color: #fff;
+      text-align: center;
       text-transform: uppercase;
       text-overflow: clip;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+    }
+    .items-table th:last-child,
+    .items-table td:last-child {
+      border-right: 0;
+    }
+    .items-table tbody tr:last-child td {
+      border-bottom: 0;
     }
     .thead-original th {
       background: #14532d;
@@ -385,6 +395,9 @@ export async function printOrderSlip(order: Order): Promise<void> {
     }
     .items-table .empty-row td {
       border-color: #e2e8f0;
+      background: #f8fafc;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .td-product {
       overflow: hidden;
@@ -438,9 +451,9 @@ export async function printOrderSlip(order: Order): Promise<void> {
       font-size: 8.5pt;
     }
     .total-divider {
-      border-top: 0.5px solid #94a3b8;
-      padding-top: 0.6mm;
-      margin-top: 0.2mm;
+      border-top: 0.35px solid #cbd5e1;
+      padding-top: 0.45mm;
+      margin-top: 0.1mm;
     }
     .payment-block {
       border-top: 0.5px solid #cbd5e1;
@@ -475,8 +488,14 @@ export async function printOrderSlip(order: Order): Promise<void> {
     /* ── Footer ── */
     .slip-bottom {
       margin-top: auto;
-      border-top: 0.5px solid #cbd5e1;
+      border-top: 0.8px solid #cbd5e1;
       padding-top: 0.8mm;
+    }
+    .slip-page-original .slip-bottom {
+      border-top-color: #14532d;
+    }
+    .slip-page-duplicate .slip-bottom {
+      border-top-color: #c41a1a;
     }
     .page-label {
       font-size: 7pt;
