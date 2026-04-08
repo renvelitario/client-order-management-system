@@ -159,4 +159,24 @@
     font-size: 18px;
 }
 
+@media (max-width: 768px) {
+    .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .page-shell-controls {
+        width: 100%;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+    }
+}
+
 

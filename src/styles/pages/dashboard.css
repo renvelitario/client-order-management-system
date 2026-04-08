@@ -26,8 +26,6 @@
 
 .dashboard-header {
     margin-bottom: 0;
-    flex-direction: column;
-    align-items: flex-start;
 }
 
 .dashboard-header h2 {
@@ -245,6 +243,11 @@
     .dashboard-report-canvas {
         padding: 12px;
         gap: 14px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .dashboard-filter-group .dashboard-range-dropdown,
