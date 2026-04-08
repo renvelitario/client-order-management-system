@@ -65,7 +65,12 @@
 
     .order-items-grid-head,
     .order-item-grid-row {
-        grid-template-columns: 64px 64px minmax(130px, 1fr) 100px 100px 36px;
+        grid-template-columns: 64px 64px minmax(200px, 2fr) 100px 100px 36px;
+        min-width: 564px;
+    }
+
+    .order-items-grid {
+        overflow-x: auto;
     }
 }
 
