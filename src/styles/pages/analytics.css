@@ -313,4 +313,14 @@
   .analytics-insight-card p {
     font-size: 22px;
   }
+
+  .analytics-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .analytics-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
 }
