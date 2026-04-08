@@ -82,7 +82,7 @@ const TodayOrders = () => {
       <ListPageHeader
         kicker="Logistics"
         title="Delivery Orders (Today)"
-        subtitle="View only the orders that are out for delivery today."
+        subtitle="View today’s delivery orders, including current, completed, and failed deliveries."
         searchInput={searchInput}
         onSearchChange={handleSearchChange}
         searchAriaLabel="Search delivery orders"
