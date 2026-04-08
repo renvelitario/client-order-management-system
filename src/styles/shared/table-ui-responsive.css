@@ -53,6 +53,12 @@
         padding-right: 16px;
     }
 
+    .entity-form-modal,
+    .order-form-modal {
+        max-width: 520px;
+        width: 100%;
+    }
+
     .order-items-section-header {
         align-items: stretch;
         flex-direction: column;

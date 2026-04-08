@@ -39,10 +39,11 @@
 
 /* Keep modal width stable in both loading and loaded states */
 .delivery-order-modal-compact {
-  width: 90%;
-  max-width: 650px;
+  width: min(520px, calc(100% - 48px));
+  max-width: 520px;
   min-width: 0;
   box-sizing: border-box;
+  margin: 0 auto;
 }
 
 /* Prevent loaded table content from stretching modal width */
