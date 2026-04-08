@@ -39,13 +39,14 @@
 
 .dashboard-filter-group {
     min-width: 0;
-    width: 100%;
+    width: auto;
+    flex: 0 0 auto;
     align-items: flex-start;
 }
 
 .dashboard-filter-group .dashboard-range-dropdown,
 .dashboard-filter-group .dashboard-range-dropdown .dropdown-filter-trigger {
-    width: 100%;
+    width: auto;
     max-width: 280px;
 }
 
@@ -252,6 +253,7 @@
 
     .dashboard-filter-group .dashboard-range-dropdown,
     .dashboard-filter-group .dashboard-range-dropdown .dropdown-filter-trigger {
+        width: 100%;
         max-width: none;
     }
 
