@@ -17,9 +17,18 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { authError } = useAuth();
 
-  const navigate = useNavigate();
+  const fillDemoCredentials = (email: string, password: string) => {
+    setIdentifier(email);
+    setPassword(password);
+  };
 
-  useEffect(() => {
+  const handleAdminDemoClick = () => {
+    fillDemoCredentials('admin@admin.com', 'admin');
+  };
+
+  const handleUserDemoClick = () => {
+    fillDemoCredentials('user@user.com', 'user');
+  };
     document.body.classList.add('login-page');
     document.documentElement.classList.add('login-page');
     return () => {
@@ -148,11 +157,27 @@ const Login = () => {
           <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
         </div>
 
-        <p className="demo-note">
-          Demo accounts:<br />
-          <strong>Admin:</strong> admin@admin.com / admin<br />
-          <strong>User:</strong> user@user.com / user
-        </p>
+        <div className="demo-note">
+          <span>Demo accounts:</span>
+          <div className="demo-credentials">
+            <button
+              type="button"
+              className="demo-link"
+              onClick={handleAdminDemoClick}
+              title="Click to fill admin credentials"
+            >
+              <strong>Admin:</strong> admin@admin.com / admin
+            </button>
+            <button
+              type="button"
+              className="demo-link"
+              onClick={handleUserDemoClick}
+              title="Click to fill user credentials"
+            >
+              <strong>User:</strong> user@user.com / user
+            </button>
+          </div>
+        </div>
 
         {/* ERROR */}
         <Notification message={error || authError} type="error" />

@@ -172,14 +172,51 @@ body.login-page {
     text-decoration: underline;
 }
 
-.login-pag: 0 0 16px;
-    margin-bottom: 0;
+.login-page .demo-note {
+    margin: 0 0 16px;
     font-size: 13px;
     color: var(--meta-text);
     text-align: center;
 }
 
-.login-page .demo-note strong {
+.login-page .demo-note span {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.login-page .demo-credentials {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+}
+
+.login-page .demo-link {
+    background: none;
+    border: none;
+    color: var(--button-bg);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.login-page .demo-link:hover {
+    background-color: rgba(47, 125, 70, 0.1);
+    color: var(--button-bg-hover);
+    text-decoration: underline;
+}
+
+.login-page .demo-link:active {
+    background-color: rgba(47, 125, 70, 0.2);
+    transform: scale(0.98);
+}
+
+.login-page .demo-link strong {
     color: var(--title-color);
 }
 
