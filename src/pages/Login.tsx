@@ -29,6 +29,8 @@ const Login = () => {
   const handleUserDemoClick = () => {
     fillDemoCredentials('user@user.com', 'user');
   };
+
+  useEffect(() => {
     document.body.classList.add('login-page');
     document.documentElement.classList.add('login-page');
     return () => {
