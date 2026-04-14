@@ -149,7 +149,9 @@ const Login = () => {
         </div>
 
         <p className="demo-note">
-          Demo account: <strong>admin@admin.com</strong> / <strong>admin</strong>
+          Demo accounts:<br />
+          <strong>Admin:</strong> admin@admin.com / admin<br />
+          <strong>User:</strong> user@user.com / user
         </p>
 
         {/* ERROR */}
