@@ -172,52 +172,63 @@ body.login-page {
     text-decoration: underline;
 }
 
-.login-page .demo-note {
-    margin: 0 0 16px;
-    font-size: 13px;
-    color: var(--meta-text);
+.login-page .demo-separator {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--input-border), transparent);
+    margin: 20px 0;
+}
+
+.login-page .demo-section {
     text-align: center;
 }
 
-.login-page .demo-note span {
-    display: block;
+.login-page .demo-title {
+    color: var(--title-color);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.login-page .demo-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
     margin-bottom: 8px;
 }
 
-.login-page .demo-credentials {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: center;
-}
-
-.login-page .demo-link {
-    background: none;
-    border: none;
+.login-page .demo-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--button-bg);
+    background: transparent;
     color: var(--button-bg);
+    border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
-    font-weight: 500;
-    text-decoration: none;
-    padding: 4px 8px;
-    border-radius: 4px;
+    font-weight: 600;
     transition: all 0.2s ease;
-    font-family: inherit;
+    min-width: 80px;
 }
 
-.login-page .demo-link:hover {
-    background-color: rgba(47, 125, 70, 0.1);
-    color: var(--button-bg-hover);
-    text-decoration: underline;
+.login-page .demo-btn:hover {
+    background-color: var(--button-bg);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(47, 125, 70, 0.3);
 }
 
-.login-page .demo-link:active {
-    background-color: rgba(47, 125, 70, 0.2);
-    transform: scale(0.98);
+.login-page .demo-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(47, 125, 70, 0.2);
 }
 
-.login-page .demo-link strong {
-    color: var(--title-color);
+.login-page .demo-hint {
+    font-size: 12px;
+    color: var(--meta-text);
+    margin: 0;
+    font-style: italic;
 }
 
 /* ERROR */

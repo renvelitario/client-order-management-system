@@ -159,26 +159,31 @@ const Login = () => {
           <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
         </div>
 
-        <div className="demo-note">
-          <span>Demo accounts:</span>
-          <div className="demo-credentials">
+        <hr className="demo-separator" />
+
+        <div className="demo-section">
+          <h3 className="demo-title">Demo Accounts</h3>
+          <div className="demo-buttons">
             <button
               type="button"
-              className="demo-link"
+              className="demo-btn admin-btn"
               onClick={handleAdminDemoClick}
-              title="Click to fill admin credentials"
+              title="Fill with admin credentials: admin@admin.com / admin"
             >
-              <strong>Admin:</strong> admin@admin.com / admin
+              Admin
             </button>
             <button
               type="button"
-              className="demo-link"
+              className="demo-btn user-btn"
               onClick={handleUserDemoClick}
-              title="Click to fill user credentials"
+              title="Fill with user credentials: user@user.com / user"
             >
-              <strong>User:</strong> user@user.com / user
+              User
             </button>
           </div>
+          <p className="demo-hint">
+            Click to fill login form with demo credentials
+          </p>
         </div>
 
         {/* ERROR */}
