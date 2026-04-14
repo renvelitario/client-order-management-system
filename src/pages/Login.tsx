@@ -155,40 +155,40 @@ const Login = () => {
           disabled={loading}
         />
 
-        <div className="auth-links">
-          <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
-        </div>
-
-        <hr className="demo-separator" />
-
-        <div className="demo-section">
-          <h3 className="demo-title">Demo Accounts</h3>
-          <div className="demo-buttons">
-            <button
-              type="button"
-              className="demo-btn admin-btn"
-              onClick={handleAdminDemoClick}
-              title="Fill with admin credentials: admin@admin.com / admin"
-            >
-              Admin
-            </button>
-            <button
-              type="button"
-              className="demo-btn user-btn"
-              onClick={handleUserDemoClick}
-              title="Fill with user credentials: user@user.com / user"
-            >
-              User
-            </button>
-          </div>
-          <p className="demo-hint">
-            Click to fill login form with demo credentials
-          </p>
-        </div>
-
         {/* ERROR */}
         <Notification message={error || authError} type="error" />
       </form>
+
+      <div className="auth-links">
+        <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
+      </div>
+
+      <hr className="demo-separator" />
+
+      <div className="demo-section">
+        <h3 className="demo-title">Demo Accounts</h3>
+        <div className="demo-buttons">
+          <button
+            type="button"
+            className="demo-btn admin-btn"
+            onClick={handleAdminDemoClick}
+            title="Fill with admin credentials: admin@admin.com / admin"
+          >
+            Admin
+          </button>
+          <button
+            type="button"
+            className="demo-btn user-btn"
+            onClick={handleUserDemoClick}
+            title="Fill with user credentials: user@user.com / user"
+          >
+            User
+          </button>
+        </div>
+        <p className="demo-hint">
+          Click to fill login form with demo credentials
+        </p>
+      </div>
     </div>
   );
 };
