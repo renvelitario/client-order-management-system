@@ -159,7 +159,6 @@ body.login-page {
     gap: 8px;
     align-items: center;
 }
-}
 
 .login-page .auth-link {
     color: var(--button-bg);
