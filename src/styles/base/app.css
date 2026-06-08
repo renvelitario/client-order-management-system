@@ -38,7 +38,7 @@
 .container {
 	width: min(100%, 1280px);
 	margin: 0 auto;
-	padding: 24px;
+	padding: clamp(16px, 2.2vw, 24px);
 	box-sizing: border-box;
 }
 
@@ -51,7 +51,7 @@
 .app-main {
 	min-width: 0;
 	margin-left: 68px;
-	padding: 90px 26px 30px;
+	padding: 92px clamp(18px, 2.2vw, 30px) 32px;
 	box-sizing: border-box;
 	transition: margin-left 0.24s ease;
 }
@@ -71,16 +71,16 @@
 	width: min(100%, 1320px);
 	min-height: 620px;
 	margin: 0 auto;
-	padding: 28px;
+	padding: clamp(20px, 2.4vw, 30px);
 	box-sizing: border-box;
 	overflow: visible;
 	display: flex;
 	flex-direction: column;
 	background: rgba(255, 255, 255, 0.92);
 	border: 1px solid var(--border-color);
-	border-radius: var(--radius-xl);
-	box-shadow: var(--shadow-xl);
-	backdrop-filter: blur(10px);
+	border-radius: 24px;
+	box-shadow: var(--shadow-lg);
+	backdrop-filter: blur(12px);
 }
 
 .app-page-container > * {
@@ -299,7 +299,7 @@
 @media (max-width: 980px) {
 	.app-main {
 		margin-left: 0;
-		padding: 90px 16px 18px;
+		padding: 88px 16px 20px;
 	}
 
 	.app-main-delivery {
@@ -308,7 +308,7 @@
 	}
 
 	.app-page-container {
-		border-radius: 22px;
+		border-radius: 18px;
 	}
 }
 
@@ -325,8 +325,9 @@
 	}
 
 	.app-page-container {
-		padding: 18px;
+		padding: 16px;
 		min-height: 0;
+		border-radius: 14px;
 	}
 
 	.session-warning-actions {

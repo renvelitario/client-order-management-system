@@ -2,8 +2,8 @@
 .edit-button {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
+    gap: 6px;
+    padding: 7px 12px;
     background: linear-gradient(130deg, var(--primary), var(--primary-hover));
     color: var(--text-inverse);
     border-radius: var(--radius-md);
@@ -30,8 +30,8 @@
 .view-button {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
+    gap: 6px;
+    padding: 7px 12px;
     background: linear-gradient(130deg, var(--secondary), var(--secondary-hover));
     color: var(--text-inverse);
     border: none;
@@ -56,8 +56,8 @@
 .delete-button {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
+    gap: 6px;
+    padding: 7px 12px;
     background: linear-gradient(130deg, var(--danger), var(--danger-hover));
     color: var(--text-inverse);
     border: none;
@@ -81,7 +81,7 @@
 .table-row-actions {
     display: flex;
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
     justify-content: flex-end;
 }
@@ -93,7 +93,7 @@
     min-width: 76px;
     justify-content: center;
     font-size: 12px;
-    padding: 6px 10px;
+    padding: 7px 10px;
 }
 
 

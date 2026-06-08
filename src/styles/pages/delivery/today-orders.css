@@ -28,10 +28,10 @@
 .delivery-selected-order {
   background: var(--surface);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 18px 20px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow-md);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
 }
 
 .delivery-selected-header {
@@ -78,7 +78,7 @@
 .delivery-order-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px 14px;
+  gap: 12px;
   margin-bottom: 14px;
 }
 
@@ -111,16 +111,16 @@
 .delivery-order-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
 .delivery-order-select-card {
   text-align: left;
   border: 1px solid var(--border-color);
   background: var(--surface);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   box-shadow: var(--shadow-sm);
-  padding: 14px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -253,9 +253,13 @@
     align-items: stretch;
   }
 
-  .delivery-status-actions button,
+  .delivery-status-actions button {
+    width: 100%;
+  }
+
   .delivery-order-card-grid {
     grid-template-columns: 1fr;
+    width: 100%;
   }
 }
 

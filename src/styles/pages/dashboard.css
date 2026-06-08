@@ -1,20 +1,20 @@
 .dashboard-page {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
 }
 
 .dashboard-report-canvas {
     background: #ffffff;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 14px;
+    border-radius: 14px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 20px;
 }
 
 .dashboard-loading {
@@ -53,7 +53,7 @@
 .kpi-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .kpi-section-title {
@@ -67,7 +67,7 @@
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 10px;
+    gap: 12px;
 }
 
 .kpi-grid-overview {
@@ -79,14 +79,14 @@
 }
 
 .kpi-card {
-    border-radius: 12px;
-    padding: 14px;
+    border-radius: 10px;
+    padding: 15px;
     color: #42513f;
     min-height: 105px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 8px 14px rgba(20, 38, 27, 0.08);
+    box-shadow: 0 6px 14px rgba(20, 38, 27, 0.06);
 }
 
 .kpi-card h4 {
@@ -160,7 +160,7 @@
 .chart-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    gap: 16px;
 }
 
 .chart-card-top-products {
@@ -170,9 +170,9 @@
 .chart-card {
     background: #fff;
     border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: 14px;
     padding: 16px;
-    box-shadow: 0 8px 16px rgba(20, 38, 27, 0.06);
+    box-shadow: var(--shadow-sm);
 }
 
 .chart-card h3 {
@@ -205,8 +205,8 @@
 .recent-orders-section {
     background: #fff;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 14px;
+    border-radius: 14px;
+    padding: 16px;
 }
 
 .recent-orders-section h3 {
@@ -247,7 +247,7 @@
 
 @media (max-width: 768px) {
     .dashboard-page {
-        padding: 14px;
+        padding: 0;
     }
 
     .dashboard-report-canvas {
@@ -303,4 +303,17 @@
         height: 250px;
     }
 
+}
+
+@media (max-width: 520px) {
+    .kpi-grid,
+    .kpi-grid-overview,
+    .kpi-grid-delivery {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card,
+    .recent-orders-section {
+        padding: 14px;
+    }
 }

@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
 import OrderScanner from '../../components/features/OrderScanner';
@@ -41,6 +41,10 @@ const DELIVERY_DATE_RANGE_OPTIONS: Array<{ value: DeliveryDateRangeFilter; label
 ];
 
 const STATUS_FILTER_OPTIONS = ADMIN_DELIVERY_FILTERS.filter((filter) => filter.value !== 'unassigned');
+const EMPTY_STATUS_COUNTS = ADMIN_DELIVERY_FILTERS.reduce<Record<DeliveryStatusKey, number>>((acc, filter) => {
+  acc[filter.value] = 0;
+  return acc;
+}, {} as Record<DeliveryStatusKey, number>);
 
 const toLocalDateInputValue = (value?: string | Date | null) => {
   const date = value ? new Date(value) : new Date();
@@ -62,6 +66,7 @@ const AdminDelivery = () => {
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
   const [revertTarget, setRevertTarget] = useState<Order | null>(null);
   const [isSearchScannerOpen, setIsSearchScannerOpen] = useState(false);
+  const [statusCounts, setStatusCounts] = useState<Record<DeliveryStatusKey, number>>(EMPTY_STATUS_COUNTS);
   const [assignmentForm, setAssignmentForm] = useState<DeliveryAssignmentForm>({
     delivery_date: toLocalDateInputValue(),
   });
@@ -85,11 +90,37 @@ const AdminDelivery = () => {
     refetch,
   } = usePaginatedList<Order>({ endpoint: '/orders/delivery/admin', initialSort: 'desc', params: listParams });
 
+  const statusFilterOptionsWithCounts = useMemo(
+    () => STATUS_FILTER_OPTIONS.map((filter) => ({
+      ...filter,
+      label: `${filter.label} (${statusCounts[filter.value] || 0})`,
+    })),
+    [statusCounts],
+  );
+
+  const fetchDeliveryStatusCounts = useCallback(async () => {
+    const { data } = await api.get('/orders/delivery/admin/status-counts', {
+      params: {
+        date_range: dateRangeFilter,
+        search: searchInput.trim() || undefined,
+      },
+    });
+
+    setStatusCounts({
+      ...EMPTY_STATUS_COUNTS,
+      ...((data as { counts?: Partial<Record<DeliveryStatusKey, number>> })?.counts || {}),
+    });
+  }, [dateRangeFilter, searchInput]);
+
   useEffect(() => {
     if (!isSearchScannerOpen && searchScanButtonRef.current) {
       searchScanButtonRef.current.focus();
     }
   }, [isSearchScannerOpen]);
+
+  useEffect(() => {
+    void fetchDeliveryStatusCounts();
+  }, [fetchDeliveryStatusCounts]);
 
   const changeFilter = (nextFilter: DeliveryStatusKey) => {
     setActiveFilter(nextFilter);
@@ -147,7 +178,7 @@ const AdminDelivery = () => {
         delivery_date: assignmentForm.delivery_date,
       });
 
-      await refetch();
+      await Promise.all([refetch(), fetchDeliveryStatusCounts()]);
       setNotification({
         type: 'success',
         message: `Order #${selectedOrder.order_id} ${assignmentMode === 'assign' ? 'set to pending' : 'rescheduled as pending'} successfully.`,
@@ -165,7 +196,7 @@ const AdminDelivery = () => {
   const updateStatus = async (order: Order, nextStatus: DeliveryStatusKey, successMessage: string) => {
     try {
       await api.patch(`/orders/${order.order_id}/delivery-status`, { delivery_status: nextStatus });
-      await refetch();
+      await Promise.all([refetch(), fetchDeliveryStatusCounts()]);
       setNotification({ type: 'success', message: successMessage });
     } catch (error) {
       setNotification({
@@ -363,7 +394,10 @@ const AdminDelivery = () => {
                 className={`delivery-filter-tab${isActive ? ' is-active' : ''}`}
                 onClick={() => changeFilter(filter.value)}
               >
-                {filter.label}
+                <span className="delivery-filter-tab-label">{filter.label}</span>
+                <span className="delivery-filter-tab-count" aria-label={`${statusCounts[filter.value] || 0} ${filter.label.toLowerCase()} orders`}>
+                  {statusCounts[filter.value] || 0}
+                </span>
               </button>
             );
           })}
@@ -377,7 +411,7 @@ const AdminDelivery = () => {
               className="delivery-status-dropdown filter-inline-dropdown"
               ariaLabelledBy="delivery-status-filter-mobile-label"
               value={activeFilter}
-              options={STATUS_FILTER_OPTIONS}
+              options={statusFilterOptionsWithCounts}
               onChange={changeFilter}
             />
           </div>

@@ -5,9 +5,9 @@
 .entity-form-modal,
 .order-form-modal {
     background: var(--surface);
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -32,7 +32,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 20px 24px 18px;
+    padding: 22px 24px 18px;
     flex-shrink: 0;
 }
 
@@ -77,7 +77,7 @@
 
 /* ---- Body (scrollable) ---- */
 .entity-modal-body {
-    padding: 20px 24px 24px;
+    padding: 22px 24px 24px;
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1 1 auto;
@@ -95,8 +95,8 @@
 .entity-modal-field {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-bottom: 16px;
+    gap: 6px;
+    margin-bottom: 17px;
     min-width: 0;
 }
 
@@ -108,8 +108,8 @@
 .entity-modal-field-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 18px;
+    margin-bottom: 17px;
     min-width: 0;
 }
 
@@ -133,7 +133,7 @@
 .entity-modal-form input[type="date"],
 .entity-modal-form select,
 .entity-modal-form textarea {
-    padding: 10px 12px;
+    padding: 11px 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     width: 100%;
@@ -141,7 +141,7 @@
     font-family: 'Montserrat', Arial, sans-serif;
     font-size: 14px;
     color: var(--text-main);
-    background: var(--surface);
+    background: #ffffff;
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     line-height: 1.4;
 }
@@ -173,7 +173,7 @@
 
 .entity-modal-form input::placeholder,
 .entity-modal-form textarea::placeholder {
-    color: #b0bac6;
+    color: #9aa79d;
 }
 
 .entity-modal-form input:disabled,
@@ -235,9 +235,9 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 10px;
-    padding-top: 10px;
-    margin-top: 8px;
+    gap: 12px;
+    padding-top: 12px;
+    margin-top: 10px;
 }
 
 .entity-modal-actions .create-button {
@@ -290,6 +290,7 @@
     .entity-modal-actions {
         flex-direction: column;
         align-items: stretch;
+        gap: 8px;
     }
 
     .entity-modal-actions .modal-cancel,

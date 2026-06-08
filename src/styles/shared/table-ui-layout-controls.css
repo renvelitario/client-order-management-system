@@ -2,16 +2,16 @@
 .header-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    gap: 16px;
 }
 
 .page-shell-header {
-    padding: 14px;
+    padding: 16px;
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    background: linear-gradient(145deg, #f5f7f1 0%, #eaeee5 100%);
+    background: linear-gradient(145deg, #f8faf5 0%, #eef4eb 100%);
 }
 
 .page-shell-heading {
@@ -30,18 +30,23 @@
 .page-shell-heading h2 {
     margin: 6px 0 4px;
     color: var(--text-main);
+    font-size: clamp(20px, 2vw, 25px);
+    line-height: 1.2;
 }
 
 .page-shell-subtitle {
     margin: 0;
     color: var(--text-muted);
     font-size: 13px;
+    line-height: 1.45;
 }
 
 .page-shell-controls {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 /* SEARCH + CREATE BUTTONS */
@@ -58,9 +63,9 @@
     background: linear-gradient(180deg, #ffffff 0%, #f7faf5 100%);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    min-height: 40px;
+    min-height: 42px;
     padding: 0 12px;
-    width: 280px;
+    width: min(320px, 36vw);
     transition: var(--transition-fast);
     flex-direction: row;
 }
@@ -135,7 +140,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    min-height: 40px;
+    min-height: 42px;
     padding: 0 16px;
     background: linear-gradient(130deg, var(--primary), var(--primary-hover));
     color: var(--text-inverse);
@@ -168,6 +173,7 @@
 
     .page-shell-controls {
         width: 100%;
+        justify-content: stretch;
     }
 
     .search-container {
@@ -176,6 +182,10 @@
 
     .search-input-wrapper {
         width: 100%;
+    }
+
+    .page-shell-heading h2 {
+        margin-top: 4px;
     }
 }
 

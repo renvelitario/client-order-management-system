@@ -27,19 +27,19 @@
   height: 36px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  background: linear-gradient(180deg, #ffffff 0%, #f7faf7 100%);
+  background: #ffffff;
   color: var(--text-main);
   padding: 0 10px 0 12px;
   font-size: 13px;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  box-shadow: var(--shadow-sm);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .filter-inline-dropdown .dropdown-filter-trigger:hover {
   border-color: rgba(54, 90, 56, 0.45);
-  box-shadow: 0 6px 14px rgba(54, 90, 56, 0.1);
+  box-shadow: 0 4px 12px rgba(54, 90, 56, 0.08);
 }
 
 .filter-inline-dropdown .dropdown-filter-trigger:focus {
@@ -83,9 +83,9 @@
   display: none;
   padding: 8px;
   border: 1px solid rgba(54, 90, 56, 0.2);
-  border-radius: 12px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 242, 0.98));
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
   backdrop-filter: blur(14px);
 }
 
@@ -97,7 +97,7 @@
 .dropdown-filter-option {
   width: 100%;
   border: 0;
-  border-radius: 10px;
+  border-radius: 8px;
   background: transparent;
   color: var(--text-main);
   padding: 10px 12px;

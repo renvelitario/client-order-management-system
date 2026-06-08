@@ -1,13 +1,15 @@
 .form-container {
     max-width: 400px;
     margin: 0 auto;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 5px;
+    background-color: var(--surface);
+    padding: 22px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
 .form-container h2 {
-    color: #333;
+    color: var(--text-main);
     margin-bottom: 20px;
 }
 
@@ -25,9 +27,9 @@
 .form-group input[type="email"],
 .form-group input[type="password"],
 .form-group select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
+    padding: 11px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     width: 100%;
     box-sizing: border-box;
 }
@@ -48,11 +50,12 @@
 }
 
 .form-group input[type="submit"] {
-    padding: 10px;
-    background-color: #4CAF50;
+    min-height: 42px;
+    padding: 0 16px;
+    background-color: var(--primary);
     color: #fff;
     border: none;
-    border-radius: 3px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.3s ease;
@@ -62,7 +65,7 @@
 }
 
 .form-group input[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: var(--primary-hover);
 }
 
 .account-password-strength {
