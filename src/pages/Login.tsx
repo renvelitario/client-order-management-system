@@ -71,8 +71,16 @@ const Login = () => {
       applyAuthenticatedSession(session, localUser);
       navigate('/');
     } catch (err) {
-      const error = err as { response?: { data?: { message?: string; error?: string } } | { message?: string } };
+      const error = err as {
+        code?: string;
+        message?: string;
+        response?: { data?: { message?: string; error?: string } };
+      };
       let message = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Login failed.';
+
+      if (!error?.response && (error?.code === 'ERR_NETWORK' || message === 'Network Error')) {
+        message = 'Unable to reach the login server. Make sure the backend is running and VITE_API_BASE_URL points to it.';
+      }
       
       setError(
         message.includes('Invalid credentials') || message.includes('invalid credentials')
