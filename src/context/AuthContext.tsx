@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../supabaseClient';
@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [localUser, setLocalUser] = useState<LocalUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState('');
+  const hydratedAccessTokenRef = useRef<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -23,9 +24,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       if (!nextSession) {
+        hydratedAccessTokenRef.current = null;
         setSession(null);
         setLocalUser(null);
         setAuthError('');
+        setLoading(false);
+        return;
+      }
+
+      if (hydratedAccessTokenRef.current === nextSession.access_token) {
+        setSession(nextSession);
         setLoading(false);
         return;
       }
@@ -38,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setStoredInactivityDurationMinutes(data.inactivity_timeout_minutes, { notify: false });
         setStoredSessionTimeoutEnabled(Boolean(data.session_timeout_enabled), { notify: false });
+        hydratedAccessTokenRef.current = nextSession.access_token;
         setSession(nextSession);
         setLocalUser(data);
         setAuthError('');
@@ -78,6 +87,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return data;
   }, []);
 
+  const applyAuthenticatedSession = useCallback((nextSession: Session, nextLocalUser: LocalUser) => {
+    setStoredInactivityDurationMinutes(nextLocalUser.inactivity_timeout_minutes, { notify: false });
+    setStoredSessionTimeoutEnabled(Boolean(nextLocalUser.session_timeout_enabled), { notify: false });
+    hydratedAccessTokenRef.current = nextSession.access_token;
+    setSession(nextSession);
+    setLocalUser(nextLocalUser);
+    setAuthError('');
+    setLoading(false);
+  }, []);
+
   const value = useMemo(() => ({
     session,
     localUser,
@@ -86,8 +105,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isAuthenticated: Boolean(session),
     isAdmin: String(localUser?.acc_type || '').toLowerCase() === 'admin',
     isDeliveryUser: Boolean(session) && String(localUser?.acc_type || '').toLowerCase() !== 'admin',
+    applyAuthenticatedSession,
     refreshLocalUser,
-  }), [session, localUser, loading, authError, refreshLocalUser]);
+  }), [session, localUser, loading, authError, applyAuthenticatedSession, refreshLocalUser]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -29,6 +29,24 @@ const api = axios.create({
   baseURL: apiBaseUrl,
 });
 
+const PUBLIC_AUTH_PATHS = new Set([
+  '/auth/login',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+]);
+
+const getRequestPath = (url?: string): string => {
+  if (!url) {
+    return '';
+  }
+
+  try {
+    return new URL(url, apiBaseUrl || window.location.origin).pathname.replace(/\/api(?=\/)/, '');
+  } catch {
+    return url.split('?')[0];
+  }
+};
+
 const getClientDeviceId = (): string => {
   const existing = localStorage.getItem(CLIENT_DEVICE_ID_KEY);
   if (existing) {
@@ -87,13 +105,20 @@ export const invalidateSessionCache = () => {
   cachedSessionAt = 0;
 };
 
-supabase.auth.onAuthStateChange((_event, session) => {
-  cachedSession = session || null;
+export const primeSessionCache = (session: Session | null) => {
+  cachedSession = session;
+  sessionRequestPromise = null;
   cachedSessionAt = Date.now();
+};
+
+supabase.auth.onAuthStateChange((_event, session) => {
+  primeSessionCache(session || null);
 });
 
 api.interceptors.request.use(async (config) => {
-  const session = await getCachedSession();
+  const requestPath = getRequestPath(config.url);
+  const session = PUBLIC_AUTH_PATHS.has(requestPath) ? null : await getCachedSession();
+
   config.headers = config.headers || {};
   if (session?.access_token) {
     config.headers.Authorization = `Bearer ${session.access_token}`;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import api, { invalidateSessionCache } from '../utils/api';
+import api, { primeSessionCache } from '../utils/api';
 import { useAuth } from '../hooks/useAuth';
 import Notification from '../components/ui/Notification';
 import AppIcon from '../components/ui/AppIcon';
@@ -15,7 +15,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { authError } = useAuth();
+  const { applyAuthenticatedSession, authError } = useAuth();
+  const navigate = useNavigate();
 
   const fillDemoCredentials = (email: string, password: string) => {
     setIdentifier(email);
@@ -45,58 +46,31 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // Step 1: Login with custom endpoint
-      console.log('Step 1: Attempting login with identifier:', identifier);
       const loginResponse = await api.post('/auth/login', {
         identifier,
         password,
       });
 
-      const { session } = loginResponse.data;
-      console.log('Step 1: Login successful, received session');
+      const { session, local_user: localUser } = loginResponse.data;
 
       if (!session?.access_token) {
         throw new Error('No access token in login response');
       }
 
-      // Step 2: Set session in Supabase client
-      console.log('Step 2: Setting session in Supabase...');
-      console.log('Session object keys:', Object.keys(session));
-      console.log('Access token length:', session.access_token?.length);
-      
+      if (!localUser) {
+        throw new Error('No user profile in login response');
+      }
+
       const { error: setSessionError } = await supabase.auth.setSession(session);
       
       if (setSessionError) {
-        console.error('Step 2: Error setting session:', setSessionError);
         throw setSessionError;
       }
-      
-      // Verify session was actually set
-      const { data: sessionData, error: getSessionError } = await supabase.auth.getSession();
-      console.log('Step 2: getSession error:', getSessionError);
-      console.log('Step 2: Verified session, token exists:', !!sessionData.session?.access_token);
-      
-      if (!sessionData.session?.access_token) {
-        throw new Error('Session was not properly set in Supabase client');
-      }
-      console.log('Step 2: Session set successfully');
 
-      // Step 3: Invalidate the API client's cached session
-      console.log('Step 3: Invalidating session cache...');
-      invalidateSessionCache();
-
-      // Small delay to ensure everything is ready
-      await new Promise(resolve => setTimeout(resolve, 150));
-
-      // Step 4: Verify the account is active
-      console.log('Step 4: Verifying account status with /auth/me...');
-      const meResponse = await api.get('/auth/me');
-      console.log('Step 4: Account verification successful, user:', meResponse.data?.username);
-
-      console.log('Login flow complete, navigating to dashboard');
+      primeSessionCache(session);
+      applyAuthenticatedSession(session, localUser);
       navigate('/');
     } catch (err) {
-      console.error('Login error full trace:', err);
       const error = err as { response?: { data?: { message?: string; error?: string } } | { message?: string } };
       let message = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Login failed.';
       

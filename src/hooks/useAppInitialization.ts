@@ -1,25 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 
-const MIN_LOADER_DURATION_MS = 650;
-const MAX_FONT_WAIT_MS = 1500;
+const MIN_LOADER_DURATION_MS = 120;
+const MAX_FONT_WAIT_MS = 300;
 
 const wait = (durationMs: number): Promise<void> =>
   new Promise((resolve) => {
     window.setTimeout(resolve, durationMs);
-  });
-
-const waitForWindowLoad = (): Promise<void> =>
-  new Promise((resolve) => {
-    if (document.readyState === 'complete') {
-      resolve();
-      return;
-    }
-
-    const handleLoad = () => {
-      resolve();
-    };
-
-    window.addEventListener('load', handleLoad, { once: true });
   });
 
 const waitForFonts = async (): Promise<void> => {
@@ -67,7 +53,6 @@ export const useAppInitialization = (authLoading: boolean) => {
 
     const runStartupTasks = async () => {
       await Promise.all([
-        waitForWindowLoad(),
         waitForFonts(),
         waitForStylesToSettle(),
         preloadImage('/logo.png'),

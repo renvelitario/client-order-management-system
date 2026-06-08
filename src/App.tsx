@@ -26,8 +26,8 @@ const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
 const AccountSessions = lazy(() => import('./pages/account/AccountSessions'));
 const NotFound = lazy(() => import('./pages/NotFoundPage'));
 
-const STARTUP_OVERLAY_FADE_DELAY_MS = 900;
-const STARTUP_OVERLAY_HIDE_DELAY_MS = 1200;
+const STARTUP_OVERLAY_FADE_DELAY_MS = 80;
+const STARTUP_OVERLAY_HIDE_DELAY_MS = 180;
 const DEMO_NOTICE_SESSION_KEY = 'demoNoticeSeenForAccessToken';
 
 const LEGACY_ROUTE_REDIRECTS = [
@@ -195,7 +195,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </Suspense>
         )}

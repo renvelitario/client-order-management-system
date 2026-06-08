@@ -118,6 +118,7 @@ export interface AuthContextValue {
   isAuthenticated: boolean;
   isAdmin: boolean;
   isDeliveryUser: boolean;
+  applyAuthenticatedSession: (session: Session, localUser: LocalUser) => void;
   refreshLocalUser: () => Promise<LocalUser>;
 }
 
