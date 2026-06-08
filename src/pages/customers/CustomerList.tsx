@@ -25,12 +25,14 @@ import { resolveEntityMutationErrorMessage } from '../../types/app';
 import type { ApiError, Customer } from '../../types/app';
 
 type CustomerFormData = {
+  student_number: string;
   name: string;
   address: string;
   contact_no: string;
 };
 
 const emptyCustomerForm: CustomerFormData = {
+  student_number: '',
   name: '',
   address: '',
   contact_no: '',
@@ -107,6 +109,7 @@ const CustomersList = () => {
     setModalMode('update');
     setActiveCustomerId(customer.customer_id);
     setFormData({
+      student_number: customer.student_number,
       name: customer.name,
       address: customer.address,
       contact_no: customer.contact_no,
@@ -209,7 +212,7 @@ const CustomersList = () => {
             customers.map((c) => (
               <tr key={c.customer_id}>
                 <td>
-                  <span className="table-id-chip">#{c.customer_id}</span>
+                  <span className="table-id-chip">{c.student_number}</span>
                 </td>
                 <td>{c.name}</td>
                 <td>{c.address}</td>

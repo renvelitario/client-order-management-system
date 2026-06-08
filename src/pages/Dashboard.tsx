@@ -6,8 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ComposedChart,
-  Line,
   Bar,
   BarChart,
   PieChart,
@@ -55,12 +53,6 @@ type TopProductEntry = {
   product: string;
   quantity: number;
   revenue: number;
-};
-
-type MonthlyTrend = {
-  label: string;
-  revenue: number;
-  orders: number;
 };
 
 type RecentOrder = Order & {
@@ -131,7 +123,6 @@ const Dashboard = () => {
     totalUnitsSold: 0,
   });
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
-  const [trendData, setTrendData] = useState<MonthlyTrend[]>([]);
   const [topProducts, setTopProducts] = useState<TopProductEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -154,7 +145,7 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAnalytics = async () => {
+    const fetchDashboardData = async () => {
       setLoading(true);
       setError('');
 
@@ -183,27 +174,6 @@ const Dashboard = () => {
           cancelledOrders: Number(summaryRes.data?.summary?.cancelledOrders || 0),
           totalUnitsSold: Number(summaryRes.data?.summary?.totalUnitsSold || 0),
         });
-
-        const monthlyTrends = (summaryRes.data?.monthlyTrends || []) as Array<{
-          month?: string;
-          revenue?: number | string;
-          orders?: number | string;
-        }>;
-
-        if (monthlyTrends.length) {
-          setTrendData(monthlyTrends.map((entry) => ({
-            label: String(entry.month || 'N/A'),
-            revenue: Number(entry.revenue || 0),
-            orders: Number(entry.orders || 0),
-          })));
-        } else {
-          const monthlyRevenue = (summaryRes.data?.monthlyRevenue || []) as Array<{ month?: string; revenue?: number | string }>;
-          setTrendData(monthlyRevenue.map((entry) => ({
-            label: String(entry.month || 'N/A'),
-            revenue: Number(entry.revenue || 0),
-            orders: 0,
-          })));
-        }
 
         const top = (summaryRes.data?.topProducts || []) as Array<{
           product_name?: string;
@@ -237,7 +207,7 @@ const Dashboard = () => {
       }
     };
 
-    fetchAnalytics();
+    fetchDashboardData();
   }, [rangeParams]);
 
   const topProductsChartData = topProducts.map((entry) => ({
@@ -247,8 +217,6 @@ const Dashboard = () => {
   }));
   const pieColors = ['#2f5736', '#6f7d48', '#8b6d33', '#486a72', '#a24b3e', '#5f6b68'];
   const chartSeriesColors = {
-    orders: '#5b685b',
-    revenue: '#365a38',
     topProducts: '#456d3b',
   };
   const deliveryStatusColors: Record<string, string> = {
@@ -351,48 +319,16 @@ const Dashboard = () => {
       </section>
 
       <section className="chart-grid">
-        <article className="chart-card">
-          <h3>Revenue vs Orders Trend</h3>
-          {trendData.length ? (
-            <div className="chart-container">
-              <div className="chart-surface">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={trendData} margin={{ top: 8, right: 6, left: -6, bottom: 4 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="label" />
-                  <YAxis yAxisId="left" allowDecimals={false} width={34} />
-                  <YAxis yAxisId="right" orientation="right" width={42} />
-                  <Tooltip
-                    contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }}
-                    formatter={(value, name) => {
-                      const resolvedName = String(name || '');
-                      const resolvedValue = Number(value || 0);
-                      return [resolvedName === 'revenue' ? formatPeso(resolvedValue) : resolvedValue, resolvedName];
-                    }}
-                    labelFormatter={(label) => `Month: ${label}`}
-                  />
-                  <Legend />
-                  <Bar yAxisId="left" dataKey="orders" name="orders" fill={chartSeriesColors.orders} radius={[6, 6, 0, 0]} />
-                  <Line yAxisId="right" type="monotone" dataKey="revenue" name="revenue" stroke={chartSeriesColors.revenue} strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 5 }} />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          ) : (
-            <p className="chart-empty">No order trend data for this range.</p>
-          )}
-        </article>
-
-        <article className="chart-card">
+        <article className="chart-card chart-card-top-products">
           <h3>Top-Selling Products (Units)</h3>
           {topProductsChartData.length ? (
             <div className="chart-container">
               <div className="chart-surface">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={topProductsChartData} layout="vertical" margin={{ top: 8, left: 0, right: 4, bottom: 4 }}>
+                  <BarChart data={topProductsChartData} layout="vertical" margin={{ top: 8, left: 0, right: 8, bottom: 4 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                   <XAxis type="number" allowDecimals={false} />
-                  <YAxis type="category" dataKey="name" width={108} />
+                  <YAxis type="category" dataKey="name" width={190} />
                   <Tooltip
                     contentStyle={{ borderRadius: 10, border: 'none', boxShadow: '0 8px 16px rgba(15, 23, 42, 0.12)' }}
                     formatter={(value, name) => {

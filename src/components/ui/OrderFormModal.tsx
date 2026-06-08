@@ -74,7 +74,7 @@ const OrderFormModal = ({
   const customerOptions = useMemo(
     () => customers.map((customer) => ({
       value: String(customer.customer_id),
-      label: `${customer.customer_id} - ${customer.name}`,
+      label: `${customer.student_number} - ${customer.name}`,
     })),
     [customers],
   );

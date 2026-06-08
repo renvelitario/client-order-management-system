@@ -1,5 +1,4 @@
 import {
-  BarChart3,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -14,7 +13,6 @@ import {
 
 export type IconName =
   | 'dashboard'
-  | 'analytics'
   | 'products'
   | 'customers'
   | 'orders'
@@ -29,7 +27,6 @@ export type IconName =
 const Icon = ({ name }: { name: IconName }) => {
   const icons = {
     dashboard: LayoutDashboard,
-    analytics: BarChart3,
     products: Package,
     customers: Users,
     orders: ShoppingCart,

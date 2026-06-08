@@ -19,7 +19,6 @@ const DeliveryHome = lazy(() => import('./pages/delivery/Home'));
 const DeliveryTodayOrders = lazy(() => import('./pages/delivery/TodayOrders'));
 const DeliveryInbox = lazy(() => import('./pages/delivery/Inbox'));
 const UserManagement = lazy(() => import('./pages/users/UserManagement'));
-const Analytics = lazy(() => import('./pages/Analytics'));
 const CreateUserAccount = lazy(() => import('./pages/account/CreateUserAccount'));
 const AccountProfileOverview = lazy(() => import('./pages/account/AccountProfileOverview'));
 const AccountSecurity = lazy(() => import('./pages/account/AccountSecurity'));
@@ -28,6 +27,7 @@ const NotFound = lazy(() => import('./pages/NotFoundPage'));
 
 const STARTUP_OVERLAY_FADE_DELAY_MS = 900;
 const STARTUP_OVERLAY_HIDE_DELAY_MS = 1200;
+const DEMO_NOTICE_SESSION_KEY = 'demoNoticeSeenForAccessToken';
 
 const LEGACY_ROUTE_REDIRECTS = [
   { from: '/products/new', to: '/products' },
@@ -59,7 +59,8 @@ const RouteLoader = () => (
 function App() {
   const [showStartupOverlay, setShowStartupOverlay] = useState(true);
   const [hideStartupOverlay, setHideStartupOverlay] = useState(false);
-  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const [showDemoNotice, setShowDemoNotice] = useState(false);
+  const { isAuthenticated, isAdmin, loading, session } = useAuth();
   const { isInitializing } = useAppInitialization(loading);
   const {
     warningState,
@@ -91,6 +92,21 @@ function App() {
     };
   }, [isInitializing, showStartupOverlay]);
 
+  useEffect(() => {
+    if (!isAuthenticated || !session?.access_token) {
+      setShowDemoNotice(false);
+      return;
+    }
+
+    const noticeSessionId = session.access_token.slice(-24);
+    if (sessionStorage.getItem(DEMO_NOTICE_SESSION_KEY) === noticeSessionId) {
+      return;
+    }
+
+    sessionStorage.setItem(DEMO_NOTICE_SESSION_KEY, noticeSessionId);
+    setShowDemoNotice(true);
+  }, [isAuthenticated, session?.access_token]);
+
   const defaultAuthenticatedRoute = isAdmin ? '/dashboard' : '/delivery/home';
 
   return (
@@ -117,6 +133,28 @@ function App() {
                 </div>
               </div>
             )}
+            {showDemoNotice && (
+              <div className="demo-notice-backdrop" role="presentation">
+                <div
+                  className="demo-notice-modal"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="demo-notice-title"
+                  aria-describedby="demo-notice-description"
+                >
+                  <p className="demo-notice-kicker">Demo Version</p>
+                  <h2 id="demo-notice-title">This project is running with demo data.</h2>
+                  <p id="demo-notice-description">
+                    You can explore every feature and make changes freely. Demo products, students, orders, delivery data, and inbox notifications are refreshed every hour, so edits made here are temporary.
+                  </p>
+                  <div className="demo-notice-actions">
+                    <button type="button" className="primary" onClick={() => setShowDemoNotice(false)}>
+                      I Understand
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             <AppLayout>
               <Suspense fallback={<RouteLoader />}>
                     <Routes>
@@ -133,7 +171,6 @@ function App() {
                       <Route path="/customers" element={<ProtectedRoute><CustomersList /></ProtectedRoute>} />
                       <Route path="/orders" element={<ProtectedRoute><OrdersList /></ProtectedRoute>} />
                       <Route path="/users" element={<AdminRoute><UserManagement /></AdminRoute>} />
-                      <Route path="/analytics" element={<AdminRoute><Analytics /></AdminRoute>} />
                       <Route path="/account/users/new" element={<AdminRoute><CreateUserAccount /></AdminRoute>} />
                       <Route path="/account/profile" element={<ProtectedRoute><AccountProfileOverview /></ProtectedRoute>} />
                       <Route path="/account/security" element={<ProtectedRoute><AccountSecurity /></ProtectedRoute>} />

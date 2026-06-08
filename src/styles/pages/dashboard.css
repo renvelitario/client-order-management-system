@@ -163,6 +163,10 @@
     gap: 14px;
 }
 
+.chart-card-top-products {
+    grid-column: span 2;
+}
+
 .chart-card {
     background: #fff;
     border: 1px solid var(--border-color);
@@ -180,6 +184,10 @@
 .chart-container {
     width: 100%;
     height: 236px;
+}
+
+.chart-card-top-products .chart-container {
+    height: 280px;
 }
 
 .pie-chart-container {
@@ -228,11 +236,12 @@
     }
 
     .chart-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
 
+    .chart-card-top-products,
     .chart-card:last-child {
-        grid-column: span 2;
+        grid-column: auto;
     }
 }
 
@@ -277,12 +286,17 @@
         grid-template-columns: 1fr;
     }
 
+    .chart-card-top-products,
     .chart-card:last-child {
         grid-column: auto;
     }
 
     .chart-container {
         height: 220px;
+    }
+
+    .chart-card-top-products .chart-container {
+        height: 260px;
     }
 
     .pie-chart-container {

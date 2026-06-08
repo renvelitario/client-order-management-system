@@ -3,6 +3,7 @@ import EntityModalShell from './EntityModalShell';
 import Notification from './Notification';
 
 type CustomerFormData = {
+  student_number: string;
   name: string;
   address: string;
   contact_no: string;
@@ -41,6 +42,19 @@ const CustomerFormModal = ({
       <Notification message={error} type="error" />
 
       <form className="entity-modal-form" onSubmit={onSubmit}>
+        <div className="entity-modal-field">
+          <label htmlFor="customer-student-number">Student Number</label>
+          <input
+            id="customer-student-number"
+            type="text"
+            name="student_number"
+            value={formData.student_number}
+            onChange={onChange}
+            placeholder="e.g. 2024-00031"
+            required
+          />
+        </div>
+
         <div className="entity-modal-field">
           <label htmlFor="customer-name">Name</label>
           <input

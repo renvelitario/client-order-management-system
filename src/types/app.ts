@@ -40,6 +40,7 @@ export interface Product {
 
 export interface Customer {
   customer_id: number;
+  student_number: string;
   name: string;
   address: string;
   contact_no: string;
