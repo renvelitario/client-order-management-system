@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
 import { ProtectedRoute, AdminRoute } from './components/auth/RouteGuards';
+import AppIcon from './components/ui/AppIcon';
 import { useAuth } from './hooks/useAuth';
 import { useAppInitialization } from './hooks/useAppInitialization';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
@@ -142,11 +143,16 @@ function App() {
                   aria-labelledby="demo-notice-title"
                   aria-describedby="demo-notice-description"
                 >
-                  <p className="demo-notice-kicker">Demo Version</p>
-                  <h2 id="demo-notice-title">This project is running with demo data.</h2>
-                  <p id="demo-notice-description">
-                    You can explore every feature and make changes freely. Demo products, students, orders, delivery data, and inbox notifications are refreshed every hour, so edits made here are temporary.
-                  </p>
+                  <div className="demo-notice-icon-wrap" aria-hidden="true">
+                    <AppIcon name="warning" className="demo-notice-icon" />
+                  </div>
+                  <div className="demo-notice-content">
+                    <p className="demo-notice-kicker">Demo Version</p>
+                    <h2 id="demo-notice-title">This project is running with demo data.</h2>
+                    <p id="demo-notice-description">
+                      You can explore every feature and make changes freely. Demo products, students, orders, delivery data, and inbox notifications are refreshed every hour, so edits made here are temporary.
+                    </p>
+                  </div>
                   <div className="demo-notice-actions">
                     <button type="button" className="primary" onClick={() => setShowDemoNotice(false)}>
                       I Understand
