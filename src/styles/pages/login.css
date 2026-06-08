@@ -310,7 +310,7 @@ body.login-page {
 
 @media (max-width: 480px) {
     .login-page .App {
-        place-items: start center;
+        place-items: center;
     }
 
     .login-page .container {
@@ -380,7 +380,7 @@ body.login-page {
     }
 }
 
-@media (max-height: 620px) {
+@media (max-height: 620px) and (min-width: 641px) {
     .login-page .App {
         place-items: start center;
     }
