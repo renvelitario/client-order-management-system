@@ -23,11 +23,11 @@ const Login = () => {
   };
 
   const handleAdminDemoClick = () => {
-    fillDemoCredentials('admin@admin.com', 'admin');
+    fillDemoCredentials('admin@admin.com', 'Admin1234');
   };
 
   const handleUserDemoClick = () => {
-    fillDemoCredentials('user@user.com', 'user');
+    fillDemoCredentials('user@user.com', 'User1234');
   };
 
   useEffect(() => {
@@ -172,7 +172,7 @@ const Login = () => {
             type="button"
             className="demo-btn admin-btn"
             onClick={handleAdminDemoClick}
-            title="Fill with admin credentials: admin@admin.com / admin"
+            title="Fill with admin credentials: admin@admin.com / Admin1234"
           >
             Admin
           </button>
@@ -180,7 +180,7 @@ const Login = () => {
             type="button"
             className="demo-btn user-btn"
             onClick={handleUserDemoClick}
-            title="Fill with user credentials: user@user.com / user"
+            title="Fill with user credentials: user@user.com / User1234"
           >
             User
           </button>
