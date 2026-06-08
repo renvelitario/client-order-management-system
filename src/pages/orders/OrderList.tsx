@@ -1,6 +1,6 @@
 import api from '../../utils/api';
 import type { FormEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { printOrderSlip } from '../../utils/printOrderSlip';
 import '../../styles/shared/table-ui-layout-controls.css';
 import '../../styles/shared/table-ui-core.css';
@@ -11,6 +11,7 @@ import '../../styles/shared/modal-ui-order-items.css';
 import '../../styles/shared/form-ui-entity-modal.css';
 import '../../styles/shared/table-ui-pagination.css';
 import '../../styles/shared/table-ui-responsive.css';
+import '../../styles/pages/orders/order-list.css';
 import { formatPeso, formatDateOnly } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
 import Pagination from '../../components/ui/Pagination';
@@ -26,7 +27,8 @@ import Notification from '../../components/ui/Notification';
 import PageLoader from '../../components/ui/PageLoader';
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import AppIcon from '../../components/ui/AppIcon';
-import { DELIVERY_STATUS_LABELS } from '../../types/delivery';
+import FilterDropdown from '../../components/ui/FilterDropdown';
+import { DELIVERY_STATUS_LABELS, DELIVERY_STATUS_OPTIONS } from '../../types/delivery';
 import { resolveApiErrorMessage, resolveEntityMutationErrorMessage } from '../../types/app';
 import type { DeliveryStatusKey } from '../../types/delivery';
 import type { ApiError, Customer, Order, Product } from '../../types/app';
@@ -48,6 +50,12 @@ type OrderForm = {
 
 const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '', price: '' });
 const MIN_ORDER_ROWS = 2;
+type OrderStatusFilter = DeliveryStatusKey | 'all';
+
+const ORDER_STATUS_FILTER_OPTIONS: Array<{ value: OrderStatusFilter; label: string }> = [
+  { value: 'all', label: 'All Statuses' },
+  ...DELIVERY_STATUS_OPTIONS,
+];
 
 const ensureMinimumOrderRows = (items: OrderItemForm[]) => {
   const nextItems = [...items];
@@ -88,8 +96,12 @@ const OrdersList = () => {
   const [pageNotification, setPageNotification] = useState({ message: '', type: 'success' });
   const [isOrderItemsModalOpen, setIsOrderItemsModalOpen] = useState(false);
   const [selectedOrderForItems, setSelectedOrderForItems] = useState<Order | null>(null);
+  const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>('all');
   const highlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchScanButtonRef = useRef<HTMLButtonElement | null>(null);
+  const listParams = useMemo(() => ({
+    delivery_status: statusFilter === 'all' ? undefined : statusFilter,
+  }), [statusFilter]);
   const {
     rows: orders,
     searchInput,
@@ -103,7 +115,7 @@ const OrdersList = () => {
     handleSearchChange,
     handlePageSizeChange,
     refetch,
-  } = usePaginatedList<Order>({ endpoint: '/orders', initialSort: 'desc' });
+  } = usePaginatedList<Order>({ endpoint: '/orders', initialSort: 'desc', params: listParams });
   const {
     deleteDialog,
     notification,
@@ -154,6 +166,11 @@ const OrdersList = () => {
   const handleSearchScanDetected = (orderId: string) => {
     handleSearchChange(orderId);
     setIsSearchScannerOpen(false);
+  };
+
+  const handleStatusFilterChange = (nextStatus: OrderStatusFilter) => {
+    setStatusFilter(nextStatus);
+    setCurrentPage(1);
   };
 
   const handleDeleteConfirm = async () => {
@@ -537,6 +554,20 @@ const OrdersList = () => {
       <Notification message={pageNotification.message} type={pageNotification.type} />
       <Notification message={notification.message} type={notification.type} />
       {orderModal}
+
+      <div className="order-filter-bar">
+        <div className="order-status-filter filter-inline-control">
+          <label id="order-status-filter-label" className="filter-inline-label">Status</label>
+          <FilterDropdown
+            id="order-status-filter"
+            className="order-status-dropdown filter-inline-dropdown"
+            ariaLabelledBy="order-status-filter-label"
+            value={statusFilter}
+            options={ORDER_STATUS_FILTER_OPTIONS}
+            onChange={handleStatusFilterChange}
+          />
+        </div>
+      </div>
 
       {initialLoading ? (
         <PageLoader pageName="Orders" />

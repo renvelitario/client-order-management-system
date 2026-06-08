@@ -638,7 +638,8 @@
 @media (max-width: 640px) {
   .mobile-shell-bar {
     height: 70px;
-    padding: 12px 14px;
+    padding: 12px;
+    gap: 10px;
   }
 
   .delivery-nav {
@@ -648,7 +649,7 @@
   }
 
   .delivery-nav-link {
-    font-size: 13px;
+    font-size: 12px;
     padding: 8px 6px;
     gap: 4px;
     flex-direction: column;
@@ -670,8 +671,8 @@
   }
 
   .logo-image {
-    height: 40px;
-    width: 40px;
+    height: 38px;
+    width: 38px;
   }
 
   .dashboard-sidebar {
@@ -686,10 +687,18 @@
   }
 
   .top-account-trigger {
-    width: 42px;
+    width: 40px;
+    height: 40px;
     padding: 0;
     gap: 0;
     justify-content: center;
+  }
+
+  .top-inbox-link,
+  .sidebar-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
   }
 }
 

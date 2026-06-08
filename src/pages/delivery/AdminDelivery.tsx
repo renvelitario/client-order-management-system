@@ -4,6 +4,7 @@ import api from '../../utils/api';
 import Pagination from '../../components/ui/Pagination';
 import OrderScanner from '../../components/features/OrderScanner';
 import { usePaginatedList } from '../../hooks/usePaginatedList';
+import { getListData } from '../../utils/listResponse';
 import { formatDateOnly, formatDateTime, formatPeso } from '../../utils/formatters';
 import ListPageHeader from '../../components/ui/ListPageHeader';
 import Notification from '../../components/ui/Notification';
@@ -99,16 +100,24 @@ const AdminDelivery = () => {
   );
 
   const fetchDeliveryStatusCounts = useCallback(async () => {
-    const { data } = await api.get('/orders/delivery/admin/status-counts', {
-      params: {
-        date_range: dateRangeFilter,
-        search: searchInput.trim() || undefined,
-      },
-    });
+    const countEntries = await Promise.all(STATUS_FILTER_OPTIONS.map(async (filter) => {
+      const { data } = await api.get('/orders/delivery/admin', {
+        params: {
+          delivery_status: filter.value,
+          date_range: dateRangeFilter,
+          search: searchInput.trim() || undefined,
+          page: 1,
+          limit: 1,
+        },
+      });
+
+      const listResult = getListData<Order>(data);
+      return [filter.value, Number(listResult.pagination.total || 0)] as const;
+    }));
 
     setStatusCounts({
       ...EMPTY_STATUS_COUNTS,
-      ...((data as { counts?: Partial<Record<DeliveryStatusKey, number>> })?.counts || {}),
+      ...Object.fromEntries(countEntries),
     });
   }, [dateRangeFilter, searchInput]);
 
@@ -392,6 +401,7 @@ const AdminDelivery = () => {
                 role="tab"
                 aria-selected={isActive}
                 className={`delivery-filter-tab${isActive ? ' is-active' : ''}`}
+                disabled={loading}
                 onClick={() => changeFilter(filter.value)}
               >
                 <span className="delivery-filter-tab-label">{filter.label}</span>
@@ -413,6 +423,7 @@ const AdminDelivery = () => {
               value={activeFilter}
               options={statusFilterOptionsWithCounts}
               onChange={changeFilter}
+              disabled={loading}
             />
           </div>
 
@@ -425,6 +436,7 @@ const AdminDelivery = () => {
               value={dateRangeFilter}
               options={DELIVERY_DATE_RANGE_OPTIONS}
               onChange={changeDateRangeFilter}
+              disabled={loading}
             />
           </div>
         </div>
@@ -438,6 +450,7 @@ const AdminDelivery = () => {
             value={dateRangeFilter}
             options={DELIVERY_DATE_RANGE_OPTIONS}
             onChange={changeDateRangeFilter}
+            disabled={loading}
           />
         </div>
       </div>
@@ -461,7 +474,14 @@ const AdminDelivery = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.length ? (
+            {loading ? (
+              <tr className="delivery-admin-loading-row">
+                <td colSpan={7}>
+                  <span className="delivery-admin-loading-indicator" aria-hidden="true" />
+                  Loading delivery orders...
+                </td>
+              </tr>
+            ) : orders.length ? (
               orders.map((order) => (
                 <tr key={order.order_id}>
                   <td>

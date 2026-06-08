@@ -246,6 +246,23 @@
 
   .delivery-order-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .delivery-selected-order {
+    padding: 14px;
+  }
+
+  .delivery-selected-header h3 {
+    font-size: 15px;
+  }
+
+  .delivery-detail-label {
+    font-size: 10px;
+  }
+
+  .delivery-detail-value {
+    font-size: 13px;
   }
 
   .delivery-status-actions {
@@ -260,6 +277,15 @@
   .delivery-order-card-grid {
     grid-template-columns: 1fr;
     width: 100%;
+  }
+
+  .delivery-order-select-card {
+    padding: 14px;
+  }
+
+  .delivery-order-select-card-head {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

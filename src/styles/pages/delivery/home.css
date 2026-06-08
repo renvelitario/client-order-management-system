@@ -101,6 +101,19 @@
 @media (max-width: 640px) {
   .delivery-home-card-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .delivery-home-empty {
+    padding: 16px;
+  }
+
+  .delivery-home-empty h2 {
+    font-size: 16px;
+  }
+
+  .delivery-home-empty p {
+    font-size: 13px;
   }
 
   .delivery-order-modal-compact .entity-modal-actions .delivery-action-success {
@@ -116,19 +129,14 @@
   }
 
   .delivery-order-modal-compact {
-    width: min(84vw, 430px);
-    max-width: 430px;
-  }
-
-  .delivery-order-modal-compact {
-    width: min(84vw, 430px) !important;
+    width: calc(100vw - 28px) !important;
     max-width: 430px !important;
   }
 }
 
 @media (max-width: 420px) {
   .delivery-order-modal-compact {
-    width: calc(100vw - 56px) !important;
+    width: calc(100vw - 24px) !important;
   }
 }
 

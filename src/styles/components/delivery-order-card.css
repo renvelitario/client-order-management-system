@@ -68,11 +68,41 @@
 }
 
 @media (max-width: 640px) {
+  .delivery-order-summary-card {
+    gap: 12px;
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .delivery-order-summary-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .delivery-order-summary-head h3 {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+
   .delivery-order-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
       "customer contact"
       "address address";
+    gap: 8px;
+  }
+
+  .delivery-order-summary-grid div {
+    padding: 9px 10px;
+  }
+
+  .delivery-order-summary-grid span {
+    font-size: 10px;
+  }
+
+  .delivery-order-summary-grid strong {
+    font-size: 13px;
   }
 
   .delivery-order-field-customer {
@@ -85,5 +115,15 @@
 
   .delivery-order-field-address {
     grid-area: address;
+  }
+}
+
+@media (max-width: 360px) {
+  .delivery-order-summary-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "customer"
+      "contact"
+      "address";
   }
 }

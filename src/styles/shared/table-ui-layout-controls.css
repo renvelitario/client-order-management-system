@@ -2,7 +2,7 @@
 .header-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 16px;
     gap: 16px;
 }
@@ -186,6 +186,48 @@
 
     .page-shell-heading h2 {
         margin-top: 4px;
+    }
+}
+
+@media (max-width: 600px) {
+    .page-shell-header {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .page-shell-kicker {
+        font-size: 10px;
+        letter-spacing: 0.08em;
+    }
+
+    .page-shell-heading h2 {
+        margin: 4px 0 3px;
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .page-shell-subtitle {
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .page-shell-controls,
+    .search-container {
+        gap: 8px;
+    }
+
+    .search-input-wrapper,
+    .create-button {
+        min-height: 44px;
+    }
+
+    .search-input-wrapper input {
+        font-size: 16px;
+    }
+
+    .create-button {
+        font-size: 13px;
+        letter-spacing: 0.01em;
     }
 }
 

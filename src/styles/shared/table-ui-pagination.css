@@ -108,12 +108,28 @@
     .pagination-footer {
         align-items: stretch;
         flex-direction: column;
+        gap: 10px;
     }
 
     .rows-per-page,
     .pagination {
         justify-content: space-between;
         width: 100%;
+    }
+
+    .rows-per-page {
+        font-size: 12px;
+    }
+
+    .pagination-btn {
+        min-width: 42px;
+        height: 42px;
+        font-size: 13px;
+    }
+
+    .pagination-input {
+        height: 42px;
+        font-size: 16px;
     }
 }
 

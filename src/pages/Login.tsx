@@ -116,7 +116,11 @@ const Login = () => {
         <img src="/logo.png" alt="Logo" />
       </div>
 
-      <h2>FEU Alabang Book Store Inventory Management System</h2>
+      <h2>
+        FEU Alabang - Bookstore
+        <br />
+        Order Management System
+      </h2>
 
       <form onSubmit={handleLogin}>
         {/* IDENTIFIER (EMAIL, USERNAME, OR PHONE) */}

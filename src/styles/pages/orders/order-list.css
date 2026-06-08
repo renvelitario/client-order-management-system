@@ -1,0 +1,41 @@
+.order-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.order-status-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 210px;
+}
+
+.order-status-filter label {
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .order-filter-bar {
+    justify-content: flex-start;
+  }
+
+  .order-status-filter {
+    min-width: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-filter-bar {
+    margin-bottom: 10px;
+  }
+
+  .order-status-filter {
+    width: 100%;
+    min-width: 0;
+    justify-content: space-between;
+  }
+}

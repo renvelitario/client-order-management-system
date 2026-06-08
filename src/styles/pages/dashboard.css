@@ -8,10 +8,10 @@
 }
 
 .dashboard-report-canvas {
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 16px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -41,7 +41,7 @@
     min-width: 0;
     width: auto;
     flex: 0 0 auto;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .dashboard-filter-group .dashboard-range-dropdown,
@@ -251,7 +251,6 @@
     }
 
     .dashboard-report-canvas {
-        padding: 12px;
         gap: 14px;
     }
 
@@ -279,7 +278,7 @@
     }
 
     .kpi-card p {
-        font-size: 20px;
+        font-size: 21px;
     }
 
     .chart-grid {
@@ -306,14 +305,65 @@
 }
 
 @media (max-width: 520px) {
+    .dashboard-page {
+        gap: 16px;
+    }
+
+    .dashboard-subtitle {
+        font-size: 12px;
+    }
+
+    .kpi-section {
+        gap: 10px;
+    }
+
+    .kpi-section-title {
+        font-size: 13px;
+    }
+
     .kpi-grid,
     .kpi-grid-overview,
     .kpi-grid-delivery {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .kpi-card {
+        min-height: 92px;
+        padding: 12px;
+    }
+
+    .kpi-card h4 {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+
+    .kpi-card p {
+        font-size: 18px;
     }
 
     .chart-card,
     .recent-orders-section {
-        padding: 14px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .chart-card h3,
+    .recent-orders-section h3 {
+        font-size: 15px;
+    }
+
+    .chart-container,
+    .chart-card-top-products .chart-container,
+    .pie-chart-container {
+        height: 230px;
+    }
+}
+
+@media (max-width: 360px) {
+    .kpi-grid,
+    .kpi-grid-overview,
+    .kpi-grid-delivery {
+        grid-template-columns: 1fr;
     }
 }

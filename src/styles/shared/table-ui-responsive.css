@@ -31,20 +31,26 @@
         box-sizing: border-box;
     }
 
-    /* Horizontal scroll for wide tables */
-    table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        width: 100%;
-        font-size: 12px;
+    .data-table-wrap {
+        border-radius: 10px;
     }
 
     th,
     td {
-        font-size: 12px;
-        padding: 8px;
+        font-size: 13px;
+        padding: 10px 12px;
         white-space: nowrap;
+    }
+
+    th {
+        font-size: 11px;
+        letter-spacing: 0.03em;
+    }
+
+    .table-id-chip,
+    .delivery-order-id-chip {
+        padding: 5px 9px;
+        font-size: 12px;
     }
 
     .entity-modal-header,
@@ -91,7 +97,7 @@
 
     .create-button {
         font-size: 13px;
-        padding: 6px 10px;
+        padding: 0 12px;
     }
 
     /* Keep all action buttons identical in mobile tables */
@@ -109,6 +115,11 @@
         padding: 0;
         box-sizing: border-box;
         line-height: 1;
+    }
+
+    th,
+    td {
+        padding: 9px 10px;
     }
 
     .edit-button {

@@ -137,8 +137,8 @@ const Topbar = ({
       <Link to={homePath} className="mobile-shell-brand">
         <img src="/logo.png" className="logo-image" alt="Logo" />
         <div className="mobile-shell-brand-copy">
-          <strong>Order Management System</strong>
-          <span>Operations workspace</span>
+          <strong>FEU Alabang - Bookstore</strong>
+          <span>Order Management System</span>
         </div>
       </Link>
 

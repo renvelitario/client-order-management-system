@@ -128,13 +128,30 @@
 
 @media (max-width: 640px) {
   .filter-inline-control {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 6px;
     justify-content: space-between;
     width: 100%;
+  }
+
+  .filter-inline-label {
+    font-size: 12px;
   }
 
   .filter-inline-dropdown,
   .filter-inline-dropdown .dropdown-filter-trigger {
     min-width: 0;
     width: 100%;
+  }
+
+  .filter-inline-dropdown .dropdown-filter-trigger {
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .dropdown-filter-option {
+    min-height: 40px;
+    font-size: 14px;
   }
 }

@@ -262,6 +262,14 @@
     gap: 14px;
   }
 
+  .account-shell-header h1 {
+    font-size: 21px;
+  }
+
+  .account-shell-header p {
+    font-size: 13px;
+  }
+
   .account-shell-nav {
     gap: 8px;
   }
@@ -279,6 +287,15 @@
 
   .account-card {
     padding: 14px;
+  }
+
+  .account-card h2 {
+    font-size: 15px;
+  }
+
+  .account-form input {
+    min-height: 44px;
+    font-size: 16px;
   }
 
   .account-form .create-button,
