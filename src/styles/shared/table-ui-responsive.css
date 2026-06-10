@@ -35,14 +35,14 @@
         border-radius: 10px;
     }
 
-    th,
-    td {
+    .data-table th,
+    .data-table td {
         font-size: 13px;
         padding: 10px 12px;
         white-space: nowrap;
     }
 
-    th {
+    .data-table th {
         font-size: 11px;
         letter-spacing: 0.03em;
     }
@@ -117,8 +117,8 @@
         line-height: 1;
     }
 
-    th,
-    td {
+    .data-table th,
+    .data-table td {
         padding: 9px 10px;
     }
 

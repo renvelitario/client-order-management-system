@@ -14,14 +14,7 @@ import DeliveryAssignmentModal from '../../components/ui/DeliveryAssignmentModal
 import DataTable, { DataTableActions, DataTableEmptyState } from '../../components/ui/DataTable';
 import FilterDropdown from '../../components/ui/FilterDropdown';
 import AppIcon from '../../components/ui/AppIcon';
-import '../../styles/shared/table-ui-layout-controls.css';
-import '../../styles/shared/table-ui-core.css';
-import '../../styles/shared/table-ui-actions.css';
-import '../../styles/shared/feedback-ui-notification.css';
-import '../../styles/shared/modal-ui-base.css';
-import '../../styles/shared/form-ui-entity-modal.css';
-import '../../styles/shared/table-ui-pagination.css';
-import '../../styles/shared/table-ui-responsive.css';
+import '../../styles/shared/table-page.css';
 import '../../styles/pages/delivery/admin-delivery.css';
 import { ADMIN_DELIVERY_FILTERS, DELIVERY_STATUS_LABELS } from '../../types/delivery';
 import type { DeliveryStatusKey } from '../../types/delivery';

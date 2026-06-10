@@ -13,9 +13,7 @@ import {
   Cell,
   Legend,
 } from 'recharts';
-import '../styles/shared/table-ui-core.css';
-import '../styles/shared/feedback-ui-notification.css';
-import '../styles/shared/table-ui-layout-controls.css';
+import '../styles/shared/dashboard-page.css';
 import '../styles/pages/dashboard.css';
 import FilterDropdown from '../components/ui/FilterDropdown';
 import { formatDateOnly, formatPeso } from '../utils/formatters';

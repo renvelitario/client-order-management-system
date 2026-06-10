@@ -9,11 +9,7 @@ import PageLoader from '../../components/ui/PageLoader';
 import DeliveryOrderCard from '../../components/features/DeliveryOrderCard';
 import DeliveryOrderDetailsModal from '../../components/features/DeliveryOrderDetailsModal';
 import { useAuth } from '../../hooks/useAuth';
-import '../../styles/shared/modal-ui-base.css';
-import '../../styles/shared/modal-ui-order-items.css';
-import '../../styles/shared/form-ui-entity-modal.css';
-import '../../styles/shared/table-ui-layout-controls.css';
-import '../../styles/shared/table-ui-core.css';
+import '../../styles/shared/delivery-order-page.css';
 import '../../styles/pages/delivery/home.css';
 
 const HOME_REFRESH_INTERVAL_MS = 10000;

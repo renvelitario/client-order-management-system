@@ -37,7 +37,7 @@ type OrderFormModalProps = {
   onOrderDateChange: (value: string) => void;
   onDeliveryDateChange: (value: string) => void;
   onScanProduct: (sku: string) => Promise<void> | void;
-  onItemChange: (index: number, field: keyof OrderItemForm, value: string) => void;
+  onItemChange: (index: number, field: keyof OrderItemForm | 'discount' | 'delivery_fee', value: string) => void;
   onRemoveItem: (index: number) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   onRequestClose: () => void;
@@ -320,7 +320,7 @@ const OrderFormModal = ({
                   <input
                     type="text"
                     value={getOrderItemAmount(item.quantity, item.price)}
-                    placeholder="—"
+                    placeholder="-"
                     readOnly
                     aria-label="Amount"
                   />
@@ -339,7 +339,6 @@ const OrderFormModal = ({
             </div>
           </div>
 
-          {/* Discount and Delivery Fee fields */}
           <div className="entity-modal-field-group">
             <div className="entity-modal-field">
               <label htmlFor="order-discount">Discount</label>

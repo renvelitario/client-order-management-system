@@ -35,6 +35,10 @@ const OrderScanner = ({
   onClose: () => void;
   onDetected: (orderId: string) => Promise<void> | void;
 }) => {
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <CameraScannerModal
       isOpen={isOpen}

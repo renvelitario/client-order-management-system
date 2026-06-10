@@ -35,6 +35,10 @@ const BarcodeScanner = ({
   onClose: () => void;
   onDetected: (sku: string) => Promise<void> | void;
 }) => {
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <CameraScannerModal
       isOpen={isOpen}

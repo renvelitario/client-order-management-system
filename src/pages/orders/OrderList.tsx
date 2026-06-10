@@ -2,15 +2,8 @@ import api from '../../utils/api';
 import type { FormEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { printOrderSlip } from '../../utils/printOrderSlip';
-import '../../styles/shared/table-ui-layout-controls.css';
-import '../../styles/shared/table-ui-core.css';
-import '../../styles/shared/table-ui-actions.css';
-import '../../styles/shared/feedback-ui-notification.css';
-import '../../styles/shared/modal-ui-base.css';
+import '../../styles/shared/table-page.css';
 import '../../styles/shared/modal-ui-order-items.css';
-import '../../styles/shared/form-ui-entity-modal.css';
-import '../../styles/shared/table-ui-pagination.css';
-import '../../styles/shared/table-ui-responsive.css';
 import '../../styles/pages/orders/order-list.css';
 import { formatPeso, formatDateOnly } from '../../utils/formatters';
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';
@@ -46,6 +39,11 @@ type OrderForm = {
   items_data: OrderItemForm[];
   discount?: string;
   delivery_fee?: string;
+};
+
+type OrderPayload = Omit<OrderForm, 'discount' | 'delivery_fee'> & {
+  discount: number;
+  delivery_fee: number;
 };
 
 const emptyOrderItem = (): OrderItemForm => ({ product_id: '', quantity: '', price: '' });
@@ -105,7 +103,6 @@ const OrdersList = () => {
   const {
     rows: orders,
     searchInput,
-    loading,
     initialLoading,
     currentPage,
     pageSize,
@@ -159,7 +156,7 @@ const OrdersList = () => {
       const { data } = await api.get<Order>(`/orders/${order.order_id}`);
       await printOrderSlip(data);
     } catch {
-      // popup blocked or fetch failed — no-op
+      // Popup blocked or fetch failed; no-op.
     }
   };
 
@@ -439,7 +436,7 @@ const OrdersList = () => {
       return;
     }
 
-    const payload: any = {
+    const payload: OrderPayload = {
       ...formData,
       items_data: sanitizedItems,
       discount: formData.discount ? Number(formData.discount) : 0,

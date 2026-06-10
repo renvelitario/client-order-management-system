@@ -1,14 +1,7 @@
 import api from "../../utils/api";
 import type { ChangeEvent, FormEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import '../../styles/shared/table-ui-layout-controls.css';
-import '../../styles/shared/table-ui-core.css';
-import '../../styles/shared/table-ui-actions.css';
-import '../../styles/shared/feedback-ui-notification.css';
-import '../../styles/shared/modal-ui-base.css';
-import '../../styles/shared/form-ui-entity-modal.css';
-import '../../styles/shared/table-ui-pagination.css';
-import '../../styles/shared/table-ui-responsive.css';
+import '../../styles/shared/table-page.css';
 import '../../styles/pages/products/product-list.css';
 import { formatPeso } from "../../utils/formatters";
 import { useDeleteDialog } from '../../hooks/useDeleteDialog';

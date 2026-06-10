@@ -104,7 +104,7 @@ const CameraScannerModal = ({
   }, [onClose, onDetected]);
 
   const stopActiveVideoTracks = useCallback(() => {
-    const host = scannerHostRef.current;
+    const host = scannerHostRef.current || document.getElementById(scannerId);
     if (!host) {
       return;
     }
@@ -118,7 +118,7 @@ const CameraScannerModal = ({
 
       videoElement.srcObject = null;
     });
-  }, []);
+  }, [scannerId]);
 
   const handleClose = useCallback(async () => {
     await stopScannerRef.current();
@@ -178,6 +178,10 @@ const CameraScannerModal = ({
   useEffect(() => {
     let cancelled = false;
 
+    if (!isOpen) {
+      return undefined;
+    }
+
     const loadCameras = async () => {
       try {
         const { Html5Qrcode } = await import('html5-qrcode');
@@ -199,30 +203,43 @@ const CameraScannerModal = ({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     let unmounted = false;
 
-    const stopScanner = async () => {
-      if (!scannerRef.current) {
+    const stopScannerInstance = async (scanner: Html5Qrcode | null) => {
+      stopActiveVideoTracks();
+
+      if (!scanner) {
         return;
       }
 
       try {
-        await scannerRef.current.stop();
+        await scanner.stop();
       } catch {
         // ignore stop errors
       }
 
       try {
-        await scannerRef.current.clear();
+        await scanner.clear();
       } catch {
         // ignore clear errors
       }
 
       stopActiveVideoTracks();
-      scannerRef.current = null;
+      const host = scannerHostRef.current || document.getElementById(scannerId);
+      if (host) {
+        host.replaceChildren();
+      }
+
+      if (scannerRef.current === scanner) {
+        scannerRef.current = null;
+      }
+    };
+
+    const stopScanner = async () => {
+      await stopScannerInstance(scannerRef.current);
 
       if (!unmounted) {
         setLoadingCamera(false);
@@ -291,6 +308,11 @@ const CameraScannerModal = ({
               },
             );
             started = true;
+
+            if (unmounted) {
+              await stopScannerInstance(scanner);
+              break;
+            }
           } catch (err) {
             startError = err;
           }
