@@ -93,88 +93,97 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <div className="logo">
-        <img src="/logo.png" alt="Logo" />
-      </div>
+    <div className="auth-shell">
+      <main className="container">
+        <div className="logo">
+          <img src="/logo.png" alt="Logo" />
+        </div>
 
-      <h2>
-        FEU Alabang - Bookstore
+        <h2>
+          FEU Alabang - Bookstore
+          <br />
+          Order Management System
+        </h2>
+
+        <form onSubmit={handleLogin}>
+          {/* IDENTIFIER (EMAIL, USERNAME, OR PHONE) */}
+          <div className="input-group">
+            <AppIcon name="person" />
+            <input
+              type="text"
+              placeholder="Email, username, or phone"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <div className="input-group">
+            <AppIcon name="lock" />
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <AppIcon
+              name={showPassword ? 'visibility_off' : 'visibility'}
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+            />
+          </div>
+
+          {/* SUBMIT */}
+          <input
+            type="submit"
+            value={loading ? 'Logging in...' : 'Log In'}
+            disabled={loading}
+          />
+
+          {/* ERROR */}
+          <Notification message={error || authError} type="error" />
+        </form>
+
+        <div className="auth-links">
+          <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
+        </div>
+
+        <hr className="demo-separator" />
+
+        <div className="demo-section">
+          <h3 className="demo-title">Demo Accounts</h3>
+          <div className="demo-buttons">
+            <button
+              type="button"
+              className="demo-btn admin-btn"
+              onClick={handleAdminDemoClick}
+              title="Fill with admin credentials: admin@admin.com / Admin1234"
+            >
+              Admin
+            </button>
+            <button
+              type="button"
+              className="demo-btn user-btn"
+              onClick={handleUserDemoClick}
+              title="Fill with user credentials: user@user.com / User1234"
+            >
+              User
+            </button>
+          </div>
+          <p className="demo-hint">
+            Click to fill login form with demo credentials
+          </p>
+        </div>
+      </main>
+
+      <footer className="auth-disclaimer">
+        This system is an academic project created for the Applications Development
+        final course requirement.
         <br />
-        Order Management System
-      </h2>
-
-      <form onSubmit={handleLogin}>
-        {/* IDENTIFIER (EMAIL, USERNAME, OR PHONE) */}
-        <div className="input-group">
-          <AppIcon name="person" />
-          <input
-            type="text"
-            placeholder="Email, username, or phone"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-          />
-        </div>
-
-        {/* PASSWORD */}
-        <div className="input-group">
-          <AppIcon name="lock" />
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <AppIcon
-            name={showPassword ? 'visibility_off' : 'visibility'}
-            className="toggle-password"
-            onClick={() => setShowPassword(!showPassword)}
-          />
-        </div>
-
-        {/* SUBMIT */}
-        <input
-          type="submit"
-          value={loading ? 'Logging in...' : 'Log In'}
-          disabled={loading}
-        />
-
-        {/* ERROR */}
-        <Notification message={error || authError} type="error" />
-      </form>
-
-      <div className="auth-links">
-        <Link to="/forgot-password" className="auth-link">Forgot your password?</Link>
-      </div>
-
-      <hr className="demo-separator" />
-
-      <div className="demo-section">
-        <h3 className="demo-title">Demo Accounts</h3>
-        <div className="demo-buttons">
-          <button
-            type="button"
-            className="demo-btn admin-btn"
-            onClick={handleAdminDemoClick}
-            title="Fill with admin credentials: admin@admin.com / Admin1234"
-          >
-            Admin
-          </button>
-          <button
-            type="button"
-            className="demo-btn user-btn"
-            onClick={handleUserDemoClick}
-            title="Fill with user credentials: user@user.com / User1234"
-          >
-            User
-          </button>
-        </div>
-        <p className="demo-hint">
-          Click to fill login form with demo credentials
-        </p>
-      </div>
+        It is not officially affiliated with, endorsed by, or connected to FEU Alabang.
+      </footer>
     </div>
   );
 };
