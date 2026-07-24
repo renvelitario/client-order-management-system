@@ -122,39 +122,39 @@
 }
 
 .kpi-status-unassigned {
-    background: #f2ece0;
-    color: #73583f;
-    border: 1px solid #dfd0b9;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
 }
 
 .kpi-status-pending {
-    background: #f7f0d8;
-    color: #7f6a2f;
-    border: 1px solid #e9ddbd;
+    background: #ffe8dc;
+    color: #ff641d;
+    border: 1px solid #ffd0b8;
 }
 
 .kpi-status-out-for-delivery {
-    background: #e7f1ff;
-    color: #1f5f9f;
-    border: 1px solid #c9ddfb;
+    background: #e0f2fe;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
 }
 
 .kpi-status-delivered {
-    background: #ecebff;
-    color: #1c1794;
-    border: 1px solid #cbc9ff;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
 }
 
 .kpi-status-failed {
-    background: #fbe6e4;
-    color: #a34b3e;
-    border: 1px solid #f0cbc6;
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
 }
 
 .kpi-status-cancelled {
-    background: #e9edea;
-    color: #5a6660;
-    border: 1px solid #d0d8d3;
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
 }
 
 .chart-grid {

@@ -105,17 +105,17 @@
     white-space: nowrap;
 }
 
-.status-unassigned { background: #f4f1ea; color: #70533c; }
-.status-pending { background: #fff8e1; color: #8d6e00; }
-.status-scheduled { background: #fff8e1; color: #8d6e00; }
-.status-out_for_delivery { background: #e3f2fd; color: var(--primary-hover); }
-.status-delivered { background: #ecebff; color: #1c1794; }
-.status-failed { background: #ffebee; color: #b71c1c; }
-.status-cancelled { background: #eceff1; color: #455a64; }
-.status-failed_delivery { background: #ffebee; color: #b71c1c; }
-.status-active { background: #ecebff; color: #1c1794; }
+.status-unassigned { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.status-pending { background: #ffe8dc; color: #ff641d; border: 1px solid #ffd0b8; }
+.status-scheduled { background: #ffe8dc; color: #ff641d; border: 1px solid #ffd0b8; }
+.status-out_for_delivery { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+.status-delivered { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.status-failed { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.status-cancelled { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+.status-failed_delivery { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.status-active { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
 .status-inactive,
-.status-disabled { background: #eceff1; color: #455a64; }
+.status-disabled { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
 
 /* INACTIVE ROW */
 .inactive-row td {
