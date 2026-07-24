@@ -84,8 +84,9 @@
 }
 
 .top-inbox-link.is-active {
-  background: rgba(255, 100, 29, 0.2);
-  border-color: rgba(255, 100, 29, 0.4);
+  background: #ff641d;
+  border-color: #ff641d;
+  color: #ffffff;
 }
 
 .top-inbox-link .app-icon {
@@ -100,7 +101,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #d73c2c;
+  background: #ff641d;
   color: #ffffff;
   font-size: 10px;
   font-weight: 700;
@@ -325,6 +326,7 @@
   flex-direction: column;
   gap: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar-section {
@@ -341,7 +343,7 @@
 
 .sidebar-divider {
   margin: 4px 10px;
-  border-top: 1px solid #ecebff;
+  border-top: 1px solid #c4cff7;
 }
 
 .sidebar-link {
@@ -553,6 +555,7 @@
   .dashboard-sidebar:not(:hover) .sidebar-link-label {
     opacity: 0;
     max-width: 0;
+    width: 0;
   }
 }
 
