@@ -1,6 +1,6 @@
 .logo-image {
-  height: 38px;
-  width: 170px;
+  height: 42px;
+  width: 188px;
   border-radius: 0;
   object-fit: contain;
 }
@@ -721,8 +721,8 @@
   }
 
   .logo-image {
-    height: 34px;
-    width: 138px;
+    height: 37px;
+    width: 150px;
   }
 
   .dashboard-sidebar {
