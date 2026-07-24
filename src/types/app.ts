@@ -124,6 +124,9 @@ export interface AuthContextValue {
 
 export const resolveApiErrorMessage = (error: unknown, fallback: string): string => {
   const typedError = error as ApiError;
+  if (!typedError?.response && (typedError?.message === 'Network Error' || (typedError as { code?: string })?.code === 'ERR_NETWORK')) {
+    return 'Unable to connect to the server. Please check your network connection and try again.';
+  }
   return typedError?.response?.data?.error || typedError?.message || fallback;
 };
 

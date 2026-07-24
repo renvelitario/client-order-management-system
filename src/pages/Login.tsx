@@ -79,7 +79,7 @@ const Login = () => {
       let message = error?.response?.data?.message || error?.response?.data?.error || error?.message || 'Login failed.';
 
       if (!error?.response && (error?.code === 'ERR_NETWORK' || message === 'Network Error')) {
-        message = 'Unable to reach the login server. Make sure the backend is running and VITE_API_BASE_URL points to it.';
+        message = 'Unable to connect to the server. Please check your network connection and try again.';
       }
       
       setError(
