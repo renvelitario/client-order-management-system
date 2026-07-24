@@ -75,7 +75,9 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
   text-decoration: none;
-  transition: background-color 0.18s ease, border-color 0.18s ease;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .top-inbox-link:hover {
@@ -84,8 +86,8 @@
 }
 
 .top-inbox-link.is-active {
-  background: #ff641d;
-  border-color: #ff641d;
+  background: rgba(255, 140, 0, 0.2);
+  border-color: rgba(255, 140, 0, 0.4);
   color: #ffffff;
 }
 
@@ -131,7 +133,9 @@
   gap: 8px;
   padding: 0 10px 0 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .top-account-trigger:hover {
@@ -178,7 +182,9 @@
   opacity: 0;
   pointer-events: none;
   transform: translateY(-4px);
-  transition: opacity 0.16s ease, transform 0.16s ease;
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
   z-index: 1120;
 }
 
@@ -230,7 +236,9 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
   min-height: 38px;
 }
 
@@ -277,7 +285,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   z-index: 1;
 }
 
@@ -358,7 +368,12 @@
   text-decoration: none;
   font-size: 13px;
   font-weight: 600;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   justify-content: flex-start;
 }
@@ -378,14 +393,18 @@
   opacity: 0;
   max-width: 0;
   overflow: hidden;
-  transition: opacity 0.15s ease, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateZ(0); 
+  transition:
+    opacity 0.15s ease,
+    max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
 }
 
 .dashboard-sidebar:hover .sidebar-link-label {
   opacity: 1;
   max-width: 170px;
-  transition: opacity 0.25s ease 0.05s, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    opacity 0.25s ease 0.05s,
+    max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-link-icon {
@@ -458,7 +477,9 @@
   padding: 10px 8px 12px;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
-  transition: color 0.16s ease, border-color 0.16s ease;
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease;
 }
 
 .delivery-nav-link:first-child {
@@ -488,13 +509,20 @@
   text-decoration: none;
   background: #ff641d;
   outline: 2px solid #ffe3d4;
-  box-shadow: 0 10px 24px rgba(255, 100, 29, 0.32), 0 0 0 6px rgba(255, 227, 212, 0.9);
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  box-shadow:
+    0 10px 24px rgba(255, 100, 29, 0.32),
+    0 0 0 6px rgba(255, 227, 212, 0.9);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
 }
 
 .delivery-nav-scan-link:hover {
   transform: translateY(-1px) scale(1.03);
-  box-shadow: 0 14px 28px rgba(255, 100, 29, 0.36), 0 0 0 6px rgba(255, 227, 212, 0.95);
+  box-shadow:
+    0 14px 28px rgba(255, 100, 29, 0.36),
+    0 0 0 6px rgba(255, 227, 212, 0.95);
 }
 
 .delivery-nav-scan-link .app-icon {
@@ -713,5 +741,3 @@
     border-radius: 12px;
   }
 }
-
-
