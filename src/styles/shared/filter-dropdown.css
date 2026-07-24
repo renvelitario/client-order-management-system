@@ -38,8 +38,8 @@
 }
 
 .filter-inline-dropdown .dropdown-filter-trigger:hover {
-  border-color: rgba(54, 90, 56, 0.45);
-  box-shadow: 0 4px 12px rgba(54, 90, 56, 0.08);
+  border-color: rgba(28, 23, 148, 0.45);
+  box-shadow: 0 4px 12px rgba(28, 23, 148, 0.08);
 }
 
 .filter-inline-dropdown .dropdown-filter-trigger:focus {
@@ -82,11 +82,10 @@
   z-index: 20;
   display: none;
   padding: 8px;
-  border: 1px solid rgba(54, 90, 56, 0.2);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.98);
+  background: #ffffff;
   box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
-  backdrop-filter: blur(14px);
 }
 
 .dropdown-filter-menu.is-open {
@@ -116,12 +115,12 @@
 .dropdown-filter-option:hover,
 .dropdown-filter-option:focus {
   outline: none;
-  background: rgba(54, 90, 56, 0.11);
+  background: #f7f8ff;
   color: var(--primary);
 }
 
 .dropdown-filter-option.is-selected {
-  background: linear-gradient(180deg, rgba(54, 90, 56, 0.18), rgba(54, 90, 56, 0.1));
+  background: #eef3ff;
   color: var(--primary);
   font-weight: 600;
 }

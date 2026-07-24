@@ -213,15 +213,15 @@ const Dashboard = () => {
     quantity: entry.quantity,
     revenue: entry.revenue,
   }));
-  const pieColors = ['#2f5736', '#6f7d48', '#8b6d33', '#486a72', '#a24b3e', '#5f6b68'];
+  const pieColors = ['#1c1794', '#ff641d', '#1f5f9f', '#ff9b5f', '#a24b3e', '#5f6381'];
   const chartSeriesColors = {
-    topProducts: '#456d3b',
+    topProducts: '#1c1794',
   };
   const deliveryStatusColors: Record<string, string> = {
     Unassigned: '#73583f',
     Pending: '#7f6a2f',
-    'Out for Delivery': '#486a72',
-    Delivered: '#2f5736',
+    'Out for Delivery': '#1f5f9f',
+    Delivered: '#1c1794',
     Failed: '#a24b3e',
     Cancelled: '#5f6b68',
   };

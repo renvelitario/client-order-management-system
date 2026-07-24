@@ -11,7 +11,7 @@
     padding: 16px;
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    background: linear-gradient(145deg, #f8faf5 0%, #eef4eb 100%);
+    background: #f0f2ff;
 }
 
 .page-shell-heading {
@@ -60,7 +60,7 @@
 .search-input-wrapper {
     display: flex;
     align-items: center;
-    background: linear-gradient(180deg, #ffffff 0%, #f7faf5 100%);
+    background: #ffffff;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     min-height: 42px;
@@ -119,13 +119,13 @@
 
 .search-input-action:hover {
     color: var(--primary);
-    background: rgba(54, 90, 56, 0.08);
+    background: #eef3ff;
 }
 
 .search-input-action:focus-visible {
     outline: none;
     color: var(--primary);
-    background: rgba(54, 90, 56, 0.08);
+    background: #eef3ff;
 }
 
 .search-input-action .app-icon {
@@ -142,7 +142,7 @@
     gap: 6px;
     min-height: 42px;
     padding: 0 16px;
-    background: linear-gradient(130deg, var(--primary), var(--primary-hover));
+    background: var(--primary);
     color: var(--text-inverse);
     border: none;
     border-radius: var(--radius-md);
@@ -156,7 +156,7 @@
 }
 
 .create-button:hover {
-    filter: saturate(1.05);
+    background: var(--primary-hover);
     box-shadow: var(--shadow-md);
 }
 

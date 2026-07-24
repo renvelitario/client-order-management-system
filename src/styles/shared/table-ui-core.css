@@ -42,7 +42,7 @@
 }
 
 .data-table th {
-    background: #f0f5ed;
+    background: #f0f2ff;
     color: var(--text-muted);
     font-size: 13px;
     font-weight: 700;
@@ -64,7 +64,7 @@
 }
 
 .data-table tbody tr:hover {
-    background: #f8fbf6;
+    background: #f8f9ff;
 }
 
 .order-row-clickable:focus-within {
@@ -109,16 +109,16 @@
 .status-pending { background: #fff8e1; color: #8d6e00; }
 .status-scheduled { background: #fff8e1; color: #8d6e00; }
 .status-out_for_delivery { background: #e3f2fd; color: var(--primary-hover); }
-.status-delivered { background: #e8f5e9; color: #2e7d32; }
+.status-delivered { background: #ecebff; color: #1c1794; }
 .status-failed { background: #ffebee; color: #b71c1c; }
 .status-cancelled { background: #eceff1; color: #455a64; }
 .status-failed_delivery { background: #ffebee; color: #b71c1c; }
-.status-active { background: #e8f5e9; color: #2e7d32; }
+.status-active { background: #ecebff; color: #1c1794; }
 .status-inactive,
 .status-disabled { background: #eceff1; color: #455a64; }
 
 /* INACTIVE ROW */
 .inactive-row td {
-    color: #9aa49b;
-    background-color: #fafbf9;
+    color: #8c90ad;
+    background-color: #fbfbff;
 }

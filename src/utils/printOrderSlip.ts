@@ -3,7 +3,7 @@ import { formatPeso, formatDateOnly } from './formatters';
 import type { Order, OrderItem } from '../types/app';
 
 const ITEMS_PER_PAGE = 10;
-const BUSINESS_NAME = 'FEU ALABANG';
+const BUSINESS_NAME = 'FULFILLTIFY';
 const LOGO_SRC = '/logo.png';
 
 function chunkItems<T>(arr: T[], size: number): T[][] {
@@ -294,12 +294,12 @@ export async function printOrderSlip(order: Order): Promise<void> {
       background-image: none !important;
     }
     .copy-label-original {
-      background: #14532d;
-      border-color: #14532d;
+      background: #1c1794;
+      border-color: #1c1794;
     }
     .copy-label-duplicate {
-      background: #c41a1a;
-      border-color: #c41a1a;
+      background: #ff641d;
+      border-color: #ff641d;
     }
 
     /* ── Meta info ── */
@@ -352,11 +352,11 @@ export async function printOrderSlip(order: Order): Promise<void> {
       border-radius: 0 !important;
     }
     .order-num.copy-label-original {
-      color: #14532d;
+      color: #1c1794;
       background: none !important;
     }
     .order-num.copy-label-duplicate {
-      color: #c41a1a;
+      color: #ff641d;
       background: none !important;
     }
 
@@ -405,10 +405,10 @@ export async function printOrderSlip(order: Order): Promise<void> {
       border-bottom: 0;
     }
     .thead-original th {
-      background: #14532d;
+      background: #1c1794;
     }
     .thead-duplicate th {
-      background: #c41a1a;
+      background: #ff641d;
     }
     .items-table .empty-row td {
       border-color: #e2e8f0;
@@ -524,10 +524,10 @@ export async function printOrderSlip(order: Order): Promise<void> {
       padding-top: 0.8mm;
     }
     .slip-page-original .slip-bottom {
-      border-top-color: #14532d;
+      border-top-color: #1c1794;
     }
     .slip-page-duplicate .slip-bottom {
-      border-top-color: #c41a1a;
+      border-top-color: #ff641d;
     }
     .page-label {
       font-size: 7pt;

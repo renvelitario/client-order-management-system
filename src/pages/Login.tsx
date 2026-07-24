@@ -96,14 +96,8 @@ const Login = () => {
     <div className="auth-shell">
       <main className="container">
         <div className="logo">
-          <img src="/logo.png" alt="Logo" />
+          <img src="/logo.png" alt="Fulfilltify logo" />
         </div>
-
-        <h2>
-          FEU Alabang - Bookstore
-          <br />
-          Order Management System
-        </h2>
 
         <form onSubmit={handleLogin}>
           {/* IDENTIFIER (EMAIL, USERNAME, OR PHONE) */}
@@ -177,13 +171,6 @@ const Login = () => {
           </p>
         </div>
       </main>
-
-      <footer className="auth-disclaimer">
-        This system is an academic project created for the Applications Development
-        final course requirement.
-        <br />
-        It is not officially affiliated with, endorsed by, or connected to FEU Alabang.
-      </footer>
     </div>
   );
 };

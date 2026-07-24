@@ -115,7 +115,7 @@
   right: 8px;
   height: 2px;
   top: 12%;
-  background: linear-gradient(90deg, rgba(46, 204, 113, 0.12), rgba(46, 204, 113, 0.92), rgba(46, 204, 113, 0.12));
+  background: #2ecc71;
   box-shadow: 0 0 8px rgba(46, 204, 113, 0.55);
   animation: barcode-scan-sweep 2s ease-in-out infinite;
 }
@@ -206,7 +206,7 @@
   display: flex;
   justify-content: center;
   padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+  background: rgba(0, 0, 0, 0.72);
 }
 
 .barcode-scanner-upload-input {

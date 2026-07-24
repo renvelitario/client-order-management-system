@@ -173,7 +173,7 @@
 
 .entity-modal-form input::placeholder,
 .entity-modal-form textarea::placeholder {
-    color: #9aa79d;
+    color: #8c90ad;
 }
 
 .entity-modal-form input:disabled,
@@ -263,8 +263,8 @@
 }
 
 .entity-modal-actions .modal-cancel:hover {
-    background: #e6ece1;
-    border-color: #c4d0c0;
+    background: #ecebff;
+    border-color: #cbc9ff;
 }
 
 .entity-modal-actions .create-button {

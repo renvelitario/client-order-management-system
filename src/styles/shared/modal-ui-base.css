@@ -65,13 +65,13 @@
 }
 
 .modal-cancel:hover {
-    background: #e6ece1;
+    background: #ecebff;
 }
 
 .modal-confirm-delete {
     min-width: 110px;
     padding: 9px 18px;
-    background: linear-gradient(130deg, var(--danger), var(--danger-hover));
+    background: var(--danger);
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -82,7 +82,7 @@
 }
 
 .modal-confirm-delete:hover {
-    filter: saturate(1.06);
+    background: var(--danger-hover);
 }
 
 @media (max-width: 640px) {

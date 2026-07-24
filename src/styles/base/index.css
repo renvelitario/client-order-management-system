@@ -1,28 +1,28 @@
 :root {
   /* Colors */
-  --primary: #315b37;
-  --primary-hover: #284a2f;
-  --primary-light: #e8f2e4;
+  --primary: #1c1794;
+  --primary-hover: #13106f;
+  --primary-light: #ecebff;
   
-  --secondary: #446b74;
-  --secondary-hover: #385a62;
+  --secondary: #ff641d;
+  --secondary-hover: #df4e0d;
   
   --danger: #b8453b;
   --danger-hover: #94362f;
   --danger-light: #fcebea;
   
   --surface: #ffffff;
-  --surface-alt: #f5f8f3;
+  --surface-alt: #f7f8ff;
   
   /* Text */
-  --text-main: #1c2c21;
+  --text-main: #141539;
   --text-primary: var(--text-main);
-  --text-muted: #607064;
+  --text-muted: #5f6381;
   --text-inverse: #ffffff;
   
   /* Borders and Layout */
-  --border-color: #d9e2d5;
-  --border-focus: rgba(49, 91, 55, 0.2);
+  --border-color: #d9ddf7;
+  --border-focus: rgba(28, 23, 148, 0.2);
   
   /* Radii */
   --radius-sm: 6px;
@@ -53,10 +53,7 @@ html {
 }
 
 body {
-	background:
-    radial-gradient(circle at top left, rgba(49, 91, 55, 0.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(68, 107, 116, 0.08), transparent 34%),
-    linear-gradient(180deg, #eef4ec 0%, #f8faf6 52%, #edf3ed 100%);
+	background: #f3f6ff;
 	color: var(--text-main);
 	font-family: 'Montserrat', Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -74,7 +71,7 @@ select {
 }
 
 ::selection {
-  background: rgba(49, 91, 55, 0.22);
+  background: rgba(28, 23, 148, 0.22);
 }
 
 .app-icon {
@@ -131,14 +128,14 @@ select {
   outline: none;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%235b685b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%235f6381' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .filter-like-select:hover {
-  border-color: rgba(54, 90, 56, 0.45);
+  border-color: rgba(28, 23, 148, 0.45);
   box-shadow: none;
 }
 
@@ -155,7 +152,7 @@ select {
 }
 
 .filter-like-select option {
-  background: #f5f8f2;
+  background: #f7f8ff;
   color: var(--text-main);
 }
 

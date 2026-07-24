@@ -109,7 +109,7 @@ const OrderFormModal = ({
       minHeight,
       fontSize,
       borderColor: state.isFocused ? 'var(--primary)' : 'var(--border-color)',
-      background: 'linear-gradient(180deg, #ffffff 0%, #f7faf7 100%)',
+      background: '#ffffff',
       boxShadow: state.isFocused
         ? '0 0 0 3px var(--border-focus)'
         : '0 1px 2px rgba(15, 23, 42, 0.04)',
@@ -128,9 +128,9 @@ const OrderFormModal = ({
     }),
     menu: (base: Record<string, unknown>) => ({
       ...base,
-      border: '1px solid rgba(54, 90, 56, 0.2)',
+      border: '1px solid var(--border-color)',
       borderRadius: '12px',
-      background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 242, 0.98))',
+      background: '#ffffff',
       boxShadow: '0 18px 40px rgba(15, 23, 42, 0.16)',
       overflow: 'hidden',
       marginTop: 8,
@@ -152,9 +152,9 @@ const OrderFormModal = ({
       cursor: 'pointer',
       color: state.isSelected || state.isFocused ? 'var(--primary)' : 'var(--text-main)',
       background: state.isSelected
-        ? 'linear-gradient(180deg, rgba(54, 90, 56, 0.18), rgba(54, 90, 56, 0.1))'
+        ? '#eef3ff'
         : state.isFocused
-          ? 'rgba(54, 90, 56, 0.11)'
+          ? '#f7f8ff'
           : 'transparent',
       fontWeight: state.isSelected ? 600 : 500,
     }),

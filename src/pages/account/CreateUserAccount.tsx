@@ -44,8 +44,8 @@ const strengthLabel = (score: number): string => {
 const strengthColor = (score: number): string => {
   if (score <= 1) return '#c62828';
   if (score === 2) return '#ef6c00';
-  if (score === 3) return '#2e7d32';
-  return '#1b5e20';
+  if (score === 3) return '#1c1794';
+  return '#ff641d';
 };
 
 const CreateUserAccount = () => {

@@ -60,7 +60,7 @@
     margin: 0;
     font-size: 14px;
     font-weight: 700;
-    color: #41503f;
+    color: #30345f;
     letter-spacing: 0.02em;
 }
 
@@ -81,7 +81,7 @@
 .kpi-card {
     border-radius: 10px;
     padding: 15px;
-    color: #42513f;
+    color: #30345f;
     min-height: 105px;
     display: flex;
     flex-direction: column;
@@ -104,9 +104,9 @@
 }
 
 .kpi-good {
-    background: #dce9d5;
-    color: #25482f;
-    border: 1px solid #bfd1b8;
+    background: #ecebff;
+    color: #1c1794;
+    border: 1px solid #cbc9ff;
 }
 
 .kpi-warn {
@@ -116,9 +116,9 @@
 }
 
 .kpi-muted {
-    background: #edf2e8;
-    color: #566553;
-    border: 1px solid #d6ddd0;
+    background: #f1f2ff;
+    color: #5f6381;
+    border: 1px solid #d9ddf7;
 }
 
 .kpi-status-unassigned {
@@ -134,15 +134,15 @@
 }
 
 .kpi-status-out-for-delivery {
-    background: #e1ecee;
-    color: #486a72;
-    border: 1px solid #c8d9dc;
+    background: #e7f1ff;
+    color: #1f5f9f;
+    border: 1px solid #c9ddfb;
 }
 
 .kpi-status-delivered {
-    background: #dce9d5;
-    color: #2f5736;
-    border: 1px solid #bfd1b8;
+    background: #ecebff;
+    color: #1c1794;
+    border: 1px solid #cbc9ff;
 }
 
 .kpi-status-failed {

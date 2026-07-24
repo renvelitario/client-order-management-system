@@ -13,7 +13,7 @@
 
 .delivery-order-summary-card:hover,
 .delivery-order-summary-card:focus-visible {
-  border-color: #bfd1b8;
+  border-color: #cbc9ff;
   box-shadow: 0 10px 28px rgba(20, 38, 27, 0.14);
   transform: translateY(-1px);
   outline: none;

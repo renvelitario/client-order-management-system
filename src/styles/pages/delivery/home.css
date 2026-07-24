@@ -72,23 +72,23 @@
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-undo {
-  background: linear-gradient(130deg, #64748b, #475569);
+  background: #64748b;
   border: none;
   color: #ffffff;
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-undo:hover:not(:disabled) {
-  filter: saturate(1.05);
+  background: #475569;
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger {
-  background: linear-gradient(130deg, #dc2626, #b91c1c);
+  background: #dc2626;
   border: none;
   color: #ffffff;
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger:hover:not(:disabled) {
-  filter: saturate(1.05);
+  background: #b91c1c;
 }
 
 .delivery-order-modal-compact .entity-modal-actions .delivery-action-danger .app-icon,

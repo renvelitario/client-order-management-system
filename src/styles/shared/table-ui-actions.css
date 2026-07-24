@@ -4,7 +4,7 @@
     align-items: center;
     gap: 6px;
     padding: 7px 12px;
-    background: linear-gradient(130deg, var(--primary), var(--primary-hover));
+    background: var(--primary);
     color: var(--text-inverse);
     border-radius: var(--radius-md);
     border: none;
@@ -19,7 +19,7 @@
 }
 
 .edit-button:hover {
-    filter: saturate(1.06);
+    background: var(--primary-hover);
 }
 
 .edit-button .app-icon {
@@ -32,7 +32,7 @@
     align-items: center;
     gap: 6px;
     padding: 7px 12px;
-    background: linear-gradient(130deg, var(--secondary), var(--secondary-hover));
+    background: var(--secondary);
     color: var(--text-inverse);
     border: none;
     border-radius: var(--radius-md);
@@ -45,7 +45,7 @@
 }
 
 .view-button:hover {
-    filter: saturate(1.06);
+    background: var(--secondary-hover);
 }
 
 .view-button .app-icon {
@@ -58,7 +58,7 @@
     align-items: center;
     gap: 6px;
     padding: 7px 12px;
-    background: linear-gradient(130deg, var(--danger), var(--danger-hover));
+    background: var(--danger);
     color: var(--text-inverse);
     border: none;
     border-radius: var(--radius-md);
@@ -71,7 +71,7 @@
 }
 
 .delete-button:hover {
-    filter: saturate(1.06);
+    background: var(--danger-hover);
 }
 
 .delete-button .app-icon {

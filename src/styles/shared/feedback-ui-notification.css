@@ -15,9 +15,9 @@
 }
 
 .notification.success {
-    background: #e6efe3;
-    color: #2f5736;
-    border: 1px solid #bfd1b8;
+    background: #ecebff;
+    color: #1c1794;
+    border: 1px solid #cbc9ff;
 }
 
 .notification.error {

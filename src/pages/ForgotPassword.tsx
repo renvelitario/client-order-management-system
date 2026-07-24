@@ -52,7 +52,7 @@ const ForgotPassword = () => {
   return (
     <div className="container">
       <div className="logo">
-        <img src="/logo.png" alt="Logo" />
+        <img src="/logo.png" alt="Fulfilltify logo" />
       </div>
 
       <h2>Reset your password</h2>
