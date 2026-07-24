@@ -146,11 +146,11 @@
 }
 
 .session-warning-modal {
-	width: min(100%, 520px);
+	width: min(100%, 640px);
 	background: #ffffff;
-	border-radius: 12px;
+	border-radius: 14px;
 	box-shadow: 0 20px 45px rgba(15, 23, 42, 0.2);
-	padding: 24px;
+	padding: 28px 32px;
 }
 
 .session-warning-modal h2 {
@@ -213,12 +213,12 @@
 }
 
 .demo-notice-modal {
-	width: min(100%, 520px);
+	width: min(100%, 640px);
 	background: #ffffff;
 	border: 1px solid rgba(28, 23, 148, 0.18);
 	border-radius: 16px;
 	box-shadow: 0 24px 56px rgba(15, 23, 42, 0.24);
-	padding: 30px 32px;
+	padding: 32px 36px;
 	text-align: center;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .demo-notice-content {
-	max-width: 440px;
+	max-width: 560px;
 	margin: 0 auto;
 }
 
