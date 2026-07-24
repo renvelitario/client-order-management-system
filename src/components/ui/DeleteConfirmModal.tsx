@@ -59,11 +59,12 @@ const DeleteConfirmModal = ({
         <div className="modal-icon-wrap" aria-hidden="true">
           <AppIcon name="warning" className="modal-warning-icon" />
         </div>
+        <p className="modal-kicker">Delete Confirmation</p>
         <h3 id="delete-confirm-title">{title}</h3>
         <p className="modal-message">{message}</p>
         <div className="modal-actions">
-          <button className="modal-cancel" onClick={onCancel}>{cancelLabel}</button>
-          <button className="modal-confirm-delete" onClick={onConfirm}>{confirmLabel}</button>
+          <button type="button" className="modal-cancel" onClick={onCancel}>{cancelLabel}</button>
+          <button type="button" className="modal-confirm-delete" onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </div>
     </div>,
