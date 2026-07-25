@@ -71,10 +71,10 @@
   position: absolute;
   width: 28px;
   height: 28px;
-  border-color: #2ecc71;
+  border-color: #ff641d;
   border-style: solid;
   border-width: 0;
-  filter: drop-shadow(0 0 4px rgba(46, 204, 113, 0.45));
+  filter: drop-shadow(0 0 4px rgba(255, 100, 29, 0.45));
 }
 
 .barcode-scanner-corner--tl {
@@ -115,8 +115,8 @@
   right: 8px;
   height: 2px;
   top: 12%;
-  background: #2ecc71;
-  box-shadow: 0 0 8px rgba(46, 204, 113, 0.55);
+  background: #ff641d;
+  box-shadow: 0 0 8px rgba(255, 100, 29, 0.55);
   animation: barcode-scan-sweep 2s ease-in-out infinite;
 }
 
@@ -274,5 +274,3 @@
     bottom: auto;
   }
 }
-
-
