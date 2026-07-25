@@ -55,7 +55,7 @@ export const useAppInitialization = (authLoading: boolean) => {
       await Promise.all([
         waitForFonts(),
         waitForStylesToSettle(),
-        preloadImage('/logo.png'),
+        preloadImage('/logo-square.png'),
         import('../pages/Login'),
       ]);
 
