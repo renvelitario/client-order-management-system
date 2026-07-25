@@ -89,7 +89,9 @@
 }
 
 .top-inbox-link:active {
-  transform: translateY(1px);
+  transform: none;
+  filter: brightness(1.3);
+  transition: filter 0s;
 }
 
 .top-inbox-link.is-active {
@@ -392,7 +394,9 @@
 }
 
 .sidebar-link:active {
-  transform: translateY(1px);
+  transform: none;
+  filter: brightness(1.25);
+  transition: filter 0s;
 }
 
 .sidebar-link.is-active {
@@ -538,10 +542,17 @@
 }
 
 .delivery-nav-scan-link:hover {
-  transform: translateY(-1px) scale(1.03);
+  transform: none;
+  filter: brightness(1.12);
   box-shadow:
     0 14px 28px rgba(255, 100, 29, 0.36),
     0 0 0 6px rgba(255, 227, 212, 0.95);
+}
+
+.delivery-nav-scan-link:active {
+  transform: none;
+  filter: brightness(1.3);
+  transition: filter 0s;
 }
 
 .delivery-nav-scan-link .app-icon {

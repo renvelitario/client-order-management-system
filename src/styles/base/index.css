@@ -107,40 +107,25 @@ select {
   flex-shrink: 0;
 }
 
-@keyframes buttonPress {
-  0% { transform: scale(1); }
-  35% { transform: scale(0.965); }
-  65% { transform: scale(0.985); }
-  100% { transform: scale(1); }
-}
-
-:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button) {
+:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button, a[role='button'], .btn) {
   cursor: pointer;
-  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, filter 220ms ease, opacity 220ms ease;
+  transform: none !important;
   transform-origin: center;
-}
-
-:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button):hover:not(:disabled):not([aria-disabled='true']) {
-  filter: none;
-  box-shadow: none;
-}
-
-:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button):active:not(:disabled):not([aria-disabled='true']) {
-  transform: translateY(1px);
-}
-
-:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button) {
   box-shadow: none !important;
 }
 
-:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button):hover:not(:disabled):not([aria-disabled='true']) {
+:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button, a[role='button'], .btn):hover:not(:disabled):not([aria-disabled='true']) {
   box-shadow: none !important;
+}
+
+:where(button, input[type='button'], input[type='submit'], input[type='reset'], .create-button, .edit-button, .view-button, .delete-button, a[role='button'], .btn):active:not(:disabled):not([aria-disabled='true']) {
+  transform: none !important;
+  filter: brightness(1.28) saturate(1.1);
+  transition: filter 0s, background-color 0s, border-color 0s;
 }
 
 .filter-like-select {
-  height: 36px;
-  padding: 0 34px 0 12px;
-  border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-family: 'Montserrat', Arial, sans-serif;

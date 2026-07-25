@@ -15,8 +15,13 @@
 .delivery-order-summary-card:focus-visible {
   border-color: #cbc9ff;
   box-shadow: 0 10px 28px rgba(20, 38, 27, 0.14);
-  transform: translateY(-1px);
+  transform: none;
   outline: none;
+}
+
+.delivery-order-summary-card:active {
+  filter: brightness(1.12);
+  transition: filter 0s;
 }
 
 .delivery-order-summary-head {
