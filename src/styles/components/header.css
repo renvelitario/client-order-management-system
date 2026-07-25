@@ -531,10 +531,10 @@
   color: #ffffff;
   text-decoration: none;
   background: #ff641d;
-  outline: 2px solid #ffe3d4;
+  outline: none;
   box-shadow:
-    0 10px 24px rgba(255, 100, 29, 0.32),
-    0 0 0 6px rgba(255, 227, 212, 0.9);
+    0 8px 20px rgba(255, 100, 29, 0.35),
+    0 0 0 5px #ffffff;
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -542,16 +542,14 @@
 }
 
 .delivery-nav-scan-link:hover {
-  transform: none;
   filter: brightness(1.12);
   box-shadow:
-    0 14px 28px rgba(255, 100, 29, 0.36),
-    0 0 0 6px rgba(255, 227, 212, 0.95);
+    0 12px 24px rgba(255, 100, 29, 0.42),
+    0 0 0 5px #ffffff;
 }
 
 .delivery-nav-scan-link:active {
-  transform: none;
-  filter: brightness(1.3);
+  filter: brightness(1.25);
   transition: filter 0s;
 }
 
@@ -636,11 +634,11 @@
   }
 
   .delivery-nav-scan-link {
-    transform: translateY(-18px);
+    transform: translateY(-32px);
   }
 
   .delivery-nav-scan-link:hover {
-    transform: translateY(-20px) scale(1.03);
+    transform: translateY(-34px) scale(1.03);
   }
 
   .mobile-shell-bar {
@@ -724,7 +722,7 @@
   .delivery-nav-scan-link {
     width: 56px;
     height: 56px;
-    transform: translateY(-16px);
+    transform: translateY(-30px);
   }
 
   .delivery-nav-scan-link .app-icon {
