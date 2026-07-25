@@ -29,7 +29,12 @@
 }
 
 .dashboard-header h2 {
-    margin: 6px 0 4px;
+    margin: 4px 0 4px;
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 2.4vw, 32px);
+    line-height: 1.15;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .dashboard-subtitle {

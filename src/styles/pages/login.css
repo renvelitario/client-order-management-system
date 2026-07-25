@@ -92,10 +92,12 @@ body.login-page {
     margin: 0 auto clamp(18px, 3vw, 24px);
     color: var(--auth-title);
     text-align: center;
-    font-size: clamp(15px, 2.6vw, 17px);
-    font-weight: 800;
-    line-height: 1.35;
-    letter-spacing: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .login-page form {
