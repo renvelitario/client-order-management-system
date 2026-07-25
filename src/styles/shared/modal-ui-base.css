@@ -26,13 +26,13 @@
     height: 66px;
     margin: 0 auto 16px;
     border-radius: 50%;
-    background: #fcebea;
-    border: 1px solid #f7c3c0;
-    color: #b8453b;
+    background: var(--danger-light);
+    border: 1px solid #fca5a5;
+    color: var(--danger);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 24px rgba(184, 69, 59, 0.16);
+    box-shadow: 0 10px 24px rgba(220, 38, 38, 0.16);
 }
 
 .modal-warning-icon {
@@ -44,7 +44,7 @@
 
 .modal-kicker {
     margin: 0 0 10px;
-    color: #b8453b;
+    color: var(--danger);
     font-size: 12px;
     font-weight: 800;
     letter-spacing: 0.08em;
