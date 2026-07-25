@@ -39,8 +39,8 @@
 
 /* Keep modal width stable in both loading and loaded states */
 .delivery-order-modal-compact {
-  width: min(520px, calc(100% - 48px));
-  max-width: 520px;
+  width: min(720px, calc(100% - 48px));
+  max-width: 720px;
   min-width: 0;
   box-sizing: border-box;
   margin: 0 auto;
@@ -139,5 +139,3 @@
     width: calc(100vw - 24px) !important;
   }
 }
-
-

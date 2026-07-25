@@ -1,7 +1,7 @@
 /* ORDER ITEMS VIEW MODAL */
 .order-items-modal {
-    width: min(520px, calc(100% - 48px));
-    max-width: 520px;
+    width: min(720px, calc(100% - 48px));
+    max-width: 720px;
     margin: 0 auto;
 }
 
