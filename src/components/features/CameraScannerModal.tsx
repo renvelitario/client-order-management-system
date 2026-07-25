@@ -55,11 +55,11 @@ const resolveScannerErrorMessage = (
   const errorName = String(typedError?.name || '').toLowerCase();
   const message = String(typedError?.message || '').toLowerCase();
 
-  if (errorName.includes('notallowed') || message.includes('permission')) {
+  if (errorName.includes('notallowed') || message.includes('permission') || message.includes('allowed')) {
     return permissionError;
   }
 
-  if (errorName.includes('notfound') || message.includes('no camera')) {
+  if (errorName.includes('notfound') || message.includes('no camera') || errorName.includes('overconstrained')) {
     return noCameraError;
   }
 
@@ -96,7 +96,6 @@ const CameraScannerModal = ({
   const stopScannerRef = useRef<() => Promise<void>>(async () => {});
   const [loadingCamera, setLoadingCamera] = useState(false);
   const [scannerError, setScannerError] = useState('');
-  const [selectedCameraId, setSelectedCameraId] = useState('');
 
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -176,36 +175,6 @@ const CameraScannerModal = ({
   }, [invalidUploadValueError, parseDetectedValue, scannerId, supportedFormats, uploadDecodeError]);
 
   useEffect(() => {
-    let cancelled = false;
-
-    if (!isOpen) {
-      return undefined;
-    }
-
-    const loadCameras = async () => {
-      try {
-        const { Html5Qrcode } = await import('html5-qrcode');
-        const cameras = await Html5Qrcode.getCameras();
-        if (cancelled) {
-          return;
-        }
-
-        const preferredId = pickPreferredCameraId(cameras || []);
-        if (preferredId) {
-          setSelectedCameraId(preferredId);
-        }
-      } catch {
-        // ignore camera enumeration failures
-      }
-    };
-
-    loadCameras();
-    return () => {
-      cancelled = true;
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
     let unmounted = false;
 
     const stopScannerInstance = async (scanner: Html5Qrcode | null) => {
@@ -264,22 +233,29 @@ const CameraScannerModal = ({
           return;
         }
 
-        const scanner = new Html5Qrcode(scannerId, {
-          formatsToSupport: supportedFormats,
-          verbose: false,
-          experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-        });
-        scannerRef.current = scanner;
+        let preferredDeviceId: string | null = null;
+        try {
+          const cameras = await Html5Qrcode.getCameras();
+          if (Array.isArray(cameras) && cameras.length > 0) {
+            preferredDeviceId = pickPreferredCameraId(cameras);
+          }
+        } catch {
+          // ignore camera enumeration errors
+        }
 
+        if (unmounted || !isOpen) {
+          return;
+        }
+
+        // Camera constraints fallback sequence for mobile browsers (iOS Safari & Chrome Android)
         const startConfigs = [
-          ...(selectedCameraId ? [{ deviceId: { exact: selectedCameraId } }] : []),
-          { facingMode: { exact: 'environment' } },
+          ...(preferredDeviceId ? [{ deviceId: preferredDeviceId }] : []),
           { facingMode: 'environment' },
           { facingMode: 'user' },
         ];
 
         let started = false;
-        let startError = null;
+        let startError: unknown = null;
 
         for (const config of startConfigs) {
           if (started || unmounted || !isOpen) {
@@ -287,6 +263,12 @@ const CameraScannerModal = ({
           }
 
           try {
+            const scanner = new Html5Qrcode(scannerId, {
+              formatsToSupport: supportedFormats,
+              verbose: false,
+            });
+            scannerRef.current = scanner;
+
             await scanner.start(
               config,
               {
@@ -308,27 +290,33 @@ const CameraScannerModal = ({
               },
             );
             started = true;
-
-            if (unmounted) {
-              await stopScannerInstance(scanner);
-              break;
-            }
+            break;
           } catch (err) {
             startError = err;
+            if (scannerRef.current) {
+              try {
+                await scannerRef.current.clear();
+              } catch {
+                // ignore clear errors
+              }
+              scannerRef.current = null;
+            }
           }
         }
 
-        if (!started) {
+        if (!started && !unmounted) {
           throw startError || new Error('Unable to start camera.');
         }
       } catch (error) {
         if (!unmounted) {
-          setScannerError(resolveScannerErrorMessage(error, {
-            secureContextError,
-            permissionError,
-            noCameraError,
-            genericStartError,
-          }));
+          setScannerError(
+            resolveScannerErrorMessage(error, {
+              secureContextError,
+              permissionError,
+              noCameraError,
+              genericStartError,
+            }),
+          );
         }
       } finally {
         if (!unmounted) {
@@ -352,7 +340,6 @@ const CameraScannerModal = ({
     qrbox,
     scannerId,
     secureContextError,
-    selectedCameraId,
     stopActiveVideoTracks,
     supportedFormats,
   ]);

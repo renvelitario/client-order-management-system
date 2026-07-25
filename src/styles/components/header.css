@@ -614,7 +614,7 @@
   .delivery-nav {
     top: auto;
     bottom: 0;
-    height: 68px;
+    height: auto;
     border-bottom: none;
     border-top: 1px solid #d9ddf7;
     box-shadow: 0 -10px 26px rgba(15, 23, 42, 0.08);
@@ -622,6 +622,7 @@
   }
 
   .delivery-nav-inner {
+    height: 64px;
     padding: 0 10px;
     gap: 14px;
     max-width: 560px;
@@ -634,11 +635,16 @@
   }
 
   .delivery-nav-scan-link {
-    transform: translateY(-32px);
+    width: 60px;
+    height: 60px;
+    transform: translateY(-38px);
+    box-shadow:
+      0 10px 24px rgba(255, 100, 29, 0.4),
+      0 0 0 6px #ffffff;
   }
 
   .delivery-nav-scan-link:hover {
-    transform: translateY(-34px) scale(1.03);
+    transform: translateY(-40px) scale(1.04);
   }
 
   .mobile-shell-bar {
@@ -704,7 +710,11 @@
   .delivery-nav {
     top: auto;
     bottom: 0;
-    height: 64px;
+    height: auto;
+  }
+
+  .delivery-nav-inner {
+    height: 60px;
   }
 
   .delivery-nav-link {
@@ -720,9 +730,16 @@
   }
 
   .delivery-nav-scan-link {
-    width: 56px;
-    height: 56px;
-    transform: translateY(-30px);
+    width: 58px;
+    height: 58px;
+    transform: translateY(-36px);
+    box-shadow:
+      0 10px 24px rgba(255, 100, 29, 0.4),
+      0 0 0 6px #ffffff;
+  }
+
+  .delivery-nav-scan-link:hover {
+    transform: translateY(-38px) scale(1.04);
   }
 
   .delivery-nav-scan-link .app-icon {
